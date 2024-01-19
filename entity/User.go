@@ -8,6 +8,6 @@ type User struct {
 	Firstname    string    `json:"firstname"`
 	Mail         string    `json:"mail"`
 	Phone        string    `json:"phone"`
-	IsSuperadmin bool      `json:"is_superadmin"`
+	IsSuperAdmin bool      `json:"is_super_admin"`
 	Birthday     time.Time `json:"birthday"`
 }
