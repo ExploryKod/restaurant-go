@@ -1,4 +1,4 @@
-package demoHTTP
+package restaurantHTTP
 
 import "time"
 

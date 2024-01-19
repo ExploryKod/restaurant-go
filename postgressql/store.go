@@ -2,15 +2,14 @@ package database
 
 import (
 	"database/sql"
-	"demoHTTP"
 )
+
+type Store struct {
+	UserStore *UserStore
+}
 
 func CreateStore(db *sql.DB) *Store {
 	return &Store{
-		NewUserStore(db),
+		UserStore: NewUserStore(db),
 	}
-}
-
-type Store struct {
-	demoHTTP.UserStoreInterface
 }
