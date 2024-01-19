@@ -7,10 +7,10 @@ import (
 
 func CreateStore(db *sql.DB) *Store {
 	return &Store{
-		NewTodoStore(db),
+		NewUserStore(db),
 	}
 }
 
 type Store struct {
-	demoHTTP.TodoStoreInterface
+	demoHTTP.UserStoreInterface
 }

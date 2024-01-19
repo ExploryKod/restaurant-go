@@ -1,4 +1,4 @@
-module demoHTTP
+module restaurantHTTP
 
 go 1.18
 
