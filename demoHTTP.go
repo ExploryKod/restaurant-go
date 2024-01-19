@@ -1,9 +1,13 @@
 package demoHTTP
 
-type TodoItem struct {
-	ID        int    `json:"id"`
-	Title     string `json:"title"`
-	Completed bool   `json:"completed"`
+type User struct {
+	id            int    `json:"id"`
+	name          string `json:"name"`
+	firstname     string `json:"firstname"`
+	mail          string `json:"mail"`
+	phone         string `json:"phone"`
+	is_superadmin bool   `json:"is_superadmin"`
+	birthday      string `json:"birthday"`
 }
 
 type TodoStoreInterface interface {
