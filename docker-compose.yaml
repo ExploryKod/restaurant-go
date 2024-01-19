@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+    database:
+        image: mariadb:10.8
+        restart: always
+        volumes:
+#            - ./database/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+            - db-data:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: data
+            MYSQL_ROOT_PASSWORD: password
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        ports:
+            - '8080:80'
+        environment:
+            - PMA_ARBITRARY=1
+
+volumes:
+    db-data:
