@@ -8,14 +8,16 @@ ENV CGO_ENABLED=0
 ENV GOOS=$GOOS
 ENV GOARCH=$GOARCH
 
-WORKDIR /goapp
-COPY ./goapp .
+WORKDIR /restaurantgo
+COPY ./restaurantgo .
 
 RUN go mod download \
     && go mod verify \
     && go mod tidy \
-    && go build -o gorillachat
+    && go build -o restaurantgo
 
 FROM scratch as FINAL
 
-COPY ./ ./app
+WORKDIR /app
+COPY --from=Builder . /app/
+ENTRYPOINT ./app
