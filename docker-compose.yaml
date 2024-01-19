@@ -1,29 +1,22 @@
 version: "3.8"
 
 services:
-    db:
-        container_name: postgresdb
-        image: postgres
+    database:
+        image: mariadb:10.8
+        restart: always
+        volumes:
+#            - ./database/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+            - db-data:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: data
+            MYSQL_ROOT_PASSWORD: password
+    phpmyadmin:
+        image: phpmyadmin
         restart: always
         ports:
-            - "5432:5432"
+            - '8080:80'
         environment:
-            POSTGRES_PASSWORD: password
-        volumes:
-            - local_pgdata:/var/lib/postgresql/data
-
-    pgadmin:
-        image: dpage/pgadmin4
-        container_name: pgadmin4_container
-        restart: always
-        ports:
-            - "8888:80"
-        environment:
-            PGADMIN_DEFAULT_EMAIL: root@root.fr
-            PGADMIN_DEFAULT_PASSWORD: password
-        volumes:
-            - pgadmin-data:/var/lib/pgadmin
+            - PMA_ARBITRARY=1
 
 volumes:
-    local_pgdata:
-    pgadmin-data:
+    db-data:
