@@ -7,7 +7,7 @@ services:
         ports:
             - "5432:5432"
         environment:
-            POSTGRES_PASSWORD: secret
+            POSTGRES_PASSWORD: password
 
     adminer:
         image: adminer
