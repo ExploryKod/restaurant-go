@@ -1,22 +1,16 @@
 version: "3.8"
 
 services:
-    database:
-        image: mariadb
+    db:
+        image: postgres
         restart: always
         ports:
-            - "3306:3306"
-        volumes:
-            - ./migrations/01-create-table.up.sql:/docker-entrypoint-initdb.d/migration.sql
+            - "5432:5432"
         environment:
-            MARIADB_ROOT_PASSWORD: password
-            MARIADB_DATABASE: todo
+            POSTGRES_PASSWORD: secret
 
     adminer:
         image: adminer
         restart: always
         ports:
             - "8080:8080"
-
-
-
