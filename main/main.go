@@ -2,27 +2,29 @@ package main
 
 import (
 	"database/sql"
-	database "demoHTTP/mysql"
-	"demoHTTP/web"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+	database "restaurantHTTP/postgressql"
+	"restaurantHTTP/web"
 )
 
 func main() {
 	conf := mysql.Config{
 		User:                 "root",
 		Passwd:               "password",
+		Addr:                 "127.0.0.1:3306",
+		DBName:               "restaurant",
 		Net:                  "tcp",
-		Addr:                 "localhost:3306",
-		DBName:               "todo",
-		AllowNativePasswords: true, // Il faut le préciser
+		AllowNativePasswords: true,
 	}
 
 	db, err := sql.Open("mysql", conf.FormatDSN())
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
 	defer db.Close()

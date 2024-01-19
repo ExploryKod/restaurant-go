@@ -11,3 +11,9 @@ type User struct {
 	IsSuperAdmin bool      `json:"is_super_admin"`
 	Birthday     time.Time `json:"birthday"`
 }
+
+type UserStoreInterface interface {
+	GetUsers() ([]User, error)
+	AddUser(item User) (int, error)
+	DeleteUser(id int) error
+}

@@ -4,12 +4,12 @@ import (
 	"database/sql"
 )
 
-func CreateStore(db *sql.DB) *Store {
-	return &Store{
-		NewUserStore(db),
-	}
+type Store struct {
+	UserStore *UserStore
 }
 
-type Store struct {
-	restaurantHTTP.UserStoreInterface
+func CreateStore(db *sql.DB) *Store {
+	return &Store{
+		UserStore: NewUserStore(db),
+	}
 }
