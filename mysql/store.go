@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"demoHTTP"
 )
 
 func CreateStore(db *sql.DB) *Store {
@@ -12,5 +11,5 @@ func CreateStore(db *sql.DB) *Store {
 }
 
 type Store struct {
-	demoHTTP.UserStoreInterface
+	restaurantHTTP.UserStoreInterface
 }
