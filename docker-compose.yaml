@@ -5,10 +5,10 @@ services:
         image: mariadb:10.8
         restart: always
         volumes:
-#            - ./database/dump.sql:/docker-entrypoint-initdb.d/dump.sql
-            - db-data:/var/lib/mysql
+            - ./migrations/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+#            - db-data:/var/lib/mysql
         environment:
-            MYSQL_DATABASE: data
+            MYSQL_DATABASE: restaurant
             MYSQL_ROOT_PASSWORD: password
     phpmyadmin:
         image: phpmyadmin
