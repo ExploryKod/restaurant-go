@@ -12,12 +12,21 @@ import (
 )
 
 func main() {
+	//conf := mysql.Config{
+	//	User:                 "root",
+	//	Passwd:               "password",
+	//	Addr:                 "127.0.0.1:3306",
+	//	DBName:               "restaurantbdd",
+	//	Net:                  "tcp",
+	//	AllowNativePasswords: true,
+	//}
+
 	conf := mysql.Config{
 		User:                 "root",
 		Passwd:               "password",
-		Addr:                 "127.0.0.1:3306",
-		DBName:               "restaurant",
 		Net:                  "tcp",
+		Addr:                 "localhost:3306",
+		DBName:               "data",
 		AllowNativePasswords: true,
 	}
 
