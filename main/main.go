@@ -15,7 +15,7 @@ func main() {
 	//conf := mysql.Config{
 	//	User:                 "root",
 	//	Passwd:               "password",
-	//	Addr:                 "127.0.0.1:3306",
+	//	Addr:                 "database:3306",
 	//	DBName:               "restaurantbdd",
 	//	Net:                  "tcp",
 	//	AllowNativePasswords: true,
@@ -25,8 +25,8 @@ func main() {
 		User:                 "root",
 		Passwd:               "password",
 		Net:                  "tcp",
-		Addr:                 "localhost:3306",
-		DBName:               "data",
+		Addr:                 "database:3306",
+		DBName:               "restaurantbdd",
 		AllowNativePasswords: true,
 	}
 
