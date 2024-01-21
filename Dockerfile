@@ -6,10 +6,9 @@ WORKDIR /app
 
 COPY . .
 RUN go mod download \
-    && go mod verify
+    && go mod verify \
 
 RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux go build -o /build/restaurantgo ./main/main.go
-
 
 # Deploy the application binary into a lean image
 FROM scratch AS build-release-stage
