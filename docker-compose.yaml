@@ -8,7 +8,7 @@ services:
             - ./migrations/dump.sql:/docker-entrypoint-initdb.d/dump.sql
 #            - db-data:/var/lib/mysql
         environment:
-            MYSQL_DATABASE: restaurant
+            MYSQL_DATABASE: restaurantbdd
             MYSQL_ROOT_PASSWORD: password
     phpmyadmin:
         image: phpmyadmin
