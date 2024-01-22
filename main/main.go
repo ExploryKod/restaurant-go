@@ -7,7 +7,7 @@ import (
 	_ "github.com/lib/pq"
 	"log"
 	"net/http"
-	database "restaurantHTTP/postgressql"
+	database "restaurantHTTP/mysql"
 	"restaurantHTTP/web"
 )
 
@@ -16,7 +16,7 @@ func main() {
 		User:                 "root",
 		Passwd:               "password",
 		Addr:                 "127.0.0.1:3306",
-		DBName:               "restaurant",
+		DBName:               "restaurantbdd",
 		Net:                  "tcp",
 		AllowNativePasswords: true,
 	}
