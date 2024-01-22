@@ -1,0 +1,190 @@
+1. Tri à Bulles (Bubble Sort)
+   - Trie un tableau en comparant et en échangeant les éléments adjacents.
+
+2. Tri par Sélection (Selection Sort)
+   - Trie un tableau en sélectionnant à chaque étape l'élément minimum et en le plaçant au bon emplacement.
+
+3. Tri par Insertion (Insertion Sort)
+   - Trie un tableau en insérant chaque élément à sa place appropriée dans la partie déjà triée du tableau.
+
+4. Tri Rapide (Quick Sort)
+   - Trie un tableau en utilisant la méthode de division et de conquête.
+
+5. Tri Fusion (Merge Sort)
+   - Trie un tableau en divisant le tableau en sous-tableaux, les triant, puis les fusionnant.
+
+6. Tri à Comptage (Counting Sort)
+   - Trie un tableau d'entiers dans une plage donnée.
+
+7. Tri Radix (Radix Sort)
+   - Trie un tableau en utilisant les chiffres individuels pour classer les éléments.
+
+8. Recherche Linéaire (Linear Search)
+   - Recherche un élément donné dans un tableau en le parcourant séquentiellement.
+
+9. Recherche Binaire (Binary Search)
+   - Recherche un élément donné dans un tableau trié en utilisant la recherche binaire.
+
+10. Algorithme de Recherche en Profondeur (Depth-First Search, DFS)
+    - Explore un graphe en suivant autant que possible le long d'une branche avant de revenir en arrière.
+
+11. Algorithme de Recherche en Largeur (Breadth-First Search, BFS)
+    - Explore un graphe en visitant tous les voisins d'un nœud avant de passer au nœud suivant.
+
+12. Algorithme de Dijkstra
+    - Trouve le chemin le plus court entre deux nœuds dans un graphe pondéré.
+
+13. Algorithme de Bellman-Ford
+    - Trouve le chemin le plus court entre deux nœuds dans un graphe, même en présence d'arêtes de poids négatif.
+
+14. Algorithme de Kruskal
+    - Trouve l'arbre couvrant de poids minimum dans un graphe non dirigé.
+
+15. Algorithme de Prim
+    - Trouve l'arbre couvrant de poids minimum dans un graphe non dirigé connexe.
+
+16. Algorithme de Recherche de Motif (Algorithme de Boyer-Moore)
+    - Recherche un motif dans une chaîne de caractères en utilisant un algorithme de recherche efficace.
+
+17. Algorithme de Chiffrement AES (Advanced Encryption Standard)
+    - Chiffre et déchiffre des données de manière sécurisée.
+
+18. Algorithme de Diffie-Hellman
+    - Permet l'échange sécurisé de clés cryptographiques sur un canal non sécurisé.
+
+19. Algorithme de Recherche de Sous-Liste Maximal (Maximum Subarray Sum)
+    - Trouve la somme maximale d'une sous-liste d'un tableau d'entiers.
+
+20. Algorithme de Tri Topologique (Topological Sort)
+    - Ordonne les sommets d'un graphe orienté acyclique (DAG) de manière à ce que tous les arcs soient dirigés du début à la fin.
+
+21. Algorithme de la Pile (Stack)
+    - Implémente une structure de données de pile (LIFO) en utilisant Java.
+
+22. Algorithme de la File (Queue)
+    - Implémente une structure de données de file (FIFO) en utilisant Java.
+
+23. Algorithme de Huffman
+    - Utilisé pour la compression de données en créant un arbre binaire de Huffman.
+
+24. Algorithme de tri par Tas (Heap Sort)
+    - Trie un tableau en utilisant une structure de données de tas.
+
+25. Algorithme de Tri Shell (Shell Sort)
+    - Trie un tableau en comparant des éléments espacés à une certaine distance.
+
+26. Algorithme de tri Bogosort
+    - Un algorithme de tri humoristique qui trie un tableau en générant des permutations aléatoires jusqu'à ce que le tableau soit trié.
+
+27. Algorithme de Hachage (Hashing)
+    - Implémente des fonctions de hachage pour stocker et récupérer rapidement des données.
+
+28. Algorithme de Trie (Trie)
+    - Implémente une structure de données de trie, idéale pour la recherche de chaînes de caractères.
+
+29. Algorithme de K-Means
+    - Un algorithme de clustering utilisé en apprentissage automatique pour regrouper des données similaires.
+
+30. Algorithme de Recherche A* (A* Search)
+    - Un algorithme de recherche utilisé en intelligence artificielle pour trouver le chemin le plus court dans un graphe pondéré.
+
+31. Algorithme de Recherche de Cycle dans un Graphe (Cycle Detection)
+    - Détecte la présence de cycles dans un graphe.
+
+32. Algorithme de Tri Topologique (Kahn's Algorithm)
+    - Une autre approche pour ordonner les sommets d'un graphe orienté acyclique (DAG).
+
+33. Algorithme de Suffix Array
+    - Utilisé pour résoudre divers problèmes de recherche de motif dans des chaînes de caractères.
+
+34. Algorithme de KMP (Knuth-Morris-Pratt)
+    - Un algorithme de recherche de motif efficace qui évite des comparaisons inutiles.
+
+35. Algorithme de Calcul de Pi (Méthode de Monte Carlo)
+    - Estime la valeur de Pi en utilisant des méthodes probabilistes.
+
+36. Algorithme de Factorisation de Nombres (Algorithme de Pollard's Rho)
+    - Utilisé pour factoriser des grands nombres en nombres premiers.
+
+37. Algorithme de RSA
+    - Un algorithme de cryptographie asymétrique utilisé pour sécuriser les communications.
+
+38. Algorithme de Tri Combiné (Comb Sort)
+    - Une variation du tri à bulles qui améliore les performances.
+
+39. Algorithme de Tri Pigeonhole (Pigeonhole Sort)
+    - Trie un tableau en utilisant la distribution des éléments dans des "nids de pigeon".
+
+40. Algorithme de Tri Gnome (Gnome Sort)
+    - Trie
+
+ un tableau en ajustant les éléments à leur place correcte.
+
+41. Algorithme de Tri Strand (Strand Sort)
+    - Trie un tableau en utilisant des opérations de fusion.
+
+42. Algorithme de Tri Stooge (Stooge Sort)
+    - Trie un tableau en utilisant une approche récursive peu efficace.
+
+43. Algorithme de tri LSD (Least Significant Digit)
+    - Trie un tableau d'entiers en utilisant des chiffres individuels.
+
+44. Algorithme de tri MSD (Most Significant Digit)
+    - Trie un tableau d'entiers en utilisant des chiffres individuels à partir du chiffre le plus significatif.
+
+45. Algorithme de Tri Cocktail (Cocktail Shaker Sort)
+    - Une variation du tri à bulles qui tri dans les deux sens.
+
+46. Algorithme de Tri Strand (Strand Sort)
+    - Trie un tableau en utilisant des opérations de fusion.
+
+47. Algorithme de Tri Sleep (Sleep Sort)
+    - Un algorithme humoristique qui trie en utilisant des threads et des temporisations.
+
+48. Algorithme de Tri Bogobogosort
+    - Une version encore plus absurde du tri Bogosort.
+
+49. Algorithme de Recherche de Sous-Liste Commune Maximale (Longest Common Subsequence)
+    - Trouve la plus longue sous-liste commune entre deux séquences.
+
+50. Algorithme de Recherche de Sous-Liste Commune Maximale (Longest Common Substring)
+    - Trouve la plus longue sous-chaîne commune entre deux chaînes de caractères.
+
+51. Algorithme de Recherche de Chemin Eulerien (Eulerian Path)
+    - Trouve un chemin dans un graphe passant par chaque arête exactement une fois.
+
+52. Algorithme de Recherche de Circuit Eulerien (Eulerian Circuit)
+    - Trouve un circuit dans un graphe passant par chaque arête exactement une fois.
+
+53. Algorithme de Recherche de Chemin Hamiltonien (Hamiltonian Path)
+    - Trouve un chemin dans un graphe passant par chaque nœud exactement une fois.
+
+54. Algorithme de Recherche de Circuit Hamiltonien (Hamiltonian Circuit)
+    - Trouve un circuit dans un graphe passant par chaque nœud exactement une fois.
+
+55. Algorithme de Tri Pigeonhole (Pigeonhole Sort)
+    - Trie un tableau en utilisant la distribution des éléments dans des "nids de pigeon".
+
+56. Algorithme de Calcul de GCD (Plus Grand Commun Diviseur)
+    - Calcule le plus grand commun diviseur de deux nombres.
+
+57. Algorithme de Calcul de LCM (Plus Petit Commun Multiple)
+    - Calcule le plus petit commun multiple de deux nombres.
+
+58. Algorithme de Tri Bogosort (Variante aléatoire)
+    - Une version aléatoire encore plus folle du tri Bogosort.
+
+59. Algorithme de Tri Stooge (Variante aléatoire)
+    - Une version aléatoire du tri Stooge.
+
+60. Algorithme de Tri Comb Gnome (Comb Gnome Sort)
+    - Une fusion des algorithmes de tri Comb et Gnome.
+
+61. Algorithme de Tri Strand Comb (Strand Comb Sort)
+    - Une fusion des algorithmes de tri Strand et Comb.
+
+62. Algorithme de Tri BogoBogoSort (Variante aléatoire)
+    - Une variante encore plus chaotique du tri BogoBogoSort.
+
+63. Algorithme de Tri BogoBogoBogoSort (Variante aléatoire)
+    - Oui, vous l'avez deviné, une autre variante aléatoire du tri BogoBogoBogoSort.
