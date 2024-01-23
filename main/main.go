@@ -14,6 +14,7 @@ func main() {
 	conf := mysql.Config{
 		User:                 "root",
 		Passwd:               "password",
+		Net:                  "tcp",
 		Addr:                 "127.0.0.1:3306",
 		DBName:               "restaurantbdd",
 		Net:                  "tcp",
