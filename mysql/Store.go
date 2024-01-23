@@ -1,14 +1,15 @@
 package database
 
 import (
-	"database/sql"
+	"github.com/jmoiron/sqlx"
+	"restaurantHTTP/entity"
 )
 
 type Store struct {
-	UserStore *UserStore
+	UserStore entity.UserStoreInterface
 }
 
-func CreateStore(db *sql.DB) *Store {
+func CreateStore(db *sqlx.DB) *Store {
 	return &Store{
 		UserStore: NewUserStore(db),
 	}

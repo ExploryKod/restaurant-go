@@ -27,4 +27,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.26.7 // indirect
 	github.com/aws/smithy-go v1.19.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/gorilla/securecookie v1.1.2 // indirect
+	github.com/gorilla/sessions v1.2.2 // indirect
+	github.com/jmoiron/sqlx v1.3.5 // indirect
 )

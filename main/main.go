@@ -1,10 +1,9 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/go-sql-driver/mysql"
-	_ "github.com/lib/pq"
+	"github.com/jmoiron/sqlx"
 	"log"
 	"net/http"
 	database "restaurantHTTP/mysql"
@@ -21,7 +20,7 @@ func main() {
 		AllowNativePasswords: true,
 	}
 
-	db, err := sql.Open("mysql", conf.FormatDSN())
+	db, err := sqlx.Open("mysql", conf.FormatDSN())
 	if err != nil {
 		log.Fatal(err)
 		return

@@ -1,6 +1,7 @@
 package web
 
 import (
+	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
@@ -15,19 +16,11 @@ func NewHandler(store *database.Store) *Handler {
 
 	handler.Use(middleware.Logger)
 
-	handler.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello world"))
-	})
+	handler.Get("/", handler.GetHomePage())
+	handler.Get("/login", handler.Login())
 
-	handler.Get("/", func(writer http.ResponseWriter, request *http.Request) {
-		writer.Write([]byte("HOME PAGE !"))
-	})
-	handler.Get("/login", func(writer http.ResponseWriter, request *http.Request) {
-		writer.Write([]byte("LOGIN PAGE !"))
-	})
 	handler.Post("/login", handler.Login())
 
-	// signup
 	handler.Get("/signup", func(writer http.ResponseWriter, request *http.Request) {
 		writer.Write([]byte("SIGNUP PAGE !"))
 	})
@@ -35,7 +28,7 @@ func NewHandler(store *database.Store) *Handler {
 
 	handler.Post("/", handler.AddUser())
 	handler.Delete("/{id}", handler.DeleteUser())
-	handler.Patch("/{id}", handler.ToggleIsSuperAdmin())
+	handler.Patch("/{id}", handler.ToggleIsSuperadmin())
 
 	return handler
 }
@@ -43,4 +36,12 @@ func NewHandler(store *database.Store) *Handler {
 type Handler struct {
 	*chi.Mux
 	*database.Store
+}
+
+func (h *Handler) jsonResponse(w http.ResponseWriter, status int, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
 }

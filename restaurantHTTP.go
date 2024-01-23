@@ -1,24 +1,15 @@
 package restaurantHTTP
 
-import "time"
+import (
+	"embed"
+)
 
-type User struct {
-	ID           int       `json:"id"`
-	Name         string    `json:"name"`
-	Firstname    string    `json:"firstname"`
-	Mail         string    `json:"mail"`
-	Phone        string    `json:"phone"`
-	IsSuperadmin bool      `json:"is_superadmin"`
-	Birthday     time.Time `json:"birthday"`
-}
+//go:embed template/*
+var EmbedTemplates embed.FS
 
-type Order struct {
-	ID   int  `json:"id"`
-	User User `json:"user"`
-}
-
-type UserStoreInterface interface {
-	GetUsers() ([]User, error)
-	AddUser(item User) (int, error)
-	DeleteUser(id int) error
+type TemplateData struct {
+	Titre   string
+	Content any
+	Success string
+	Error   string
 }
