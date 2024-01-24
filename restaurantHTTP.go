@@ -4,7 +4,7 @@ import (
 	"embed"
 )
 
-//go:embed template/*
+//go:embed src/templates/*
 var EmbedTemplates embed.FS
 
 type TemplateData struct {

@@ -23,7 +23,7 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: nil, Error: "", Success: ""}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "template/layout.gohtml", "template/home.gohtml")
+			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/home.gohtml")
 			if err != nil {
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
@@ -45,7 +45,7 @@ func (h *Handler) Login() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method == http.MethodGet {
 			data := restaurantHTTP.TemplateData{Titre: "Login Page"}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "template/layout.gohtml", "template/login.gohtml")
+			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/login.gohtml")
 			if err != nil {
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
@@ -95,7 +95,7 @@ func (h *Handler) Login() http.HandlerFunc {
 			})
 
 			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: user, Error: "", Success: "Connexion réussie !"}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "template/layout.gohtml", "template/home.gohtml")
+			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/home.gohtml")
 			if err != nil {
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
@@ -125,7 +125,7 @@ func (h *Handler) Signup() http.HandlerFunc {
 func (h *Handler) failLogin() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		data := restaurantHTTP.TemplateData{Titre: "Login Page", Content: nil, Error: "Nom d'utilisateur ou mot de passe incorrect !", Success: ""}
-		tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "template/layout.gohtml", "template/login.gohtml")
+		tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/login.gohtml")
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return

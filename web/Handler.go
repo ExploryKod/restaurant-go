@@ -2,9 +2,11 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
+	"os"
 	database "restaurantHTTP/mysql"
 )
 
@@ -16,8 +18,10 @@ func NewHandler(store *database.Store) *Handler {
 
 	handler.Use(middleware.Logger)
 
-	fs := http.FileServer(http.Dir("./template/asset"))
-	handler.Handle("/asset/*", http.StripPrefix("/asset/", fs))
+	workDir, _ := os.Getwd()
+	fmt.Println(workDir)
+	fs := http.FileServer(http.Dir("src"))
+	handler.Handle("/src/*", http.StripPrefix("/src/", fs))
 
 	handler.Get("/", handler.GetHomePage())
 	handler.Get("/login", handler.Login())

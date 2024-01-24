@@ -1,0 +1,21 @@
+{{define "layout"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{.Titre}}</title>
+        <link href="/src/output.css" rel="stylesheet">
+    </head>
+    <body class="bg-gray-400 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <div class="bg-cyan-500 text-white p-4">
+            <h1 class="text-3xl font-bold">Hey, c'est notre Layout à nous d'ajouter le header etc</h1>
+        </div>
+
+        <div class="flex-grow">
+            {{template "content" .}}
+        </div>
+    </div>
+    </body>
+    </html>
+{{end}}
