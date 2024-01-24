@@ -16,6 +16,7 @@
 *.pem
 
 #tmp air file
+/node_modules
 ./backend/tmp
 ./backend/tmp/*
 /go_app/tmp
