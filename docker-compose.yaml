@@ -39,10 +39,10 @@ services:
             MARIADB_ROOT_PASSWORD: ${BDD_PASSWORD:-password}
             MARIADB_DATABASE: ${BDD_NAME:-restaurantbdd}
         ports:
-            - "${WEB_PORT}:${WEB_PORT}"
+            - "${WEB_DOCKER_PORT}:${WEB_DOCKER_PORT}"
         volumes:
             - ./:/app
-        command: /bin/sh -c "./begin.sh go run main/main.go"
+        command: /bin/sh -c "go run main/main.go"
 
 volumes:
     db-data:
