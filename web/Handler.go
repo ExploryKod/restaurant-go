@@ -16,6 +16,9 @@ func NewHandler(store *database.Store) *Handler {
 
 	handler.Use(middleware.Logger)
 
+	fs := http.FileServer(http.Dir("./template/asset"))
+	handler.Handle("/asset/*", http.StripPrefix("/asset/", fs))
+
 	handler.Get("/", handler.GetHomePage())
 	handler.Get("/login", handler.Login())
 
