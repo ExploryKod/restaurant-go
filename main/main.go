@@ -1,20 +1,25 @@
 package main
 
 import (
-	"fmt"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
+	"os"
 	database "restaurantHTTP/mysql"
 	"restaurantHTTP/web"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file:", err)
+	}
 	conf := mysql.Config{
 		User:                 "root",
 		Passwd:               "password",
-		Addr:                 "127.0.0.1:3309",
+		Addr:                 os.Getenv("BDD_PORT"),
 		DBName:               "restaurantbdd",
 		Net:                  "tcp",
 		AllowNativePasswords: true,
@@ -35,9 +40,12 @@ func main() {
 	store := database.CreateStore(db)
 	mux := web.NewHandler(store)
 
-	err = http.ListenAndServe(":8097", mux)
+	err = http.ListenAndServe(os.Getenv("MUX_PORT"), mux)
+
 	if err != nil {
-		_ = fmt.Errorf("impossible de lancer le serveur : %w", err)
+		log.Fatal(err)
+
 		return
 	}
+
 }
