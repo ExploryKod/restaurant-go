@@ -6,11 +6,13 @@ import (
 )
 
 type Store struct {
-	UserStore entity.UserStoreInterface
+	UserStore       entity.UserStoreInterface
+	RestaurantStore entity.RestaurantStoreInterface
 }
 
 func CreateStore(db *sqlx.DB) *Store {
 	return &Store{
-		UserStore: NewUserStore(db),
+		UserStore:       NewUserStore(db),
+		RestaurantStore: NewRestaurantStore(db),
 	}
 }

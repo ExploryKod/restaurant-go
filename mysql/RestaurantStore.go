@@ -1,9 +1,22 @@
 package database
 
-import "restaurantHTTP/entity"
+import (
+	"github.com/jmoiron/sqlx"
+	"restaurantHTTP/entity"
+)
+
+type RestaurantStore struct {
+	*sqlx.DB
+}
+
+func NewRestaurantStore(db *sqlx.DB) *UserStore {
+	return &UserStore{
+		db,
+	}
+}
 
 func (t *UserStore) AddRestaurant(item entity.Restaurant) (int, error) {
-	res, err := t.DB.Exec("INSERT INTO restaurants (name, mail, is_validated) VALUES ( ? , ? , ?)", item, item, item)
+	res, err := t.DB.Exec("INSERT INTO restaurants (name, logo, mail, is_validated) VALUES ( ? , ? , ?, ?)", item, item, item)
 	if err != nil {
 		return 0, err
 	}
