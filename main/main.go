@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/go-mail/mail"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
@@ -16,6 +17,29 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file:", err)
 	}
+
+	m := mail.NewMessage()
+
+	m.SetHeader("From", "a_franssen@hetic.eu")
+
+	m.SetHeader("To", "amauryfranssen@gmail.com", "a_franssen@hetic.eu")
+
+	m.SetAddressHeader("Cc", "", "")
+
+	m.SetHeader("Subject", "Hello!")
+
+	m.SetBody("text/html", "Hello <b>Kate</b> and <i>Noah</i>!")
+
+	m.Attach("")
+
+	d := mail.NewDialer("smtp.gmail.com", 587, "amauryfranssen@gmail.com", "")
+
+	if err := d.DialAndSend(m); err != nil {
+
+		panic(err)
+
+	}
+
 	conf := mysql.Config{
 		User:                 "root",
 		Passwd:               "password",
