@@ -29,10 +29,10 @@ func (t *RestaurantStore) AddRestaurant(item entity.Restaurant) (int, error) {
 	return int(id), nil
 }
 
-func (t *RestaurantStore) GetRestaurants() ([]entity.Restaurant, error) {
+func (t *RestaurantStore) GetRestaurant() ([]entity.Restaurant, error) {
 	var restaurantList []entity.Restaurant
 
-	rows, err := t.Query("SELECT id, name, description FROM Restaurants")
+	rows, err := t.Query("SELECT id, name, logo, mail, is_validated  FROM Restaurants")
 	if err != nil {
 		return []entity.Restaurant{}, err
 	}
@@ -41,7 +41,7 @@ func (t *RestaurantStore) GetRestaurants() ([]entity.Restaurant, error) {
 
 	for rows.Next() {
 		var restaurant entity.Restaurant
-		if err = rows.Scan(&restaurant.ID, &restaurant.Name, &restaurant.Mail, &restaurant.IsValidated); err != nil {
+		if err = rows.Scan(&restaurant.ID, &restaurant.Name, &restaurant.Logo, &restaurant.Mail, &restaurant.IsValidated); err != nil {
 			return []entity.Restaurant{}, err
 		}
 		restaurantList = append(restaurantList, restaurant)
@@ -50,6 +50,5 @@ func (t *RestaurantStore) GetRestaurants() ([]entity.Restaurant, error) {
 	if err = rows.Err(); err != nil {
 		return []entity.Restaurant{}, err
 	}
-
 	return restaurantList, nil
 }

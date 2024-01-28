@@ -343,7 +343,30 @@ ALTER TABLE `Restaurant_has_users`
   ADD CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`);
 COMMIT;
 
-INSERT INTO Users (username, password, is_superadmin) VALUES('admin', 'admin', 1)
+INSERT INTO `Users` (
+    `id`,
+    `username`,
+    `password`,
+    `name`,
+    `firstname`,
+    `mail`,
+    `phone`,
+    `is_superadmin`,
+    `birthday`
+) VALUES
+      (1, 'john', 'password', 'Doe', 'John', 'user1@example.com', '+1234567890', 0, '1990-01-15'),
+      (2, 'jane', 'password', 'Smith', 'Jane', 'user2@example.com', '+9876543210', 0, '1985-08-22'),
+      (3, 'admin', 'password', 'Amaury', 'LeGrandMaître', 'admin@example.com', '+5555555555', 1, '1980-05-10'),
+      (4, 'alice', 'password', 'Johnson', 'Alice', 'user3@example.com', '+1111111111', 0, '1995-03-28'),
+      (5, 'bob', 'password', 'Williams', 'Bob', 'user4@example.com', '+9999999999', 0, '1992-11-18'),
+      (6, 'administrateur', 'password', 'Nassim', 'LeGrandMaître', 'admin@example.com', '+5555555555', 1, '1980-05-10'),
+      (6, 'trésorier', 'password', 'Justin', 'LeGrandMaître', 'admin@example.com', '+5555555555', 1, '1980-05-10'),
+      (6, 'cto', 'password', 'Reewas', 'LeGrandMaître', 'admin@example.com', '+5555555555', 1, '1980-05-10');
+
+INSERT INTO `Restaurants` ( `id`, `name`, `logo`, `image`, `phone`, `mail`, `is_open`, `opening_time`, `closing_time`, `grade`, `is_validated` ) VALUES ( 1, 'Pegasus', 'logo/restaurant-1.jpg', 'image/restaurant-1.jpg', '+1234567890', 'pegasus@example.com', 1, '08:00:05', '22:06:00', 4, 1 );
+INSERT INTO `Restaurants` ( `id`, `name`, `logo`, `image`, `phone`, `mail`, `is_open`, `opening_time`, `closing_time`, `grade`, `is_validated` ) VALUES ( 2, 'Italica', 'logo/restaurant-2.jpg', 'image/restaurant-2.jpg', '+1274566890', 'italica@example.com', 1, '08:00:00', '22:00:00', 2, 0 );
+INSERT INTO `Restaurants` ( `id`, `name`, `logo`, `image`, `phone`, `mail`, `is_open`, `opening_time`, `closing_time`, `grade`, `is_validated` ) VALUES ( 3, 'Greca', 'logo/restaurant-3.jpg', 'image/restaurant-3.jpg', '+1274566890', 'greca@example.com', 1, '08:00:00', '22:00:00', 3, 1 );
+INSERT INTO `Restaurants` ( `id`, `name`, `logo`, `image`, `phone`, `mail`, `is_open`, `opening_time`, `closing_time`, `grade`, `is_validated` ) VALUES ( 4, 'Algeria', 'logo/restaurant-4.jpg', 'image/restaurant-4.jpg', '+1274769890', 'algeria@example.com', 1, '08:00:00', '22:00:00', 4, 1 );
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
