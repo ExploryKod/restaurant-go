@@ -16,8 +16,8 @@ func (h *Handler) GetRestaurantList() http.HandlerFunc {
 		}
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Titre: "Restaurant Page", Content: "", Error: "", Success: ""}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/components/restaurantList.gohtml")
+			data := restaurantHTTP.TemplateData{Titre: "Restaurant Page", Content: "", Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
+			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/restaurants.gohtml")
 			if err != nil {
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
