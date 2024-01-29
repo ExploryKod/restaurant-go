@@ -3,37 +3,30 @@ package web
 import (
 	"fmt"
 	"github.com/gorilla/sessions"
-	"html/template"
 	"net/http"
 	"restaurantHTTP"
+	"restaurantHTTP/entity"
 	"strconv"
 	"time"
 )
 
-var store = sessions.NewCookieStore([]byte("faux-token-temporaire"))
+var storeSession = sessions.NewCookieStore([]byte("faux-token-temporaire"))
 
 func (h *Handler) GetHomePage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
-		session, err := store.Get(request, "session-name")
+		session, err := storeSession.Get(request, "session-name")
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: nil, Error: "", Success: ""}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/home.gohtml")
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
 
-			err = tmpl.ExecuteTemplate(writer, "layout", data)
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
+			username := session.Values["username"].(string)
+			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: entity.User{Username: username}, Error: "", Success: ""}
+
+			h.RenderHtml(data, "pages/home.gohtml")(writer, request)
 			return
 		}
 
@@ -45,17 +38,8 @@ func (h *Handler) Login() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method == http.MethodGet {
 			data := restaurantHTTP.TemplateData{Titre: "Login Page"}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/login.gohtml")
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
 
-			err = tmpl.ExecuteTemplate(writer, "layout", data)
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
+			h.RenderHtml(data, "auth/login.gohtml")(writer, request)
 			return
 		}
 
@@ -74,9 +58,10 @@ func (h *Handler) Login() http.HandlerFunc {
 
 		if user.Username == username && user.Password == password {
 
-			session, _ := store.Get(request, "session-name")
+			session, _ := storeSession.Get(request, "session-name")
 			session.Values["authenticated"] = true
 			session.Values["username"] = user.Username
+
 			err := session.Save(request, writer)
 			if err != nil {
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
@@ -94,17 +79,7 @@ func (h *Handler) Login() http.HandlerFunc {
 				Value: token,
 			})
 
-			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: user, Error: "", Success: "Connexion réussie !"}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/home.gohtml")
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			err = tmpl.ExecuteTemplate(writer, "layout", data)
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-			}
+			http.Redirect(writer, request, "/", http.StatusSeeOther)
 		} else {
 			h.failLogin()(writer, request)
 		}
@@ -113,28 +88,17 @@ func (h *Handler) Login() http.HandlerFunc {
 
 func (h *Handler) Signup() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		// handler signup from post request
 		username := request.FormValue("username")
 		password := request.FormValue("password")
 
 		fmt.Println(username, password)
-
 	}
 }
 
 func (h *Handler) failLogin() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		data := restaurantHTTP.TemplateData{Titre: "Login Page", Content: nil, Error: "Nom d'utilisateur ou mot de passe incorrect !", Success: ""}
-		tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/login.gohtml")
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
 
-		err = tmpl.ExecuteTemplate(writer, "layout", data)
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		h.RenderHtml(data, "auth/login.gohtml")(writer, request)
 	}
 }
