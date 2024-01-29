@@ -21,19 +21,23 @@ func NewHandler(store *database.Store) *Handler {
 	fs := http.FileServer(http.Dir("src"))
 	handler.Handle("/src/*", http.StripPrefix("/src/", fs))
 
-	handler.Get("/", handler.GetHomePage())
-	handler.Get("/login", handler.Login())
+	handler.Route("/", func(r chi.Router) {
+		r.Get("/", handler.GetHomePage())
 
-	handler.Post("/login", handler.Login())
+		r.Get("/login", handler.Login())
+		r.Post("/login", handler.Login())
 
-	handler.Get("/signup", func(writer http.ResponseWriter, request *http.Request) {
-		writer.Write([]byte("SIGNUP PAGE !"))
+		r.Get("/signup", handler.Signup())
+		r.Post("/signup", handler.Signup())
 	})
-	handler.Post("/signup", handler.Signup())
 
-	handler.Post("/", handler.AddUser())
-	handler.Delete("/{id}", handler.DeleteUser())
-	handler.Patch("/{id}", handler.ToggleIsSuperadmin())
+	handler.Route("/user", func(r chi.Router) {
+		//r.Get("/getAll", handler.GetAllUsers())
+		//r.Get("/get/{id}", handler.GetUser())
+		r.Post("/add", handler.AddUser())
+		r.Delete("/delete/{id}", handler.DeleteUser())
+		r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
+	})
 
 	return handler
 }

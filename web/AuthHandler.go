@@ -88,6 +88,12 @@ func (h *Handler) Login() http.HandlerFunc {
 
 func (h *Handler) Signup() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+		if request.Method == http.MethodGet {
+			data := restaurantHTTP.TemplateData{Titre: "Signup Page"}
+
+			h.RenderHtml(data, "auth/signup.gohtml")(writer, request)
+			return
+		}
 		username := request.FormValue("username")
 		password := request.FormValue("password")
 
