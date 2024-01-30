@@ -55,18 +55,16 @@ func (h *Handler) jsonResponse(w http.ResponseWriter, status int, data interface
 	}
 }
 
-func (h *Handler) RenderHtml(data restaurantHTTP.TemplateData, fileRoute string) http.HandlerFunc {
-	return func(writer http.ResponseWriter, request *http.Request) {
-		tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout/layout.gohtml", "src/templates/"+fileRoute)
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
+func (h *Handler) RenderHtml(writer http.ResponseWriter, data restaurantHTTP.TemplateData, fileRoute string) {
+	tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout/layout.gohtml", "src/templates/"+fileRoute)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-		err = tmpl.ExecuteTemplate(writer, "layout", data)
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	err = tmpl.ExecuteTemplate(writer, "layout", data)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }

@@ -8,7 +8,7 @@ import (
 var EmbedTemplates embed.FS
 
 type TemplateData struct {
-	Titre   string
+	Title   string
 	Content any
 	Success string
 	Error   string

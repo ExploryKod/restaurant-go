@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"github.com/gorilla/sessions"
+	"log"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
@@ -24,9 +25,9 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 
 			username := session.Values["username"].(string)
-			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: entity.User{Username: username}, Error: "", Success: ""}
+			data := restaurantHTTP.TemplateData{Title: "Home", Content: entity.User{Username: username}, Error: "", Success: ""}
 
-			h.RenderHtml(data, "pages/home.gohtml")(writer, request)
+			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
 		}
 
@@ -37,9 +38,9 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 func (h *Handler) Login() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method == http.MethodGet {
-			data := restaurantHTTP.TemplateData{Titre: "Login Page"}
+			data := restaurantHTTP.TemplateData{Title: "Login"}
 
-			h.RenderHtml(data, "auth/login.gohtml")(writer, request)
+			h.RenderHtml(writer, data, "auth/login.gohtml")
 			return
 		}
 
@@ -52,7 +53,7 @@ func (h *Handler) Login() http.HandlerFunc {
 		}
 
 		if user == nil {
-			h.failLogin()(writer, request)
+			h.failLogin(writer, request)
 			return
 		}
 
@@ -81,7 +82,7 @@ func (h *Handler) Login() http.HandlerFunc {
 
 			http.Redirect(writer, request, "/", http.StatusSeeOther)
 		} else {
-			h.failLogin()(writer, request)
+			h.failLogin(writer, request)
 		}
 	}
 }
@@ -89,22 +90,49 @@ func (h *Handler) Login() http.HandlerFunc {
 func (h *Handler) Signup() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method == http.MethodGet {
-			data := restaurantHTTP.TemplateData{Titre: "Signup Page"}
+			data := restaurantHTTP.TemplateData{Title: "Signup"}
 
-			h.RenderHtml(data, "auth/signup.gohtml")(writer, request)
+			h.RenderHtml(writer, data, "auth/signup.gohtml")
 			return
 		}
 		username := request.FormValue("username")
 		password := request.FormValue("password")
+		name := request.FormValue("name")
+		firstname := request.FormValue("firstname")
+		mail := request.FormValue("mail")
+		phone := request.FormValue("phone")
+		//birthday := request.FormValue("birthday")
 
-		fmt.Println(username, password)
+		response, _ := h.UserStore.GetUserByUsername(username)
+		if response != nil {
+			//data := restaurantHTTP.TemplateData{Title: "Signup", Content: nil, Error: "Nom d'utilisateur déjà utilisé !", Success: ""}
+
+			//h.RenderJson()
+			return
+		}
+
+		user := &entity.User{
+			Username:     username,
+			Password:     password,
+			Name:         name,
+			Firstname:    firstname,
+			Mail:         mail,
+			Phone:        phone,
+			IsSuperadmin: false,
+		}
+
+		_, err := h.UserStore.AddUser(*user)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
 }
 
-func (h *Handler) failLogin() http.HandlerFunc {
-	return func(writer http.ResponseWriter, request *http.Request) {
-		data := restaurantHTTP.TemplateData{Titre: "Login Page", Content: nil, Error: "Nom d'utilisateur ou mot de passe incorrect !", Success: ""}
+func (h *Handler) failLogin(writer http.ResponseWriter, request *http.Request) {
+	data := restaurantHTTP.TemplateData{Title: "Login", Content: nil, Error: "Nom d'utilisateur ou mot de passe incorrect !", Success: ""}
 
-		h.RenderHtml(data, "auth/login.gohtml")(writer, request)
-	}
+	h.RenderHtml(writer, data, "auth/login.gohtml")
 }

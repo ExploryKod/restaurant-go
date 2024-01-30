@@ -1,26 +1,81 @@
 {{define "content"}}
     <div class="max-w-md mx-auto my-8">
-        <h1 class="text-3xl font-bold mb-4">Register account</h1>
+        <h1 class="text-red-800 text-3xl font-bold mb-2">Register account</h1>
 
         {{if .Error}}
-            <div class="bg-red-500 text-white p-2 rounded mb-4">{{.Error}}</div>
+            <div class="bg-red-500 text-white p-2 rounded mb-2">{{.Error}}</div>
         {{end}}
 
-        <form class="bg-white rounded-lg shadow-md p-8" action="/signup" method="post">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Username</label>
-                <input class="basic-input" type="text" name="username" id="username" placeholder="Username" required>
+        <form class="bg-white rounded-lg shadow-md p-8" action="/signup" method="post"
+              x-data="{
+                    selected: 1,
+                    total: 2,
+                    previous() {
+                        this.selected = Math.max(this.selected - 1, 1)
+                    },
+                    next() {
+                        this.selected = Math.min(this.selected + 1, this.total)
+                    }
+              }"
+        >
+            <div x-show="selected === 1">
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Username</label>
+                    <input class="basic-input" type="text" name="username" id="username" placeholder="Username"
+                           required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
+                    <input class="basic-input" type="password" name="password" id="password" placeholder="Password"
+                           required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password2">Confirm Password</label>
+                    <input class="basic-input" type="password" name="password2" id="password2"
+                           placeholder="Confirm Password" required>
+                </div>
             </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
-                <input class="basic-input" type="password" name="password" id="password" placeholder="Password" required>
+
+            <div x-show="selected === 2">
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
+                    <input class="basic-input" type="text" name="name" id="name" placeholder="Name" required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="firstname">Firstname</label>
+                    <input class="basic-input" type="text" name="firstname" id="firstname" placeholder="Firstname"
+                           required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="mail">Mail</label>
+                    <input class="basic-input" type="text" name="mail" id="mail" placeholder="Mail" required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
+                    <input class="basic-input" type="text" name="phone" id="phone" placeholder="Phone" required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="birthday">Birthday</label>
+                    <input class="basic-input" type="date" name="birthday" id="birthday" placeholder="Birthday"
+                           required>
+                </div>
+                <div class="mt-4">
+                    <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
+                        Sign Up
+                    </button>
+                </div>
             </div>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="password2">Confirm Password</label>
-                <input class="basic-input" type="password" name="password2" id="password2" placeholder="Confirm Password" required>
+            <div class="mb-2 flex flex-row justify-items-end">
+                <a class="text-cyan-500 hover:text-cyan-700" href="/login">Already have an account ?
+                    Sign in!</a>
             </div>
-            <div>
-                <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">Sign Up</button>
+            <div class="relative">
+                <button @click="previous" x-show="selected > 1" type="button"
+                        class="absolute start-0 font-semibold text-red-700"><- Previous
+                </button>
+                <button @click="next" x-show="selected < 2" type="button"
+                        class="absolute end-0 font-semibold text-red-700">Next ->
+                </button>
             </div>
         </form>
 
