@@ -29,6 +29,10 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Get("/signup", handler.Signup())
 		r.Post("/signup", handler.Signup())
+
+		r.Get("/checkUsername", handler.checkUsername())
+
+		r.Get("/logout", handler.Logout())
 	})
 
 	handler.Route("/user", func(r chi.Router) {
@@ -47,7 +51,7 @@ type Handler struct {
 	*database.Store
 }
 
-func (h *Handler) jsonResponse(w http.ResponseWriter, status int, data interface{}) {
+func (h *Handler) RenderJson(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if err := json.NewEncoder(w).Encode(data); err != nil {

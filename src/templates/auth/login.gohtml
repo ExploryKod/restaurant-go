@@ -5,6 +5,9 @@
         {{if .Error}}
             <div class="bg-red-500 text-white p-2 rounded mb-4">{{.Error}}</div>
         {{end}}
+        {{if .Success}}
+            <div class="bg-emerald-500 text-white p-2 rounded mb-4">{{.Success}}</div>
+        {{end}}
 
         <form class="bg-white rounded-lg shadow-md p-8" action="/login" method="post">
             <div class="mb-4">
