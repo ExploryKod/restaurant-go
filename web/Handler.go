@@ -30,7 +30,7 @@ func NewHandler(store *database.Store) *Handler {
 		r.Get("/signup", handler.Signup())
 		r.Post("/signup", handler.Signup())
 
-		r.Get("/checkUsername", handler.checkUsername())
+		r.Get("/checkEmailAndUsername", handler.checkEmailAndUsername())
 
 		r.Get("/logout", handler.Logout())
 	})

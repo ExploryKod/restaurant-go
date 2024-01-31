@@ -70,11 +70,7 @@ func (h *Handler) Login() http.HandlerFunc {
 			return
 		}
 
-		//hash, _ := HashPassword(password)
-		//fmt.Println("Hash :", hash)
 		match := CheckPasswordHash(password, user.Password)
-		fmt.Println("Match :", match)
-		fmt.Println("user password :", user.Password)
 
 		if user.Username == username && match {
 			session, _ := storeSession.Get(request, "session-name")
@@ -180,32 +176,75 @@ func (h *Handler) failLogin(writer http.ResponseWriter, request *http.Request) {
 	h.RenderHtml(writer, data, "auth/login.gohtml")
 }
 
-func (h *Handler) checkUsername() http.HandlerFunc {
+func (h *Handler) checkEmailAndUsername() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+
 		username := request.URL.Query().Get("username")
+		email := request.URL.Query().Get("email")
 
-		user, err := h.UserStore.GetUserByUsername(username)
-		if err != nil {
-			fmt.Println(err)
-		}
+		var user *entity.User
+		var err error
 
-		if user == nil {
-			h.RenderJson(writer, http.StatusOK, struct {
-				Exists  bool   `json:"exists"`
+		EmailAndUsernameCheck := struct {
+			Email struct {
+				Exists  *bool  `json:"exists"`
+				Message string `json:"message"`
+			} `json:"email"`
+			Username struct {
+				Exists  *bool  `json:"exists"`
+				Message string `json:"message"`
+			} `json:"username"`
+		}{
+			Email: struct {
+				Exists  *bool  `json:"exists"`
 				Message string `json:"message"`
 			}{
-				true,
-				"Username available !",
-			})
-		} else {
-			h.RenderJson(writer, http.StatusOK, struct {
-				Exists  bool   `json:"exists"`
+				nil,
+				"",
+			},
+			Username: struct {
+				Exists  *bool  `json:"exists"`
 				Message string `json:"message"`
 			}{
-				false,
-				"Username already taken !",
-			})
+				nil,
+				"",
+			},
 		}
+
+		if username != "" {
+			user, err = h.UserStore.GetUserByUsername(username)
+			if err != nil {
+				fmt.Println(err)
+			}
+			if user == nil {
+				EmailAndUsernameCheck.Username.Exists = new(bool)
+				*EmailAndUsernameCheck.Username.Exists = false
+				EmailAndUsernameCheck.Username.Message = "Username available !"
+			} else {
+				EmailAndUsernameCheck.Username.Exists = new(bool)
+				*EmailAndUsernameCheck.Username.Exists = true
+				EmailAndUsernameCheck.Username.Message = "Username already taken !"
+			}
+		}
+
+		if email != "" {
+			user, err = h.UserStore.GetUserByMail(email)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			if user == nil {
+				EmailAndUsernameCheck.Email.Exists = new(bool)
+				*EmailAndUsernameCheck.Email.Exists = false
+				EmailAndUsernameCheck.Email.Message = "Email available !"
+			} else {
+				EmailAndUsernameCheck.Email.Exists = new(bool)
+				*EmailAndUsernameCheck.Email.Exists = true
+				EmailAndUsernameCheck.Email.Message = "Email already taken !"
+			}
+		}
+
+		h.RenderJson(writer, http.StatusOK, EmailAndUsernameCheck)
 	}
 }
 

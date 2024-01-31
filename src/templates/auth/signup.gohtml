@@ -17,10 +17,24 @@
                         this.selected = Math.min(this.selected + 1, this.total)
                     },
                     username: '',
-                    error: null,
-                    success: null,
-                    checkUsername(value) {
-                        fetch('http://localhost:8097/checkUsername?username=' + value)
+                    email: '',
+                    error: {
+                        username: null,
+                        email: null
+                    },
+                    success: {
+                        username: null,
+                        email: null
+                    },
+                    checkUsername(value, type) {
+                        if (type === 'email') {
+                            if (!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                                this.error.email = 'Email is not valid'
+                                this.success.email = false
+                                return
+                            }
+                        }
+                        fetch('http://localhost:8097/checkEmailAndUsername?username=' + (type === 'username' ? value : '') + '&email=' + (type === 'email' ? value : ''))
                             .then((response) => {
                                 if (!response.ok) {
                                     throw new Error('Erreur lors de la requête.');
@@ -28,14 +42,23 @@
                                 return response.json()
                             })
                             .then((json) => {
-                                if (!json.exists) {
-                                    this.success = false
-                                    this.error = json.message
-                                } else {
-                                    this.error = false
-                                    this.success = json.message
+                            console.log('STRUCT:',json)
+                                if (json.username?.exists) {
+                                    this.error.username = json.username.message
+                                    this.success.username = false
+                                }else {
+                                    this.success.username = json.username.message
+                                    this.error.username = false
                                 }
-                                console.log(this.data);
+
+                                if (json.email?.exists) {
+                                    this.error.email = json.email.message
+                                    this.success.email = false
+                                }else {
+                                    this.success.email = json.email.message
+                                    this.error.email = false
+                                }
+                                console.log('ERROR:', this.error, 'SUCCESS:', this.success)
                             })
                             .catch((error) => {
                                 console.log('Error during checking username:',error)
@@ -47,9 +70,11 @@
                 <div class="mb-2">
                     <label class="flex justify-between text-gray-700 text-sm font-bold mb-2" for="username">
                         <span>Username</span>
-                        <span x-text="error || success" :class="{'text-red-500 text-xs': error, 'text-emerald-500 text-xs': success}"></span>
+                        <span x-text="error.username || success.username"
+                              :class="{'text-red-500 text-xs': error.username, 'text-emerald-500 text-xs': success.username}"></span>
                     </label>
-                    <input x-model="username" @change="checkUsername($event.target.value)" :class="{ 'basic-input-error': error, 'basic-input-success': success, 'basic-input': !error && !success }"
+                    <input x-model="username" @change="checkUsername($event.target.value,'username')"
+                           :class="{ 'basic-input-error': error.username, 'basic-input-success': success.username, 'basic-input': !error.username && !success.username }"
                            type="text" name="username" id="username"
                            placeholder="Username"
                            required>
@@ -77,8 +102,19 @@
                            required>
                 </div>
                 <div class="mb-2">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="mail">Mail</label>
-                    <input class="basic-input" type="text" name="mail" id="mail" placeholder="Mail" required>
+                    <label class="flex justify-between text-gray-700 text-sm font-bold mb-2" for="mail">
+                        <span>
+                            Email
+                        </span>
+                        <span
+                            x-text="error.email || success.email"
+                            :class="{'text-red-500 text-xs': error.email, 'text-emerald-500 text-xs': success.email}"
+                        ></span>
+                    </label>
+                    <input x-model="email" @change="checkUsername($event.target.value,'email')"
+                           :class="{ 'basic-input-error': error.email, 'basic-input-success': success.email, 'basic-input': !error.email && !success.email }"
+                           type="email" name="mail" id="mail" placeholder="Email"
+                           pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required>
                 </div>
                 <div class="mb-2">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
@@ -87,7 +123,7 @@
                 <div class="mb-2">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="birthday">Birthday</label>
                     <input class="basic-input" type="date" name="birthday" id="birthday" placeholder="Birthday"
-                           >
+                    >
                 </div>
                 <div class="mt-4">
                     <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
