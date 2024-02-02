@@ -1,42 +1,85 @@
 package main
 
 import (
-	"github.com/go-mail/mail"
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
+	"net/smtp"
 	"os"
 	database "restaurantHTTP/mysql"
 	"restaurantHTTP/web"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file:", err)
+	errdot := godotenv.Load()
+	if errdot != nil {
+		log.Fatal("Error loading .env file:", errdot)
 	}
 
-	m := mail.NewMessage()
+	//m := mail.NewMessage()
+	//
+	//m.SetHeader("From", "a_franssen@hetic.eu")
+	//
+	//m.SetHeader("To", "amauryfranssen@gmail.com", "a_franssen@hetic.eu")
+	//
+	//m.SetAddressHeader("Cc", "", "")
+	//
+	//m.SetHeader("Subject", "Hello!")
+	//
+	//m.SetBody("text/html", "Hello <b>Kate</b> and <i>Noah</i>!")
+	//
+	//m.Attach("")
+	//
+	//d := mail.NewDialer("smtp.gmail.com", 587, "amauryfranssen@gmail.com", "")
 
-	m.SetHeader("From", "a_franssen@hetic.eu")
+	//if err := d.DialAndSend(m); err != nil {
+	//
+	//	panic(err)
+	//
+	//}
 
-	m.SetHeader("To", "amauryfranssen@gmail.com", "a_franssen@hetic.eu")
+	// Mailtrap account config
 
-	m.SetAddressHeader("Cc", "", "")
+	username := "953143d5103e03"
 
-	m.SetHeader("Subject", "Hello!")
+	password := "143f5c5914b162"
 
-	m.SetBody("text/html", "Hello <b>Kate</b> and <i>Noah</i>!")
+	smtpHost := "sandbox.smtp.mailtrap.io"
 
-	m.Attach("")
+	// Prod:
+	//username := "api"
+	//
+	//password := "<secret_token>"
+	//
+	//smtpHost := "live.smtp.mailtrap.io"
 
-	d := mail.NewDialer("smtp.gmail.com", 587, "amauryfranssen@gmail.com", "")
+	// Choose auth method and set it up
 
-	if err := d.DialAndSend(m); err != nil {
+	auth := smtp.PlainAuth("", username, password, smtpHost)
 
-		panic(err)
+	// Message data
+
+	from := "amaury.fra@restaurantgo.dev"
+
+	to := []string{"a_franssen@hetic.eu"}
+
+	message := []byte("To: kate.doe@example.com\r\n" +
+		"From: john.doe@your.domain\r\n" +
+		"\r\n" +
+		"Subject: Why aren't you using Mailtrap yet?\r\n" +
+		"\r\n" +
+		"Here's the space for your great sales pitch\r\n")
+
+	// Connect to the server and send message
+
+	smtpUrl := smtpHost + ":25"
+
+	err := smtp.SendMail(smtpUrl, auth, from, to, message)
+	if err != nil {
+
+		log.Fatal(err)
 
 	}
 
