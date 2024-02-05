@@ -40,6 +40,28 @@ func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 	}
 }
 
+func (h *Handler) ShowMenuByRestaurant() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		session, err := storeSession.Get(request, "session-name")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		restaurants, err := h.RestaurantStore.GetRestaurant()
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
+			data := restaurantHTTP.TemplateData{Title: "Restaurant Page", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
+			h.RenderHtml(writer, data, "pages/restaurants.menu.gohtml")
+		}
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
+	}
+}
+
 func (h *Handler) GetRestaurants() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		restaurants, err := h.RestaurantStore.GetRestaurant()

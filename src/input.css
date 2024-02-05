@@ -15,7 +15,12 @@
     @apply border rounded-lg w-full py-2 px-3 border-emerald-500 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-emerald-300;
   }
 
+
+  .restaugo-title-wrapper {
+    @apply w-full mt-2 mb-20 px-5
+  }
+
   .restogo-title-xl {
-    @apply font-semibold text-xl leading-6
+    @apply mt-2 mb-20 font-semibold text-3xl leading-6 text-teal-900
   }
 }
