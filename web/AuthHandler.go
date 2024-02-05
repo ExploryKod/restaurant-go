@@ -10,7 +10,6 @@ import (
 	"net/url"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
-	"strconv"
 	"time"
 )
 
@@ -19,7 +18,7 @@ var storeSession = sessions.NewCookieStore([]byte("faux-token-temporaire"))
 func (h *Handler) GetHomePage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
-		session, err := storeSession.Get(request, "session-name")
+		session, err := storeSession.Get(request, "session-basic")
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -28,7 +27,8 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 
 			username := session.Values["username"].(string)
-			data := restaurantHTTP.TemplateData{Title: "Home", Content: entity.User{Username: username}}
+			token := session.Values["token"].(string)
+			data := restaurantHTTP.TemplateData{Title: "Home", Content: entity.User{Username: username}, Token: token}
 
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
@@ -73,7 +73,10 @@ func (h *Handler) Login() http.HandlerFunc {
 		match := CheckPasswordHash(password, user.Password)
 
 		if user.Username == username && match {
-			session, _ := storeSession.Get(request, "session-name")
+			token := makeToken(user.Username)
+
+			session, _ := storeSession.Get(request, "session-basic")
+			session.Values["token"] = token
 			session.Values["authenticated"] = true
 			session.Values["username"] = user.Username
 
@@ -83,14 +86,12 @@ func (h *Handler) Login() http.HandlerFunc {
 				return
 			}
 
-			token := strconv.Itoa(user.ID) + "." + user.Username + "." + user.Password
 			http.SetCookie(writer, &http.Cookie{
 				HttpOnly: true,
 				Expires:  time.Now().Add(7 * 24 * time.Hour),
 				SameSite: http.SameSiteLaxMode,
-				// HTTPS en dessous
-				// Secure: true,
-				Name:  "token",
+				// Secure: true, // si on souhaite activer le HTTPS
+				Name:  "jwt",
 				Value: token,
 			})
 
@@ -156,7 +157,7 @@ func (h *Handler) Signup() http.HandlerFunc {
 
 func (h *Handler) Logout() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		session, _ := storeSession.Get(request, "session-name")
+		session, _ := storeSession.Get(request, "session-basic")
 		session.Values["authenticated"] = false
 		session.Values["username"] = nil
 
@@ -165,6 +166,16 @@ func (h *Handler) Logout() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		http.SetCookie(writer, &http.Cookie{
+			Name:     "token",
+			Value:    "",
+			Expires:  time.Now(),
+			Path:     "/",
+			HttpOnly: true,
+			SameSite: http.SameSiteLaxMode,
+			//Secure:   true,
+		})
 
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}

@@ -4,11 +4,24 @@ import (
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+	"github.com/go-chi/jwtauth/v5"
 	"html/template"
 	"net/http"
 	"restaurantHTTP"
 	database "restaurantHTTP/mysql"
 )
+
+var tokenAuth *jwtauth.JWTAuth
+
+func init() {
+	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
+}
+
+func makeToken(name string) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"username": name})
+	return tokenString
+}
 
 func NewHandler(store *database.Store) *Handler {
 	handler := &Handler{
@@ -18,11 +31,20 @@ func NewHandler(store *database.Store) *Handler {
 
 	handler.Use(middleware.Logger)
 
+	handler.Use(cors.Handler(cors.Options{
+		AllowedOrigins: []string{"https://*", "http://*"},
+		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
+
 	fs := http.FileServer(http.Dir("src"))
 	handler.Handle("/src/*", http.StripPrefix("/src/", fs))
 
 	handler.Route("/", func(r chi.Router) {
-		r.Get("/", handler.GetHomePage())
 
 		r.Get("/login", handler.Login())
 		r.Post("/login", handler.Login())
@@ -31,16 +53,24 @@ func NewHandler(store *database.Store) *Handler {
 		r.Post("/signup", handler.Signup())
 
 		r.Get("/checkEmailAndUsername", handler.checkEmailAndUsername())
-
-		r.Get("/logout", handler.Logout())
 	})
 
-	handler.Route("/user", func(r chi.Router) {
-		//r.Get("/getAll", handler.GetAllUsers())
-		//r.Get("/get/{id}", handler.GetUser())
-		r.Post("/add", handler.AddUser())
-		r.Delete("/delete/{id}", handler.DeleteUser())
-		r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
+	handler.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(tokenAuth))
+
+		r.Use(jwtauth.Authenticator(tokenAuth))
+
+		r.Get("/", handler.GetHomePage())
+		r.Get("/logout", handler.Logout())
+
+		r.Route("/user", func(r chi.Router) {
+			//r.Get("/getAll", handler.GetAllUsers())
+			//r.Get("/get/{id}", handler.GetUser())
+			r.Post("/add", handler.AddUser())
+			r.Delete("/delete/{id}", handler.DeleteUser())
+			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
+		})
+
 	})
 
 	return handler

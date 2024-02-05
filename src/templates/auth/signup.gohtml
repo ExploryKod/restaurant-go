@@ -7,74 +7,19 @@
         {{end}}
 
         <form class="bg-white rounded-lg shadow-md p-8" action="/signup" method="post"
-              x-data="{
-                    selected: 1,
-                    total: 2,
-                    previous() {
-                        this.selected = Math.max(this.selected - 1, 1)
-                    },
-                    next() {
-                        this.selected = Math.min(this.selected + 1, this.total)
-                    },
-                    username: '',
-                    email: '',
-                    error: {
-                        username: null,
-                        email: null
-                    },
-                    success: {
-                        username: null,
-                        email: null
-                    },
-                    checkUsername(value, type) {
-                        if (type === 'email') {
-                            if (!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-                                this.error.email = 'Email is not valid'
-                                this.success.email = false
-                                return
-                            }
-                        }
-                        fetch('http://localhost:8097/checkEmailAndUsername?username=' + (type === 'username' ? value : '') + '&email=' + (type === 'email' ? value : ''))
-                            .then((response) => {
-                                if (!response.ok) {
-                                    throw new Error('Erreur lors de la requête.');
-                                }
-                                return response.json()
-                            })
-                            .then((json) => {
-                            console.log('STRUCT:',json)
-                                if (json.username?.exists) {
-                                    this.error.username = json.username.message
-                                    this.success.username = false
-                                }else {
-                                    this.success.username = json.username.message
-                                    this.error.username = false
-                                }
+              x-data="{stepper :stepper(), checker: checker()}" >
+            <div>
 
-                                if (json.email?.exists) {
-                                    this.error.email = json.email.message
-                                    this.success.email = false
-                                }else {
-                                    this.success.email = json.email.message
-                                    this.error.email = false
-                                }
-                                console.log('ERROR:', this.error, 'SUCCESS:', this.success)
-                            })
-                            .catch((error) => {
-                                console.log('Error during checking username:',error)
-                            });
-                    }
-              }"
-        >
-            <div x-show="selected === 1">
+            </div>
+            <div x-show="stepper.selected === 1" >
                 <div class="mb-2">
                     <label class="flex justify-between text-gray-700 text-sm font-bold mb-2" for="username">
                         <span>Username</span>
-                        <span x-text="error.username || success.username"
-                              :class="{'text-red-500 text-xs': error.username, 'text-emerald-500 text-xs': success.username}"></span>
+                        <span x-text="checker.error.username || checker.success.username"
+                              :class="{'text-red-500 text-xs': checker.error.username, 'text-emerald-500 text-xs': checker.success.username}"></span>
                     </label>
-                    <input x-model="username" @change="checkUsername($event.target.value,'username')"
-                           :class="{ 'basic-input-error': error.username, 'basic-input-success': success.username, 'basic-input': !error.username && !success.username }"
+                    <input x-model="checker.username" @change="checker.checkUsername($event.target.value,'username')"
+                           :class="{ 'basic-input-error': checker.error.username, 'basic-input-success': checker.success.username, 'basic-input': !checker.error.username && !checker.success.username }"
                            type="text" name="username" id="username"
                            placeholder="Username"
                            required>
@@ -91,7 +36,7 @@
                 </div>
             </div>
 
-            <div x-show="selected === 2">
+            <div x-show="stepper.selected === 2">
                 <div class="mb-2">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
                     <input class="basic-input" type="text" name="name" id="name" placeholder="Name" required>
@@ -107,12 +52,12 @@
                             Email
                         </span>
                         <span
-                            x-text="error.email || success.email"
-                            :class="{'text-red-500 text-xs': error.email, 'text-emerald-500 text-xs': success.email}"
+                            x-text="checker.error.email || checker.success.email"
+                            :class="{'text-red-500 text-xs': checker.error.email, 'text-emerald-500 text-xs': checker.success.email}"
                         ></span>
                     </label>
-                    <input x-model="email" @change="checkUsername($event.target.value,'email')"
-                           :class="{ 'basic-input-error': error.email, 'basic-input-success': success.email, 'basic-input': !error.email && !success.email }"
+                    <input x-model="checker.email" @change="checker.checkUsername($event.target.value,'email')"
+                           :class="{ 'basic-input-error': checker.error.email, 'basic-input-success': checker.success.email, 'basic-input': !checker.error.email && !checker.success.email }"
                            type="email" name="mail" id="mail" placeholder="Email"
                            pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required>
                 </div>
@@ -136,10 +81,10 @@
                     Sign in!</a>
             </div>
             <div class="relative">
-                <button @click="previous" x-show="selected > 1" type="button"
+                <button @click="stepper.previous()" x-show="stepper.selected > 1" type="button"
                         class="absolute start-0 font-semibold text-red-700"><- Previous
                 </button>
-                <button @click="next" x-show="selected < 2" type="button"
+                <button @click="stepper.next()" x-show="stepper.selected < 2" type="button"
                         class="absolute end-0 font-semibold text-red-700">Next ->
                 </button>
             </div>

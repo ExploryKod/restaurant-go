@@ -12,4 +12,5 @@ type TemplateData struct {
 	Content any
 	Success string
 	Error   string
+	Token   string
 }
