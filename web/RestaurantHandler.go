@@ -9,32 +9,32 @@ import (
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
-		session, err := store.Get(request, "session-name")
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		//session, err := store.Get(request, "session-name")
+		//if err != nil {
+		//	http.Error(writer, err.Error(), http.StatusInternalServerError)
+		//	return
+		//}
 		restaurants, err := h.RestaurantStore.GetRestaurant()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Titre: "Restaurant Page", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/restaurants.gohtml")
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			err = tmpl.ExecuteTemplate(writer, "layout", data)
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
+		//if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
+		data := restaurantHTTP.TemplateData{Title: "Restaurant Page", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
+		tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/restaurants.gohtml")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		err = tmpl.ExecuteTemplate(writer, "layout", data)
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		//}
 
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
@@ -45,13 +45,19 @@ func (h *Handler) GetRestaurants() http.HandlerFunc {
 		restaurants, err := h.RestaurantStore.GetRestaurant()
 		if err != nil {
 			// Handle database error
-			h.jsonResponse(w, http.StatusInternalServerError, map[string]interface{}{
+			h.RenderJson(w, http.StatusInternalServerError, map[string]interface{}{
 				"message": "Internal Server Error",
 			})
 			return
 		}
 
-		h.jsonResponse(w, http.StatusOK, restaurants)
+		h.RenderJson(w, http.StatusOK, restaurants)
+	}
+}
+
+func (h *Handler) ChooseRestaurant() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		return
 	}
 }
 

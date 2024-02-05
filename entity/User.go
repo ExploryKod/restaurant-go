@@ -12,7 +12,7 @@ type User struct {
 	Birthday     []uint8 `json:"birthday" db:"birthday"`
 }
 
-func NewUser(username string, password string, name string, firstname string, mail string, phone string, isSuperadmin bool, birthday sql.NullTime) *User {
+func NewUser(username string, password string, name string, firstname string, mail string, phone string, isSuperadmin bool, birthday []uint8) *User {
 	return &User{
 		Username:     username,
 		Password:     password,

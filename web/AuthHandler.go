@@ -1,7 +1,6 @@
 package web
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
@@ -139,7 +138,7 @@ func (h *Handler) Signup() http.HandlerFunc {
 			Mail:         mail,
 			Phone:        phone,
 			IsSuperadmin: false,
-			Birthday:     sql.NullTime{},
+			Birthday:     []uint8{65, 66, 67, 68, 69},
 		}
 
 		var id int

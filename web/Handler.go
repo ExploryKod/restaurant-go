@@ -75,6 +75,7 @@ func NewHandler(store *database.Store) *Handler {
 
 	handler.Group(func(r chi.Router) {
 		handler.Get("/restaurants", handler.ShowRestaurantsPage())
+		handler.Get("/restaurants/get", handler.GetRestaurants())
 		handler.Get("/restaurant/add", handler.AddRestaurant())
 	})
 
