@@ -9,32 +9,32 @@ import (
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
-		//session, err := store.Get(request, "session-name")
-		//if err != nil {
-		//	http.Error(writer, err.Error(), http.StatusInternalServerError)
-		//	return
-		//}
+		session, err := storeSession.Get(request, "session-name")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		restaurants, err := h.RestaurantStore.GetRestaurant()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		//if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-		data := restaurantHTTP.TemplateData{Title: "Restaurant Page", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
-		tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/restaurants.gohtml")
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
+		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
+			data := restaurantHTTP.TemplateData{Title: "Restaurant Page", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
+			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout/layout.gohtml", "src/templates/pages/restaurants.client.gohtml")
+			if err != nil {
+				http.Error(writer, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			err = tmpl.ExecuteTemplate(writer, "layout", data)
+			if err != nil {
+				http.Error(writer, err.Error(), http.StatusInternalServerError)
+				return
+			}
 			return
 		}
-
-		err = tmpl.ExecuteTemplate(writer, "layout", data)
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		//}
 
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
@@ -55,7 +55,7 @@ func (h *Handler) GetRestaurants() http.HandlerFunc {
 	}
 }
 
-func (h *Handler) ChooseRestaurant() http.HandlerFunc {
+func (h *Handler) getRestaurantById() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		return
 	}

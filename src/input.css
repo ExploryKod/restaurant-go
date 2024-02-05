@@ -14,4 +14,8 @@
   .basic-input-success {
     @apply border rounded-lg w-full py-2 px-3 border-emerald-500 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-emerald-300;
   }
+
+  .restogo-title-xl {
+    @apply font-semibold text-xl leading-6
+  }
 }

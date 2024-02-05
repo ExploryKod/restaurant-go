@@ -1,5 +1,8 @@
 {{define "content"}}
         <div class="mt-20 mx-auto px-4">
+            <div class="my-2 w-full">
+                <h1 class="text-center text-red-600 restogo-title-xl">Choix de votre restaurant</h1>
+            </div>
             <section class="flex flex-col sm:flex-row justify-center items-center gap-5 sm:flex-wrap">
             {{- /*gotype: restaurantHTTP/web.TemplateData*/ -}}
             {{ range .Content }}
