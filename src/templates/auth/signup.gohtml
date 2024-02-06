@@ -11,7 +11,7 @@
             <div>
 
             </div>
-            <div x-show="stepper.selected === 1" >
+            <div x-show="stepper.selected === 1" x-transition>
                 <div class="mb-2">
                     <label class="flex justify-between text-gray-700 text-sm font-bold mb-2" for="username">
                         <span>Username</span>
@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div x-show="stepper.selected === 2">
+            <div x-show="stepper.selected === 2" x-transition>
                 <div class="mb-2">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
                     <input class="basic-input" type="text" name="name" id="name" placeholder="Name" required>

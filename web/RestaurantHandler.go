@@ -9,7 +9,7 @@ import (
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
-		session, err := storeSession.Get(request, "session-name")
+		session, err := storeSession.Get(request, "session-basic")
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -43,7 +43,7 @@ func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 func (h *Handler) ShowMenuByRestaurant() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
-		session, err := storeSession.Get(request, "session-name")
+		session, err := storeSession.Get(request, "session-basic")
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return

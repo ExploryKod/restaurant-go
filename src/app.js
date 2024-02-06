@@ -1,16 +1,5 @@
 document.addEventListener('alpine:init', () => {
 
-    Alpine.store('token', () => {
-        const cookies = document.cookie.split(';');
-        for (const cookie of cookies) {
-            const [cookieName, cookieValue] = cookie.trim().split('=');
-            if (cookieName === 'token') {
-                return cookieValue;
-            }
-        }
-        return null;
-    })
-
     Alpine.data('checker', () => ({
         username: '',
         email: '',
