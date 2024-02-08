@@ -44,6 +44,14 @@
   .btn-home-secondary {
     @apply w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-cyan-700 bg-cyan-100 hover:bg-cyan-200 md:py-4 md:text-lg md:px-10
   }
+
+  .btn-home-primary {
+    @apply w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-cyan-700 hover:bg-cyan-900 md:py-4 md:text-lg md:px-10
+  }
+
+  .btn-home-secondary {
+    @apply w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-cyan-700 bg-cyan-100 hover:bg-cyan-200 md:py-4 md:text-lg md:px-10
+  }
 }
 
 /* Pure css */
