@@ -77,7 +77,8 @@ func NewHandler(store *database.Store) *Handler {
 		handler.Get("/restaurants", handler.ShowRestaurantsPage())
 		handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
 		handler.Get("/restaurants/get", handler.GetRestaurants())
-		handler.Get("/restaurant/add", handler.AddRestaurant())
+		handler.Post("/restaurant/add", handler.AddRestaurant())
+		handler.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
 	})
 
 	return handler
