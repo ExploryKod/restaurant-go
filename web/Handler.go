@@ -80,12 +80,14 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Use(jwtauth.Authenticator(tokenAuth))
 		handler.Get("/restaurants", handler.ShowRestaurantsPage())
-		//handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
+		handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
 		handler.Get("/restaurants/get", handler.GetRestaurants())
 		handler.Get("/restaurant/add", handler.AddRestaurant())
 
 		r.Get("/restaurant/menu/{id}", handler.CreateOrder())
 		r.Post("/restaurant/orders/create", handler.CreateOrder())
+		handler.Post("/restaurant/add", handler.AddRestaurant())
+		handler.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
 	})
 
 	return handler

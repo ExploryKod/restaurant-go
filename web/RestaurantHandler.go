@@ -4,6 +4,8 @@ import (
 	"html/template"
 	"net/http"
 	"restaurantHTTP"
+	"restaurantHTTP/entity"
+	"time"
 )
 
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
@@ -62,6 +64,28 @@ func (h *Handler) ShowMenuByRestaurant() http.HandlerFunc {
 	}
 }
 
+func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		session, err := storeSession.Get(request, "session-name")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		restaurants, err := h.RestaurantStore.GetRestaurant()
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
+			data := restaurantHTTP.TemplateData{Title: "Restaurant Profile", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
+			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
+		}
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
+	}
+}
+
 func (h *Handler) GetRestaurants() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		restaurants, err := h.RestaurantStore.GetAllRestaurants()
@@ -86,6 +110,15 @@ func (h *Handler) getRestaurantById() http.HandlerFunc {
 // TODO: separer la logique métier des handler de page
 func (h *Handler) AddRestaurant() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+
+		_, err := h.RestaurantStore.AddRestaurant(entity.Restaurant{1, "name", "/logo", "img/", "0367", "mail.com", true, time.Now(), time.Now(), 2, true})
+		if err != nil {
+			// Handle database error
+			h.RenderJson(writer, http.StatusInternalServerError, map[string]interface{}{
+				"message": "Internal Server Error",
+			})
+			return
+		}
 		return
 	}
 }
