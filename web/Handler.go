@@ -15,11 +15,11 @@ import (
 var tokenAuth *jwtauth.JWTAuth
 
 func init() {
-	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
+	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
 }
 
-func makeToken(id int, username string, mail string) string {
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": username, "mail": mail})
+func makeToken(name string) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"username": name})
 	return tokenString
 }
 
@@ -71,32 +71,20 @@ func NewHandler(store *database.Store) *Handler {
 			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
 		})
 
-		r.Route("/restaurant", func(r chi.Router) {
-			r.Use(jwtauth.Verifier(tokenAuth))
-			r.Use(jwtauth.Authenticator(tokenAuth))
-			// restaurant
-			r.Get("/", handler.ShowRestaurantsPage())
-			r.Get("/get", handler.GetAllRestaurants())
-			r.Get("/{id}", handler.ShowRestaurantProfile())
-			r.Get("/profile/{id}", handler.ShowRestaurantProfile())
-			// Menu & order
-			//r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
-			r.Get("/menu/{id}", handler.CreateOrder())
-			r.Post("/restaurant/orders/create", handler.CreateOrder())
-		})
-
-		r.Route("/admin", func(r chi.Router) {
-			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
-		})
-
-		r.Route("/api", func(r chi.Router) {
-			r.Post("/restaurant/register", handler.RegisterRestaurant())
-		})
-
 	})
 
-	// Product
-	handler.Get("/productType", handler.GetProductTypePage())
+	handler.Group(func(r chi.Router) {
+		handler.Get("/restaurants", handler.ShowRestaurantsPage())
+		handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
+		handler.Get("/restaurants/get", handler.GetRestaurants())
+		handler.Get("/restaurant/add", handler.AddRestaurant())
+
+		r.Get("/restaurant/menu/{id}", handler.CreateOrder())
+		r.Post("/restaurant/orders/create", handler.CreateOrder())
+		handler.Post("/restaurant/add", handler.AddRestaurant())
+		handler.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+	})
+
 	return handler
 }
 

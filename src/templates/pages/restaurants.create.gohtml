@@ -3,6 +3,14 @@
     <h1 class="text-center restogo-title-xl">Profile restaurateur</h1>
 </div>
 <div class="max-w-md mx-auto my-8">
+    <form class="bg-white rounded-lg shadow-md p-8" action="/restaurant/add" method="post">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-name">Nom</label>
+            <input class="basic-input" type="text" name="restaurant-name" id="restaurant-name" placeholder="Nom de de votre restaurant" required>
+        </div>
+        <div>
+            <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
+                Créer
     {{if .Error}}
         <div class="bg-red-500 text-white p-2 rounded mb-4">{{.Error}}</div>
     {{end}}
@@ -65,4 +73,3 @@
     </form>
 </div>
 {{ end }}
-
