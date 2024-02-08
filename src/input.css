@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .basic-input {
+    @apply border rounded-lg w-full py-2 px-3 focus:border-cyan-400 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-cyan-300;
+  }
+
+  .basic-input-error {
+    @apply border rounded-lg w-full py-2 px-3 border-red-500 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-red-300;
+  }
+
+  .basic-input-success {
+    @apply border rounded-lg w-full py-2 px-3 border-emerald-500 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-emerald-300;
+  }
+
+  .restaugo-title-wrapper {
+    @apply w-full mt-2 mb-20 px-5
+  }
+
+  .restogo-title-xl {
+    @apply mt-2 mb-20 font-semibold text-3xl leading-6 text-teal-900
+  }
+
+  .btn-lg {
+    @apply bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700
+  }
+
+  .btn-reverse-lg {
+    @apply bg-stone-100 text-cyan-500 font-bold py-2 px-4 rounded hover:bg-cyan-700 hover:text-stone-50
+  }
+}
