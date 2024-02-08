@@ -3,7 +3,13 @@
     <h1 class="text-center restogo-title-xl">Profile restaurateur</h1>
 </div>
 <div class="max-w-md mx-auto my-8">
-    <form class="bg-white rounded-lg shadow-md p-8" action="/restaurant/add" method="post">
+    {{if .Error}}
+        <div class="bg-red-500 text-white p-2 rounded mb-4">{{.Error}}</div>
+    {{end}}
+    {{if .Success}}
+        <div class="bg-emerald-500 text-white p-2 rounded mb-4">{{.Success}}</div>
+    {{end}}
+    <form class="bg-white rounded-lg shadow-md p-8" action="/api/restaurant/register" method="post">
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-name">Nom</label>
             <input class="basic-input" type="text" name="restaurant-name" id="restaurant-name" placeholder="Nom de de votre restaurant" required>

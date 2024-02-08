@@ -16,7 +16,7 @@ func NewRestaurantStore(db *sqlx.DB) *RestaurantStore {
 }
 
 func (t *RestaurantStore) AddRestaurant(item entity.Restaurant) (int, error) {
-	res, err := t.DB.Exec("INSERT INTO Restaurants (name, logo, mail, is_validated) VALUES ( ? , ? , ?, ?)", item.ID, item.Logo, item.Mail, item.IsValidated)
+	res, err := t.DB.Exec("INSERT INTO Restaurants (name) VALUES (?)", item.Name)
 	if err != nil {
 		return 0, err
 	}

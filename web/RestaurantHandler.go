@@ -1,11 +1,9 @@
 package web
 
 import (
-	"html/template"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
-	"time"
 )
 
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
@@ -24,20 +22,8 @@ func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "Restaurant Page", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout/layout.gohtml", "src/templates/pages/restaurants.client.gohtml")
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			err = tmpl.ExecuteTemplate(writer, "layout", data)
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			return
+			h.RenderHtml(writer, data, "pages/restaurants.client.gohtml")
 		}
-
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
 }
@@ -64,6 +50,28 @@ func (h *Handler) ShowMenuByRestaurant() http.HandlerFunc {
 	}
 }
 
+func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		session, err := storeSession.Get(request, "session-basic")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		restaurants, err := h.RestaurantStore.GetRestaurant()
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		// TODO: limiter à un accés admin seulement (il créé le restaurant à la suite d'un email > formulaire de contact restaurateur > admin)
+		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
+			data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Content: restaurants}
+			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
+		}
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
+	}
+}
+
 func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
@@ -79,7 +87,7 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 		}
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Title: "Restaurant Profile", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
+			data := restaurantHTTP.TemplateData{Title: "Fiche restaurant", Content: restaurants}
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
@@ -107,18 +115,28 @@ func (h *Handler) getRestaurantById() http.HandlerFunc {
 	}
 }
 
-// TODO: separer la logique métier des handler de page
-func (h *Handler) AddRestaurant() http.HandlerFunc {
+func (h *Handler) RegisterRestaurant() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-
-		_, err := h.RestaurantStore.AddRestaurant(entity.Restaurant{1, "name", "/logo", "img/", "0367", "mail.com", true, time.Now(), time.Now(), 2, true})
-		if err != nil {
-			// Handle database error
-			h.RenderJson(writer, http.StatusInternalServerError, map[string]interface{}{
-				"message": "Internal Server Error",
-			})
+		if request.Method != "POST" {
+			http.Error(writer, "cette route n'est disponible qu'en POST", http.StatusBadRequest)
 			return
 		}
+
+		// Traiter tous les cas d'erreur et renvoyer ces message au front
+		// Pourquoi utiliser renderHTML et non redirect - gestion des status d'erreur
+		// Interdire de s'inscrire 2 fois
+		// Envoyer un email de confirmation d'inscription au restaurateur
+		// Attention > rectifier le uint[] dans login birthday
+
+		restaurantName := request.FormValue("restaurant-name")
+		_, err := h.RestaurantStore.AddRestaurant(entity.Restaurant{Name: restaurantName})
+		if err != nil {
+			data := restaurantHTTP.TemplateData{Error: "Echec de l'inscription du restaurant"}
+			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
+			return
+		}
+		data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Success: restaurantName + " est inscris dans le FoodCourt."}
+		h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
 		return
 	}
 }
