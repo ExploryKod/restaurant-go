@@ -23,11 +23,21 @@
     @apply mt-2 mb-20 font-semibold text-3xl leading-6 text-teal-900
   }
 
+  /* Custom buttons */
+
   .btn-lg {
     @apply bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700
   }
 
   .btn-reverse-lg {
     @apply bg-stone-100 text-cyan-500 font-bold py-2 px-4 rounded hover:bg-cyan-700 hover:text-stone-50
+  }
+
+  .btn-home-primary {
+    @apply w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-cyan-700 hover:bg-cyan-900 md:py-4 md:text-lg md:px-10
+  }
+
+  .btn-home-secondary {
+    @apply w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-cyan-700 bg-cyan-100 hover:bg-cyan-200 md:py-4 md:text-lg md:px-10
   }
 }
