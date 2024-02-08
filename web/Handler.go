@@ -71,14 +71,25 @@ func NewHandler(store *database.Store) *Handler {
 			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
 		})
 
+		r.Route("/restaurants", func(r chi.Router) {
+			r.Get("/", handler.ShowRestaurantsPage())
+			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/get", handler.GetRestaurants())
+			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+		})
+
+		r.Route("/admin", func(r chi.Router) {
+			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
+		})
+
+		r.Route("/api", func(r chi.Router) {
+			r.Post("/restaurant/register", handler.RegisterRestaurant())
+		})
+
 	})
 
 	handler.Group(func(r chi.Router) {
-		handler.Get("/restaurants", handler.ShowRestaurantsPage())
-		handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
-		handler.Get("/restaurants/get", handler.GetRestaurants())
-		handler.Post("/restaurant/add", handler.AddRestaurant())
-		handler.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+
 	})
 
 	return handler
