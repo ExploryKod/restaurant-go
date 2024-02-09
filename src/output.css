@@ -883,8 +883,3 @@ video {
 .outline {
   outline-style: solid;
 }
-
-.hover\:bg-cyan-700:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(14 116 144 / var(--tw-bg-opacity));
-}
