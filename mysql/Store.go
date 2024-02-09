@@ -7,6 +7,8 @@ import (
 
 type Store struct {
 	UserStore entity.UserStoreInterface
+	ProductStore entity.ProductStoreInterface
+	ProductType entity.ProductTypeStoreInterface
 }
 
 func CreateStore(db *sqlx.DB) *Store {
