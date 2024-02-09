@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/jmoiron/sqlx"
+	"restaurantHTTP/entity"
 )
 // Product Represents a product with restaurant
 type Product struct {
