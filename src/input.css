@@ -66,3 +66,16 @@ input:checked ~ .toggle__dot {
   left: 5px;
   background-color: #06B6D4;
 }
+
+/* Pure css */
+.toggle__dot {
+  top: 2px;
+  left: 3.5px;
+  transition: all 0.3s ease-in-out;
+}
+
+input:checked ~ .toggle__dot {
+  transform: translateX(100%);
+  left: 5px;
+  background-color: #06B6D4;
+}
