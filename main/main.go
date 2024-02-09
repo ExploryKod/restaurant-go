@@ -1,15 +1,16 @@
 package main
 
 import (
-	"github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"net/smtp"
 	"os"
 	database "restaurantHTTP/mysql"
 	"restaurantHTTP/web"
+
+	"github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -20,7 +21,7 @@ func main() {
 
 	conf := mysql.Config{
 		User:                 "root",
-		Passwd:               "Rankwell@89",
+		Passwd:               "first1974",
 		Addr:                 os.Getenv("BDD_PORT"),
 		DBName:               "restaurantbdd",
 		Net:                  "tcp",

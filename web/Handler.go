@@ -2,14 +2,15 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
-	"github.com/go-chi/jwtauth/v5"
 	"html/template"
 	"net/http"
 	"restaurantHTTP"
 	database "restaurantHTTP/mysql"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+	"github.com/go-chi/jwtauth/v5"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -54,6 +55,9 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Get("/product/type/create", handler.AddProductType())
 		r.Post("/product/type/create", handler.AddProductType())
+
+		r.Get("/product/create", handler.AddProduct())
+		r.Post("/product/create", handler.AddProduct())
 
 		r.Get("/checkEmailAndUsername", handler.checkEmailAndUsername())
 	})
