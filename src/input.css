@@ -79,3 +79,75 @@ input:checked ~ .toggle__dot {
   left: 5px;
   background-color: #06B6D4;
 }
+
+/* Dashboard */
+
+/*-----------------------------------------------
+** Created by - Abeer Ibrahim
+** LinkedIn @abalhussaini
+-----------------------------------------------*/
+@import url("https://fonts.googleapis.com/css?family=Signika+Negative:300,400&display=swap");
+body {
+  font-family: "Signika Negative", sans-serif;
+  font-weight: 300;
+}
+
+:root {
+  --main-color: #334bcb;
+  --secondary-color: #5ccefa;
+  --dark-color: #061454;
+}
+
+
+.text-blue {
+  color: var(--main-color);
+}
+.text-dark {
+  color: var(--dark-color);
+}
+.text-secondary {
+  color: var(--secondary-color);
+}
+.border-blue {
+  border-bottom: 3px solid var(--main-color);
+}
+
+.bg-main-color {
+  background-color: var(--main-color);
+}
+.bg-secondary-color {
+  background-color: var(--secondary-color);
+}
+nav .nav-item {
+  transition: all 0.2s ease-in-out;
+}
+nav .nav-item:hover,
+nav .nav-item:focus {
+  color: #334bcb;
+}
+nav .sub-nav-item:hover,
+nav .sub-nav-item:focus {
+  color: #334bcb;
+  border-bottom: 3px solid var(--main-color);
+}
+.sub-nav-item {
+  border-radius: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.box-placeholder {
+  width: 40px;
+  height: 40px;
+  margin-right: 2%;
+}
+
+.bar-chart {
+  padding-top: 40px;
+}
+
+
+
+.h-line {
+  height: 5px;
+}
+
