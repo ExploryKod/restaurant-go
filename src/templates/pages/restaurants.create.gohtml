@@ -11,10 +11,53 @@
     {{end}}
     <form class="bg-white rounded-lg shadow-md p-8" action="/api/restaurant/register" method="post">
         <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-name">Nom</label>
-            <input class="basic-input" type="text" name="restaurant-name" id="restaurant-name" placeholder="Nom de de votre restaurant" required>
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-name">Nom du restaurant:</label>
+            <input class="basic-input" type="text" name="restaurant-name" id="restaurant-name" placeholder="Nom du restaurant" required>
         </div>
-        <div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-tel">Téléphone:</label>
+            <input class="basic-input" type="tel" name="restaurant-tel" id="restaurant-tel" placeholder="+33 (0)3 22 36 56 89">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Email:</label>
+            <input class="basic-input" type="email" name="restaurant-email" id="restaurant-email" placeholder="nom@gmail.com" required>
+        </div>
+
+        <div class="mb-4">
+            <label for="restaurant-open" class="flex flex-col flex-wrap cursor-pointer md:mb-0">
+                <span class="font-bold mb-2 block">Validation:</span>
+                <div class="relative">
+                    <input name="restaurant-open" id="restaurant-open" type="checkbox" class="hidden">
+                    <div class="toggle__line w-12 h-6 bg-gray-200 rounded-full shadow-inner"></div>
+                    <div class="toggle__dot absolute w-5 h-5 bg-white rounded-full shadow inset-y-0 left-0"></div>
+                </div>
+            </label>
+        </div>
+
+        <div class="mb-4">
+            <div class="mb-10 custom-number-input h-10 w-32">
+                <label for="custom-input-number" class="block text-gray-700 text-sm font-bold mb-2">Note restaurateur:</label>
+                <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                    <button type="button" data-action="decrement" class="
+                    bg-cyan-500 text-cyan-100 hover:text-cyan-950
+                    hover:bg-cyan-800 h-full w-20 rounded-l cursor-pointer outline-none">
+                        <span class="text-white m-auto text-lg">−</span>
+                    </button>
+                    <input type="number"
+                           class="h-full border-none outline-none focus:outline-none text-center w-full
+                            bg-cyan-800 font-semibold text-white text-sm
+                            hover:text-black focus:text-black
+                            md:text-basecursor-default flex items-center text-gray-700  outline-none"
+                           name="restaurant-grade" value="0"/>
+                    <button type="button" data-action="increment"
+                            class="bg-cyan-500 text-cyan-100-600 hover:text-cyan-950
+                            hover:bg-cyan-800 h-full w-20 rounded-r cursor-pointer">
+                        <span class="text-white m-auto text-lg">+</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="mt-2">
             <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
                 Créer
             </button>
@@ -22,3 +65,4 @@
     </form>
 </div>
 {{ end }}
+

@@ -7,6 +7,10 @@
     @apply border rounded-lg w-full py-2 px-3 focus:border-cyan-400 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-cyan-300;
   }
 
+  .basic-input-number {
+    @apply border rounded-lg w-full py-2 px-3 focus:border-cyan-400 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-cyan-300;
+  }
+
   .basic-input-error {
     @apply border rounded-lg w-full py-2 px-3 border-red-500 focus:outline-none focus:ring focus:ring-opacity-40 focus:ring-red-300;
   }
@@ -40,4 +44,17 @@
   .btn-home-secondary {
     @apply w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-cyan-700 bg-cyan-100 hover:bg-cyan-200 md:py-4 md:text-lg md:px-10
   }
+}
+
+/* Pure css */
+.toggle__dot {
+  top: 2px;
+  left: 3.5px;
+  transition: all 0.3s ease-in-out;
+}
+
+input:checked ~ .toggle__dot {
+  transform: translateX(100%);
+  left: 5px;
+  background-color: #06B6D4;
 }
