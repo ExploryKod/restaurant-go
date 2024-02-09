@@ -71,18 +71,17 @@ func NewHandler(store *database.Store) *Handler {
 			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
 		})
 
-		r.Route("/restaurants", func(r chi.Router) {
+		r.Route("/restaurant", func(r chi.Router) {
+			r.Use(jwtauth.Verifier(tokenAuth))
+			r.Use(jwtauth.Authenticator(tokenAuth))
+			// restaurant
 			r.Get("/", handler.ShowRestaurantsPage())
-			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
 			r.Get("/get", handler.GetAllRestaurants())
 			r.Get("/{id}", handler.ShowRestaurantProfile())
-			r.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
-			r.Get("/restaurants/get", handler.GetAllRestaurants())
-			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
-		})
-
-		r.Route("/restaurant", func(r chi.Router) {
-			r.Get("/restaurant/menu/{id}", handler.CreateOrder())
+			r.Get("/profile/{id}", handler.ShowRestaurantProfile())
+			// Menu & order
+			//r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/menu/{id}", handler.CreateOrder())
 			r.Post("/restaurant/orders/create", handler.CreateOrder())
 		})
 
@@ -98,21 +97,6 @@ func NewHandler(store *database.Store) *Handler {
 
 	// Product
 	handler.Get("/productType", handler.GetProductTypePage())
-	handler.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(tokenAuth))
-
-		r.Use(jwtauth.Authenticator(tokenAuth))
-		handler.Get("/restaurants", handler.ShowRestaurantsPage())
-		handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
-		handler.Get("/restaurants/get", handler.GetRestaurants())
-		handler.Get("/restaurant/add", handler.AddRestaurant())
-
-		r.Get("/restaurant/menu/{id}", handler.CreateOrder())
-		r.Post("/restaurant/orders/create", handler.CreateOrder())
-		handler.Post("/restaurant/add", handler.AddRestaurant())
-		handler.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
-	})
-
 	return handler
 }
 

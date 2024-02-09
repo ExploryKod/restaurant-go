@@ -60,7 +60,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetRestaurant()
+		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -82,14 +82,15 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetRestaurant()
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		// TODO: récup l'id depuis le slug et renvoyer une fiche d'info sur le restaurant
+		//_, err := h.RestaurantStore.GetRestaurantByID(id)
+		//if err != nil {
+		//	http.Error(writer, err.Error(), http.StatusInternalServerError)
+		//	return
+		//}
 		// TODO: doit se faire en fonction de l'id du restaurant
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Title: "Fiche restaurant", Content: restaurants}
+			data := restaurantHTTP.TemplateData{Title: "Fiche restaurant", Content: ""}
 			h.RenderHtml(writer, data, "pages/restaurants.profile.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)

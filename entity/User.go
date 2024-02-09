@@ -1,8 +1,6 @@
 package entity
 
-import (
-	"database/sql"
-)
+import "database/sql"
 
 type User struct {
 	ID           int          `json:"id" db:"id"`
@@ -16,10 +14,24 @@ type User struct {
 	Birthday     sql.NullTime `json:"birthday" db:"birthday"`
 }
 
+func NewUser(username string, password string, name string, firstname string, mail string, phone string, isSuperadmin bool, birthday sql.NullTime) *User {
+	return &User{
+		Username:     username,
+		Password:     password,
+		Name:         name,
+		Firstname:    firstname,
+		Mail:         mail,
+		Phone:        phone,
+		IsSuperadmin: isSuperadmin,
+		Birthday:     birthday,
+	}
+}
+
 type UserStoreInterface interface {
 	GetUserByID(id int) *User
 	GetUserByUsername(username string) (*User, error)
+	GetUserByMail(mail string) (*User, error)
 	GetUsers() ([]User, error)
-	AddUser(item User) (int, error)
+	AddUser(item *User) (int, error)
 	DeleteUser(id int) error
 }
