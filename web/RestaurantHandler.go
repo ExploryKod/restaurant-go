@@ -1,9 +1,11 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
+	"strconv"
 )
 
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
@@ -85,10 +87,10 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
+		// TODO: doit se faire en fonction de l'id du restaurant
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "Fiche restaurant", Content: restaurants}
-			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
+			h.RenderHtml(writer, data, "pages/restaurants.profile.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
@@ -129,7 +131,15 @@ func (h *Handler) RegisterRestaurant() http.HandlerFunc {
 		// Attention > rectifier le uint[] dans login birthday
 
 		restaurantName := request.FormValue("restaurant-name")
-		_, err := h.RestaurantStore.AddRestaurant(entity.Restaurant{Name: restaurantName})
+		restaurantEmail := request.FormValue("restaurant-email")
+		restaurantTel := request.FormValue("restaurant-tel")
+		restaurantGrade := request.FormValue("restaurant-grade")
+		restaurantGradeInt, err := strconv.Atoi(restaurantGrade)
+		if err != nil {
+			fmt.Println("type parsing for grade failed")
+			return
+		}
+		_, err = h.RestaurantStore.AddRestaurant(entity.Restaurant{Name: restaurantName, Phone: restaurantTel, Mail: restaurantEmail, Grade: restaurantGradeInt, IsValidated: true})
 		if err != nil {
 			data := restaurantHTTP.TemplateData{Error: "Echec de l'inscription du restaurant"}
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
