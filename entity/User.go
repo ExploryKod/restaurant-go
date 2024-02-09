@@ -26,6 +26,7 @@ func NewUser(username string, password string, name string, firstname string, ma
 }
 
 type UserStoreInterface interface {
+	GetUserByID(id int) *User
 	GetUserByUsername(username string) (*User, error)
 	GetUserByMail(mail string) (*User, error)
 	GetUsers() ([]User, error)

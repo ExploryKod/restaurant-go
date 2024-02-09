@@ -72,7 +72,7 @@ func (h *Handler) Login() http.HandlerFunc {
 		match := CheckPasswordHash(password, user.Password)
 
 		if user.Username == username && match {
-			token := makeToken(user.Username)
+			token := makeToken(user.ID, user.Username, user.Mail)
 
 			session, _ := storeSession.Get(request, "session-basic")
 			session.Values["token"] = token
