@@ -138,7 +138,6 @@ func (h *Handler) Signup() http.HandlerFunc {
 			Mail:         mail,
 			Phone:        phone,
 			IsSuperadmin: false,
-			Birthday:     []uint8{65, 66, 67, 68, 69},
 		}
 
 		var id int
