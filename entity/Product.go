@@ -9,3 +9,9 @@ type Product struct {
 	Image       string      `json:"image"`
 	Description string      `json:"description"`
 }
+
+type ProductStoreInterface interface {
+	GetProductByRestaurantId() ([]Product, error)
+	AddProduct(item Product) (int, error)
+	DeleteProduct(id Product) error
+}

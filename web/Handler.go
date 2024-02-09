@@ -35,6 +35,9 @@ func NewHandler(store *database.Store) *Handler {
 	handler.Delete("/{id}", handler.DeleteUser())
 	handler.Patch("/{id}", handler.ToggleIsSuperadmin())
 
+	// Product
+	handler.Get("/productType", handler.GetProductTypePage())
+
 	return handler
 }
 
