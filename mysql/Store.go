@@ -14,5 +14,7 @@ type Store struct {
 func CreateStore(db *sqlx.DB) *Store {
 	return &Store{
 		UserStore: NewUserStore(db),
+		ProductStore: NewProductStore(db),
+		ProductTypeStore: NewProductTypeStore(db),
 	}
 }

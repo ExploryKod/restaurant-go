@@ -15,7 +15,7 @@ type Product struct {
 // - db: Object of Product
 // Returns:
 // - A pointer to newly created Prodcut instance
-func NewProduct(db *sqlx.DB) *Product {
+func NewProductStore(db *sqlx.DB) *Product {
 	return &Product{
 		db,
 	}
