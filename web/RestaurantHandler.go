@@ -96,7 +96,7 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 	}
 }
 
-func (h *Handler) GetRestaurants() http.HandlerFunc {
+func (h *Handler) GetAllRestaurants() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
@@ -108,12 +108,6 @@ func (h *Handler) GetRestaurants() http.HandlerFunc {
 		}
 
 		h.RenderJson(w, http.StatusOK, restaurants)
-	}
-}
-
-func (h *Handler) getRestaurantById() http.HandlerFunc {
-	return func(writer http.ResponseWriter, request *http.Request) {
-		return
 	}
 }
 
