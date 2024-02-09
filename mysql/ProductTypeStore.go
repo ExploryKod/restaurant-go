@@ -15,7 +15,8 @@ func NewProductTypeStore(db *sqlx.DB) *ProductTypeStore {
 		db,
 	}
 }
-// Get Product type by restaurant id
+
+// Get Product Type by restaurant id
 // Parameters:
 // - resturantId: Id of the restaurant
 // Returns:
@@ -34,7 +35,11 @@ func (t *ProductTypeStore) GetProductTypeByRestaurantId(resturantId string) (*en
 	return product, nil
 }
 
-
+// Add Product Type
+// Parameters:
+// - item: Object Product Type
+// Returns:
+// - Id of inserted Product Type
 func (t *ProductTypeStore) AddProduct(item entity.ProductType) (int, error) {
 	res, err := t.DB.Exec("INSERT INTO Product_type ( , ) VALUES ( , )", item, item)
 	if err != nil {
@@ -49,6 +54,11 @@ func (t *ProductTypeStore) AddProduct(item entity.ProductType) (int, error) {
 	return int(id), nil
 }
 
+// Delete Product
+// Parameters:
+// - id: The is of Product Type
+// Returns:
+// - nil
 func (t *ProductTypeStore) DeleteProductType(id int) error {
 	_, err := t.DB.Exec("DELETE FROM Product_type WHERE id = ?", id)
 	if err != nil {
