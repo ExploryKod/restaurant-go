@@ -1,9 +1,5 @@
 package entity
 
-import (
-	"database/sql"
-)
-
 type Product struct {
 	ID          int         `json:"id" db:"id"`
 	ProductType ProductType `json:"product_type" db:"product_type"`
@@ -15,7 +11,7 @@ type Product struct {
 }
 
 type ProductStoreInterface interface {
-	GetProductByRestaurantId() ([]Product, error)
+	GetProductByRestaurantId(restaurantId string) (*Product, error)
 	AddProduct(item Product) (int, error)
-	DeleteProduct(id Product) error
+	DeleteProduct(id int) error
 }

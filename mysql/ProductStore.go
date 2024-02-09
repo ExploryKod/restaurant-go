@@ -3,11 +3,13 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"github.com/jmoiron/sqlx"
 	"restaurantHTTP/entity"
+
+	"github.com/jmoiron/sqlx"
 )
+
 // Product Represents a product with restaurant
-type Product struct {
+type ProductStore struct {
 	*sqlx.DB
 }
 
@@ -16,8 +18,8 @@ type Product struct {
 // - db: Object of Product
 // Returns:
 // - A pointer to newly created Prodcut instance
-func NewProductStore(db *sqlx.DB) *Product {
-	return &Product{
+func NewProductStore(db *sqlx.DB) *ProductStore {
+	return &ProductStore{
 		db,
 	}
 }
@@ -27,7 +29,7 @@ func NewProductStore(db *sqlx.DB) *Product {
 // - resturantId: Id of the restaurant
 // Returns:
 // - A list of Product
-func (t *Product) GetProductByRestaurantId(resturantId string) (*entity.Product, error) {
+func (t *ProductStore) GetProductByRestaurantId(resturantId string) (*entity.Product, error) {
 
 	product := &entity.Product{}
 
@@ -46,7 +48,7 @@ func (t *Product) GetProductByRestaurantId(resturantId string) (*entity.Product,
 // - item: Object Product
 // Returns:
 // - Id of inserted Product
-func (t *Product) AddProduct(item entity.Product) (int, error) {
+func (t *ProductStore) AddProduct(item entity.Product) (int, error) {
 	res, err := t.DB.Exec("INSERT INTO Product ( , ) VALUES ( , )", item, item)
 	if err != nil {
 		return 0, err
@@ -65,7 +67,7 @@ func (t *Product) AddProduct(item entity.Product) (int, error) {
 // - id: The is of Product
 // Returns:
 // - nil
-func (t *Product) DeleteProduct(id int) error {
+func (t *ProductStore) DeleteProduct(id int) error {
 	_, err := t.DB.Exec("DELETE FROM Product WHERE id = ?", id)
 	if err != nil {
 		return err

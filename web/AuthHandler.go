@@ -2,15 +2,15 @@ package web
 
 import (
 	"fmt"
-	"github.com/gorilla/sessions"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
 	"time"
+	// "github.com/gorilla/sessions"
 )
 
-var storeSession = sessions.NewCookieStore([]byte("faux-token-temporaire"))
+// var storeSession = sessions.NewCookieStore([]byte("faux-token-temporaire"))
 
 func (h *Handler) GetHomePage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
