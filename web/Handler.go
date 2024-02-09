@@ -52,6 +52,9 @@ func NewHandler(store *database.Store) *Handler {
 		r.Get("/signup", handler.Signup())
 		r.Post("/signup", handler.Signup())
 
+		r.Get("/product/type/create", handler.AddProductType())
+		r.Post("/product/type/create", handler.AddProductType())
+
 		r.Get("/checkEmailAndUsername", handler.checkEmailAndUsername())
 	})
 
@@ -85,6 +88,10 @@ func NewHandler(store *database.Store) *Handler {
 		r.Route("/api", func(r chi.Router) {
 			r.Post("/restaurant/register", handler.RegisterRestaurant())
 		})
+		// Product
+		// r.Route("/product", func(r chi.Router) {
+		// 	r.Get("/product/type", handler.AddProductType())
+		// })
 
 	})
 
