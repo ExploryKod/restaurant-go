@@ -17,6 +17,7 @@ type User struct {
 }
 
 type UserStoreInterface interface {
+	GetUserByID(id int) *User
 	GetUserByUsername(username string) (*User, error)
 	GetUsers() ([]User, error)
 	AddUser(item User) (int, error)

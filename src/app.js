@@ -1,5 +1,25 @@
 document.addEventListener('alpine:init', () => {
 
+    Alpine.store('user', {
+        id: null,
+        username: null,
+        email: null,
+        isLogged: false,
+        login(id,username, email) {
+            this.id = id;
+            this.username = username;
+            this.email = email;
+            this.isLogged = true;
+        },
+        logout() {
+            this.id = null;
+            this.username = null;
+            this.email = null;
+            this.isLogged = false;
+        }
+    });
+
+
     Alpine.data('checker', () => ({
         username: '',
         email: '',

@@ -8,8 +8,22 @@
         <h1 class="text-6xl font-bold text-indigo-500">Maintenant on est connecté</h1>
         <p class="">Mais il reste à gérer un vrai token etc...</p>
     </div>
+        <script>
+            function cookieExists(cookieName) {
+                const cookies = document.cookie.split('; ');
+
+                for (const cookie of cookies) {
+                    const [name] = cookie.split('=');
+
+                    if (name === cookieName) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            console.log(cookieExists('token'))
+        </script>
 {{end}}
-
-
-
 

@@ -17,11 +17,20 @@ func NewUserStore(db *sqlx.DB) *UserStore {
 	}
 }
 
-func (t *UserStore) GetUserByUsername(username string) (*entity.User, error) {
+func (u *UserStore) GetUserByID(id int) *entity.User {
+	user := &entity.User{}
+	err := u.Get(user, "SELECT id, username, password, name, firstname, mail, phone, is_superadmin, birthday FROM Users WHERE id = ?", id)
+	if err != nil {
+		return nil
+	}
+	return user
+}
+
+func (u *UserStore) GetUserByUsername(username string) (*entity.User, error) {
 
 	user := &entity.User{}
 
-	err := t.Get(user, "SELECT id, username, password, name, firstname, mail, phone, is_superadmin, birthday FROM Users WHERE username = ?", username)
+	err := u.Get(user, "SELECT id, username, password, name, firstname, mail, phone, is_superadmin, birthday FROM Users WHERE username = ?", username)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	} else if err != nil {
@@ -31,10 +40,24 @@ func (t *UserStore) GetUserByUsername(username string) (*entity.User, error) {
 	return user, nil
 }
 
-func (t *UserStore) GetUsers() ([]entity.User, error) {
+func (u *UserStore) GetUserByMail(mail string) (*entity.User, error) {
+
+	user := &entity.User{}
+
+	err := u.Get(user, "SELECT id, username, password, name, firstname, mail, phone, is_superadmin, birthday FROM Users WHERE mail = ?", mail)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (u *UserStore) GetUsers() ([]entity.User, error) {
 	var todos []entity.User
 
-	rows, err := t.Query("SELECT id, title, completed FROM users")
+	rows, err := u.Query("SELECT id, title, completed FROM users")
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +79,8 @@ func (t *UserStore) GetUsers() ([]entity.User, error) {
 	return todos, nil
 }
 
-func (t *UserStore) AddUser(item entity.User) (int, error) {
-	res, err := t.DB.Exec("INSERT INTO users ( , ) VALUES ( , )", item, item)
+func (u *UserStore) AddUser(item *entity.User) (int, error) {
+	res, err := u.DB.Exec("INSERT INTO Users (username, password, name, firstname, mail, phone, is_superadmin, birthday) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", item.Username, item.Password, item.Name, item.Firstname, item.Mail, item.Phone, item.IsSuperadmin, item.Birthday)
 	if err != nil {
 		return 0, err
 	}
@@ -70,8 +93,8 @@ func (t *UserStore) AddUser(item entity.User) (int, error) {
 	return int(id), nil
 }
 
-func (t *UserStore) DeleteUser(id int) error {
-	_, err := t.DB.Exec("DELETE FROM users WHERE id = ?", id)
+func (u *UserStore) DeleteUser(id int) error {
+	_, err := u.DB.Exec("DELETE FROM users WHERE id = ?", id)
 	if err != nil {
 		return err
 	}
@@ -79,8 +102,8 @@ func (t *UserStore) DeleteUser(id int) error {
 	return nil
 }
 
-func (t *UserStore) ToggleIsAdmin(id int) error {
-	_, err := t.DB.Exec("UPDATE users SET `is_superadmin` = IF (`is_superadmin`, 0, 1) WHERE id = ?", id)
+func (u *UserStore) ToggleIsAdmin(id int) error {
+	_, err := u.DB.Exec("UPDATE users SET `is_superadmin` = IF (`is_superadmin`, 0, 1) WHERE id = ?", id)
 	if err != nil {
 		return err
 	}
