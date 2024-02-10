@@ -3,16 +3,14 @@ package web
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth/v5"
 	"log"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
 	"time"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/jwtauth/v5"
 )
 
 func (h *Handler) CreateOrder() http.HandlerFunc {
@@ -26,7 +24,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 			return
 		}
 
-		restaurantIDUrl := request.URL.Query().Get("restaurant_id")
+		restaurantIDUrl := chi.URLParam(request, "id")
 
 		_, claims, err := jwtauth.FromContext(request.Context())
 		if err != nil {
@@ -36,7 +34,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		}
 
 		/* products */
-		var products []entity.Product
+		var products *[]entity.Product
 
 		if err := json.NewDecoder(request.Body).Decode(&products); err != nil {
 			log.Println(err)
@@ -55,39 +53,37 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 
 		/*order*/
 		restaurantID, _ := strconv.Atoi(restaurantIDUrl)
-		restaurant, err := h.RestaurantStore.GetRestaurantByID(restaurantID)
-		if err != nil {
-			fmt.Println(err)
+		restaurant := h.RestaurantStore.GetRestaurantByID(restaurantID)
+		if restaurant == nil {
+			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": "restaurant not found"})
 			return
 		}
-		order := entity.NewOrder(*user, *restaurant, "pending", 0, 0, time.Now(), sql.NullTime{})
 
-		_, err = h.OrderStore.AddOrder(*order)
+		totalPrice := 0.0
+		for _, product := range *products {
+			totalPrice += float64(product.Price)
+		}
+
+		order := entity.NewOrder(*user, *restaurant, "pending", totalPrice, 0, time.Now(), sql.NullTime{})
+
+		var lastOrderID int
+		lastOrderID, err = h.OrderStore.AddOrder(*order)
+		if err != nil {
+			log.Println(err)
+			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+			return
+		}
+		order.ID = lastOrderID
+
+		orderHasProduct := entity.NewOrderHasProduct(*order, *products)
+
+		_, err = h.OrderHasProductStore.AddOrderHasProduct(orderHasProduct)
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
 			return
 		}
 
-		orderHasProduct := entity.NewOrderHasProduct(*order, products)
-
-		_, err = h.OrderHasProductStore.AddOrderHasProduct(*orderHasProduct)
-		if err != nil {
-			log.Println(err)
-			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
-			return
-		}
-
-		for _, product := range products {
-			fmt.Printf("ID: %d\n", product.ID)
-			fmt.Printf("Name: %s\n", product.Name)
-			fmt.Printf("Price: %d\n", product.Price)
-			fmt.Printf("Image: %s\n", product.Image)
-			fmt.Printf("Description: %s\n", product.Description)
-			fmt.Println("-------------------------------------")
-		}
-
-		h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Order created successfully!", "products": products})
-
+		h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Order created successfully!", "data": orderHasProduct})
 	}
 }
