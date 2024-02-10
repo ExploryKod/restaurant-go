@@ -14,7 +14,7 @@ func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetRestaurant()
+		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -36,7 +36,7 @@ func (h *Handler) ShowMenuByRestaurant() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetRestaurant()
+		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -58,7 +58,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetRestaurant()
+		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -80,7 +80,7 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetRestaurant()
+		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -94,9 +94,9 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 	}
 }
 
-func (h *Handler) GetRestaurants() http.HandlerFunc {
+func (h *Handler) GetAllRestaurants() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		restaurants, err := h.RestaurantStore.GetRestaurant()
+		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			// Handle database error
 			h.RenderJson(w, http.StatusInternalServerError, map[string]interface{}{
@@ -109,7 +109,7 @@ func (h *Handler) GetRestaurants() http.HandlerFunc {
 	}
 }
 
-func (h *Handler) getRestaurantById() http.HandlerFunc {
+func (h *Handler) GetAllRestaurantsById() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
