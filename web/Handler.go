@@ -18,8 +18,8 @@ func init() {
 	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
 }
 
-func makeToken(name string) string {
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"username": name})
+func makeToken(id int, name string, email string) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": name, "user": email})
 	return tokenString
 }
 

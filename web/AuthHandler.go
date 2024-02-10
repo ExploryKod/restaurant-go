@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"restaurantHTTP"
-	"strconv"
 	"restaurantHTTP/entity"
 	"time"
 )
@@ -28,7 +27,7 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 
 			username := session.Values["username"].(string)
 			token := session.Values["token"].(string)
-			data := restaurantHTTP.TemplateData{Title: "Home", Content: entity.User{Username: username}, Token: token}
+			data := restaurantHTTP.TemplateData{Titre: "Accueil", Content: entity.User{Username: username}, Token: token}
 
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
@@ -48,7 +47,7 @@ func (h *Handler) Login() http.HandlerFunc {
 				decodedMessage = ""
 			}
 
-			data := restaurantHTTP.TemplateData{Title: "Login"}
+			data := restaurantHTTP.TemplateData{Titre: "Login"}
 			if decodedMessage != "" {
 				data.Success = decodedMessage
 			}
@@ -105,7 +104,7 @@ func (h *Handler) Login() http.HandlerFunc {
 func (h *Handler) Signup() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method == http.MethodGet {
-			data := restaurantHTTP.TemplateData{Title: "Signup"}
+			data := restaurantHTTP.TemplateData{Titre: "Signup"}
 
 			h.RenderHtml(writer, data, "auth/signup.gohtml")
 			return
@@ -123,9 +122,8 @@ func (h *Handler) Signup() http.HandlerFunc {
 			fmt.Println(response)
 			return
 		}
-
 		if response != nil {
-			h.RenderHtml(writer, restaurantHTTP.TemplateData{Title: "Signup", Error: "Username already taken !"}, "auth/signup.gohtml")
+			h.RenderHtml(writer, restaurantHTTP.TemplateData{Titre: "Signup", Error: "Username already taken !"}, "auth/signup.gohtml")
 			return
 		}
 
@@ -181,7 +179,7 @@ func (h *Handler) Logout() http.HandlerFunc {
 }
 
 func (h *Handler) failLogin(writer http.ResponseWriter, request *http.Request) {
-	data := restaurantHTTP.TemplateData{Title: "Login", Error: "Nom d'utilisateur ou mot de passe incorrect !"}
+	data := restaurantHTTP.TemplateData{Titre: "Login", Error: "Nom d'utilisateur ou mot de passe incorrect !"}
 
 	h.RenderHtml(writer, data, "auth/login.gohtml")
 }
