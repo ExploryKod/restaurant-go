@@ -15,9 +15,14 @@ func NewOrderHasProductStore(db *sqlx.DB) *OrderHasProductStore {
 	}
 }
 
-func (o OrderHasProductStore) AddOrderHasProduct(item entity.OrderHasProduct) (int, error) {
-	//TODO implement me
-	panic("implement me")
+func (o OrderHasProductStore) AddOrderHasProduct(item *entity.OrderHasProduct) (int, error) {
+	for _, product := range item.Products {
+		_, err := o.Exec("INSERT INTO Order_has_products (order_id, product_id) VALUES ( ? , ? )", item.Order.ID, product.ID)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return 0, nil
 }
 
 func (o OrderHasProductStore) GetAllOrderHasProducts() ([]entity.OrderHasProduct, error) {

@@ -5,7 +5,7 @@ document.addEventListener('alpine:init', () => {
         username: null,
         email: null,
         isLogged: false,
-        login(id,username, email) {
+        login(id, username, email) {
             this.id = id;
             this.username = username;
             this.email = email;
@@ -342,7 +342,7 @@ document.addEventListener('alpine:init', () => {
                 },
                 body: JSON.stringify(Alpine.store('cart').items),
             })
-                .then(response => response.json())
+                .then(response => (response.json()))
                 .then(data => {
                     console.log('Success:', data);
                     this.toggle();
