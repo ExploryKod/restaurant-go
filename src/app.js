@@ -5,7 +5,7 @@ document.addEventListener('alpine:init', () => {
         username: null,
         email: null,
         isLogged: false,
-        login(id,username, email) {
+        login(id, username, email) {
             this.id = id;
             this.username = username;
             this.email = email;
