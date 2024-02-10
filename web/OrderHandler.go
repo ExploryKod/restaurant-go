@@ -34,7 +34,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		}
 
 		/* products */
-		var products []entity.Product
+		var products *[]entity.Product
 
 		if err := json.NewDecoder(request.Body).Decode(&products); err != nil {
 			log.Println(err)
@@ -59,7 +59,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		}
 
 		totalPrice := 0.0
-		for _, product := range products {
+		for _, product := range *products {
 			totalPrice += float64(product.Price)
 		}
 
@@ -74,7 +74,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		}
 		order.ID = lastOrderID
 
-		orderHasProduct := entity.NewOrderHasProduct(*order, products)
+		orderHasProduct := entity.NewOrderHasProduct(*order, *products)
 
 		_, err = h.OrderHasProductStore.AddOrderHasProduct(orderHasProduct)
 		if err != nil {
