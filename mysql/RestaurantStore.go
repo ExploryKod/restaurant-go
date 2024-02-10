@@ -9,6 +9,16 @@ type RestaurantStore struct {
 	*sqlx.DB
 }
 
+func (t *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (t *RestaurantStore) GetRestaurantByID(id int) *entity.Restaurant {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewRestaurantStore(db *sqlx.DB) *RestaurantStore {
 	return &RestaurantStore{
 		db,

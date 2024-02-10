@@ -20,7 +20,7 @@ func main() {
 
 	conf := mysql.Config{
 		User:                 "root",
-		Passwd:               "Rankwell@89",
+		Passwd:               os.Getenv("BDD_PASSWORD"),
 		Addr:                 os.Getenv("BDD_PORT"),
 		DBName:               "restaurantbdd",
 		Net:                  "tcp",
