@@ -53,24 +53,33 @@ func (t *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 	return restaurantList, nil
 }
 
-func (t *RestaurantStore) GetRestaurantByID(id int) (*entity.Restaurant, error) {
-	var restaurant *entity.Restaurant
-
-	rows, err := t.Query("SELECT id, name, logo, mail, is_validated  FROM Restaurants WHERE id = ?", id)
+func (s *RestaurantStore) GetRestaurantByID(id int) *entity.Restaurant {
+	restaurant := &entity.Restaurant{}
+	err := s.Get(restaurant, "SELECT id, name, logo, mail, is_validated FROM Restaurants WHERE id = ?", id)
 	if err != nil {
-		return nil, err
+		return nil
 	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		if err = rows.Scan(&restaurant.ID, &restaurant.Name, &restaurant.Logo, &restaurant.Mail, &restaurant.IsValidated); err != nil {
-			return nil, err
-		}
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-	return restaurant, nil
+	return restaurant
 }
+
+//func (t *RestaurantStore) GetRestaurantByID(id int) (*entity.Restaurant, error) {
+//	var restaurant *entity.Restaurant
+//
+//	rows, err := t.Query("SELECT id, name, logo, mail, is_validated  FROM Restaurants WHERE id = ?", id)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	defer rows.Close()
+//
+//	for rows.Next() {
+//		if err = rows.Scan(&restaurant.ID, &restaurant.Name, &restaurant.Logo, &restaurant.Mail, &restaurant.IsValidated); err != nil {
+//			return nil, err
+//		}
+//	}
+//
+//	if err = rows.Err(); err != nil {
+//		return nil, err
+//	}
+//	return restaurant, nil
+//}
