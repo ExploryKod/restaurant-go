@@ -1,10 +1,8 @@
 package web
 
 import (
-	"github.com/go-mail/mail"
 	"net/http"
-	"net/smtp"
-	"restaurantHTTP"
+	"restaurantHTTP/service"
 )
 
 func (h *Handler) AskToAddRestaurantByEmail() http.HandlerFunc {
@@ -25,40 +23,68 @@ func (h *Handler) AskToAddRestaurantByEmail() http.HandlerFunc {
 		restaurantSubject := request.FormValue("restaurant-subject")
 		restaurantMessage := request.FormValue("restaurant-message")
 
+		//_, err = h.RestaurantStore.AddRestaurant(entity.Restaurant{Name: restaurantName, Phone: restaurantTel, Mail: restaurantEmail})
 		// Mailtrap account config
-		username := "953143d5103e03"
-		password := "143f5c5914b162"
-		smtpHost := "sandbox.smtp.mailtrap.io"
+		template := "pages/home.gohtml"
 
-		// Choose auth method
-		auth := smtp.PlainAuth("", username, password, smtpHost)
+		message := []byte("" +
+			"To: a_franssen@hetic.eu\r\n" +
+			"From:" + restaurantEmail +
+			"\r\n" +
+			"Subject: " + restaurantSubject + "\r\n" + "\r\n" +
+			"\r\n" + restaurantName + "\r\n" + restaurantMessage + "\r\n")
 
-		// Create a new email message
-		m := mail.NewMessage()
-		m.SetHeader("From", restaurantEmail)
-		m.SetHeader("To", "a_franssen@hetic.eu")
-		m.SetHeader("Subject", restaurantSubject)
-
-		// Set the email body as HTML
-		m.SetBody("text/html", "<strong>"+restaurantName+"</strong><br/>"+restaurantMessage)
-
-		// Setup the dialer with the SMTP server details
-		d := mail.NewDialer(smtpHost, 25, username, password)
-
-		// Send the email
-		if err := d.DialAndSend(m); err != nil {
-			data := restaurantHTTP.TemplateData{Error: "Echec de l'envoi d'email, veuillez réessayer"}
-			h.RenderHtml(writer, data, "pages/home.gohtml")
-			return
+		emailData := service.EmailData{
+			ReceiverEmail: restaurantEmail,
+			SenderEmail:   "restaurago@goemail.com",
+			Subject:       restaurantSubject,
+			Message:       message,
 		}
+		service.MakeMailtrapEmail(h, writer, emailData, template)
 
-		data := restaurantHTTP.TemplateData{Success: "Vous avez bien envoyé votre email"}
-		h.RenderHtml(writer, data, "pages/home.gohtml")
-		return
+		//username := os.Getenv("SMTP_USERNAME")
+		//
+		//password := os.Getenv("SMTP_PASSWORD")
+		//
+		//smtpHost := os.Getenv("SMTP_HOST")
+		//
+		//// Use this to send real email (Prod) with MailTrap api account:
+		////username := "api"
+		////
+		////password := "<secret_token>"
+		////
+		////smtpHost := "live.smtp.mailtrap.io"
+		//
+		//// Choose auth method
+		//auth := smtp.PlainAuth("", username, password, smtpHost)
+		//// Message data
+		//from := restaurantEmail
+		//to := []string{"a_franssen@hetic.eu"}
+		//
+		//message := []byte("" +
+		//	"To: a_franssen@hetic.eu\r\n" +
+		//	"From: amaury.fra@restaurantgo.dev\r\n" +
+		//	"\r\n" +
+		//	"Subject: " + restaurantSubject + "\r\n" + "\r\n" +
+		//	"\r\n" + restaurantName + "\r\n" + restaurantMessage + "\r\n")
+		//
+		//// Connect to the server and send message
+		//smtpUrl := smtpHost + os.Getenv("SMTP_PORT")
+		//
+		//err := smtp.SendMail(smtpUrl, auth, from, to, message)
+		//if err != nil {
+		//	//log.Fatal(err)
+		//	data := restaurantHTTP.TemplateData{Error: "Echec de l'envoi d'email, veuillez réessayer"}
+		//	h.RenderHtml(writer, data, "pages/home.gohtml")
+		//	return
+		//}
+		//data := restaurantHTTP.TemplateData{Success: "Vous avez bien envoyé votre email"}
+		//h.RenderHtml(writer, data, "pages/home.gohtml")
+		//return
 	}
 }
 
-//func (h *Handler) AskToAddRestaurantByEmail() http.HandlerFunc {
+//func (h *Handler) AskToAddRestaurantByEmailWithHTML() http.HandlerFunc {
 //	return func(writer http.ResponseWriter, request *http.Request) {
 //		if request.Method != "POST" {
 //			http.Error(writer, "cette route n'est disponible qu'en POST", http.StatusBadRequest)
@@ -76,45 +102,33 @@ func (h *Handler) AskToAddRestaurantByEmail() http.HandlerFunc {
 //		restaurantSubject := request.FormValue("restaurant-subject")
 //		restaurantMessage := request.FormValue("restaurant-message")
 //
-//		//_, err = h.RestaurantStore.AddRestaurant(entity.Restaurant{Name: restaurantName, Phone: restaurantTel, Mail: restaurantEmail})
 //		// Mailtrap account config
-//
 //		username := "953143d5103e03"
-//
 //		password := "143f5c5914b162"
-//
 //		smtpHost := "sandbox.smtp.mailtrap.io"
-//
-//		// Use this to send real email (Prod) with MailTrap api account:
-//		//username := "api"
-//		//
-//		//password := "<secret_token>"
-//		//
-//		//smtpHost := "live.smtp.mailtrap.io"
 //
 //		// Choose auth method
 //		auth := smtp.PlainAuth("", username, password, smtpHost)
-//		// Message data
-//		from := restaurantEmail
-//		to := []string{"a_franssen@hetic.eu"}
 //
-//		message := []byte("" +
-//			"To: a_franssen@hetic.eu\r\n" +
-//			"From: amaury.fra@restaurantgo.dev\r\n" +
-//			"\r\n" +
-//			"Subject: " + restaurantSubject + "\r\n" + "\r\n" +
-//			"\r\n" + restaurantName + "\r\n" + restaurantMessage + "\r\n")
+//		// Create a new email message
+//		m := mail.NewMessage()
+//		m.SetHeader("From", restaurantEmail)
+//		m.SetHeader("To", "a_franssen@hetic.eu")
+//		m.SetHeader("Subject", restaurantSubject)
 //
-//		// Connect to the server and send message
-//		smtpUrl := smtpHost + ":25"
+//		// Set the email body as HTML
+//		m.SetBody("text/html", "<strong>"+restaurantName+"</strong><br/>"+restaurantMessage)
 //
-//		err := smtp.SendMail(smtpUrl, auth, from, to, message)
-//		if err != nil {
-//			//log.Fatal(err)
+//		// Setup the dialer with the SMTP server details
+//		d := mail.NewDialer(smtpHost, 25, username, password)
+//
+//		// Send the email
+//		if err := d.DialAndSend(m); err != nil {
 //			data := restaurantHTTP.TemplateData{Error: "Echec de l'envoi d'email, veuillez réessayer"}
 //			h.RenderHtml(writer, data, "pages/home.gohtml")
 //			return
 //		}
+//
 //		data := restaurantHTTP.TemplateData{Success: "Vous avez bien envoyé votre email"}
 //		h.RenderHtml(writer, data, "pages/home.gohtml")
 //		return
