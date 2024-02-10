@@ -5,3 +5,9 @@ type ProductType struct {
 	Name string `json:"name"`
 	Icon string `json:"icon"`
 }
+
+type ProductTypeStoreInterface interface {
+	GetProductTypeByRestaurantId(resturantId string) (*ProductType, error)
+	AddProduct(item ProductType) (int, error)
+	DeleteProductType(id int) error
+}

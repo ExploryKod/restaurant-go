@@ -86,6 +86,9 @@ func NewHandler(store *database.Store) *Handler {
 		r.Post("/restaurant/orders/create", handler.CreateOrder())
 	})
 
+	// Product
+	handler.Get("/productType", handler.GetProductTypePage())
+
 	return handler
 }
 
