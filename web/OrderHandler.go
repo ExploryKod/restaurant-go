@@ -19,7 +19,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 
 			ID := chi.URLParam(request, "id")
 
-			templateData := restaurantHTTP.TemplateData{Titre: "Create Order", Content: struct{ IdRestaurant string }{IdRestaurant: ID}}
+			templateData := restaurantHTTP.TemplateData{Title: "Create Order", Content: struct{ IdRestaurant string }{IdRestaurant: ID}}
 			h.RenderHtml(writer, templateData, "pages/order/create.gohtml")
 			return
 		}

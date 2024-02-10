@@ -67,7 +67,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 		}
 		// TODO: limiter à un accés admin seulement (il créé le restaurant à la suite d'un email > formulaire de contact restaurateur > admin)
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Titre: "Inscription d'un nouveau restaurant", Content: restaurants}
+			data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Content: restaurants}
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
@@ -89,7 +89,7 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 		//}
 		// TODO: doit se faire en fonction de l'id du restaurant
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Titre: "Fiche restaurant", Content: ""}
+			data := restaurantHTTP.TemplateData{Title: "Fiche restaurant", Content: ""}
 			h.RenderHtml(writer, data, "pages/restaurants.profile.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
@@ -139,7 +139,7 @@ func (h *Handler) RegisterRestaurant() http.HandlerFunc {
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
 			return
 		}
-		data := restaurantHTTP.TemplateData{Titre: "Inscription d'un nouveau restaurant", Success: restaurantName + " est inscris dans le FoodCourt."}
+		data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Success: restaurantName + " est inscris dans le FoodCourt."}
 		h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
 		return
 	}
