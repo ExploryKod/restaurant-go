@@ -60,7 +60,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 			fmt.Println(err)
 			return
 		}
-		order := entity.NewOrder(*user, *restaurant, "pending", totalPrice, 0, time.Now(), sql.NullTime{})
+		order := entity.NewOrder(*user, *restaurant, "pending", 0, 0, time.Now(), sql.NullTime{})
 
 		_, err = h.OrderStore.AddOrder(*order)
 		if err != nil {
