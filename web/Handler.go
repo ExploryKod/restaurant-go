@@ -73,15 +73,15 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Route("/restaurant", func(r chi.Router) {
 			r.Get("/", handler.ShowRestaurantsPage())
-			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
 			r.Get("/get", handler.GetAllRestaurants())
-			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
-			r.Get("/menu/{id}", handler.CreateOrder())
+			r.Get("/menus/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/order/{id}", handler.CreateOrder())
 			r.Post("/orders/create", handler.CreateOrder())
+			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})
 
-		r.Route("/admin", func(r chi.Router) {
-			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
+		r.Route("/email", func(r chi.Router) {
+			r.Post("/create-restaurant", handler.AskToAddRestaurantByEmail())
 		})
 
 		r.Route("/api", func(r chi.Router) {

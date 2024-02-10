@@ -1010,6 +1010,10 @@ video {
   margin: auto;
 }
 
+.m-1 {
+  margin: 0.25rem;
+}
+
 .mx-0 {
   margin-left: 0px;
   margin-right: 0px;
@@ -2698,10 +2702,6 @@ nav .sub-nav-item:focus {
 
   .sm\:w-3\/5 {
     width: 60%;
-  }
-
-  .sm\:w-auto {
-    width: auto;
   }
 
   .sm\:max-w-sm {
