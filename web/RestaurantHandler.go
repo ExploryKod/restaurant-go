@@ -89,6 +89,23 @@ func (h *Handler) GetAllRestaurants() http.HandlerFunc {
 	}
 }
 
+func (h *Handler) ShowBecomeRestaurantPage() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		session, err := storeSession.Get(request, "session-basic")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
+			data := restaurantHTTP.TemplateData{Error: "", Success: ""}
+			h.RenderHtml(writer, data, "pages/restaurants.subscribe.gohtml")
+		}
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
+	}
+}
+
 func (h *Handler) RegisterRestaurant() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method != "POST" {

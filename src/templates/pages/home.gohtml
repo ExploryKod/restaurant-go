@@ -445,49 +445,6 @@
 
         </div>
     </section>
-<div class="max-w-md mx-auto my-8">
-    <h1 class="text-red-800 text-3xl font-bold mb-4"> Devenir restaurateur </h1>
-    <p class="text-cyan-700 text-sm font-semibold mb-2">Afin de devenir restaurateur chez RestaurantGo, nous vous invitons à remplir le formulaire ci-dessous.</p>
-    <p class="text-cyan-700 text-sm font-semibold mb-4">Nous reviendrons vers vous par email ou téléphone pour vous indiquer le reste de la marche à suivre.</p>
-
-    {{if .Error}}
-        <div class="bg-red-500 text-white p-2 rounded mb-4">{{.Error}}</div>
-    {{end}}
-    {{if .Success}}
-        <div class="bg-emerald-500 text-white p-2 rounded mb-4">{{.Success}}</div>
-    {{end}}
-    <form class="bg-white rounded-lg shadow-md p-8" action="/email/create-restaurant" method="post">
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-name">Nom du restaurant:</label>
-            <small class="mb-2 text-xs text-gray-500 italic">Nom pour vous identifier dans le Food Court.</small>
-            <input class="basic-input" type="text" name="restaurant-name" id="restaurant-name" placeholder="Nom du restaurant" required>
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-tel">Téléphone:</label>
-            <input class="basic-input" type="tel" name="restaurant-tel" id="restaurant-tel" placeholder="+33 (0)3 22 36 56 89">
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-subject">Objet:</label>
-            <input class="basic-input" type="text" name="restaurant-subject" id="restaurant-subject" placeholder="Objet de votre email">
-        </div>
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Email:</label>
-            <input class="basic-input" type="email" name="restaurant-email" id="restaurant-email" placeholder="nom@gmail.com">
-        </div>
-
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-message">Votre message:</label>
-            <small class="mb-2 text-xs text-gray-500 italic">Donnez-nous de l'information sur votre cuisine, un lien vers votre site web, la raison de votre demande.</small>
-            <textarea id="restaurant-message" placeholder="Votre message" class="basic-input text-grey-darkest p-2 m-1 bg-gray-50" rows="6" cols="50" name="restaurant-message">
-            </textarea>
-        </div>
-        <div class="mt-2">
-            <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
-                Valider la demande
-            </button>
-        </div>
-    </form>
-</div>
         <script>
             function cookieExists(cookieName) {
                 const cookies = document.cookie.split('; ');

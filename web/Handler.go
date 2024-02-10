@@ -80,6 +80,8 @@ func NewHandler(store *database.Store) *Handler {
 
 			r.Post("/{id}/create-order", handler.CreateOrder())
 
+			r.Get("/become-restaurant", handler.ShowBecomeRestaurantPage())
+
 		})
 
 		r.Route("/order", func(r chi.Router) {
