@@ -38,7 +38,7 @@ func (h *Handler) AskToAddRestaurantByEmail() http.HandlerFunc {
 			ReceiverEmail:  restaurantEmail,
 			SenderEmail:    "restaurago@goemail.com",
 			Subject:        restaurantSubject,
-			errorMessage:   "Votre message ne nous ai pas parvenu, veuillez réessayer",
+			errorMessage:   "Votre message n'est pas parvenu, veuillez réessayer",
 			successMessage: "Votre email a bien été envoyé, nous vous contactons dans les meilleurs délais",
 			Message:        message,
 		}

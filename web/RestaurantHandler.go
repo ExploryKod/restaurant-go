@@ -139,3 +139,53 @@ func (h *Handler) RegisterRestaurant() http.HandlerFunc {
 		return
 	}
 }
+
+func (h *Handler) AddTagToRestaurant() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		if request.Method != "POST" {
+			http.Error(writer, "cette route n'est disponible qu'en POST", http.StatusBadRequest)
+			return
+		}
+
+		restaurantTag := request.FormValue("restaurant-tag")
+
+		_, err := h.RestaurantStore.AddTagToRestaurant(entity.Tag{Name: restaurantTag})
+		if err != nil {
+			data := restaurantHTTP.TemplateData{Error: "Echec de l'ajout de tag au restaurant"}
+			h.RenderHtml(writer, data, "pages/restaurants.admin.gohtml")
+			return
+		} else {
+			// get tag id of Tag (créer méthode dans model getTags)
+			// get id of the restaurant adding the tag > slug via gohtml
+			// Jointure
+			//_, err h.AddTagToRestaurantHasTag()
+		}
+		data := restaurantHTTP.TemplateData{Title: "", Success: "Nouveau tag" + restaurantTag + "ajouté"}
+		h.RenderHtml(writer, data, "pages/restaurants.admin.gohtml")
+		return
+	}
+}
+
+func (h *Handler) ShowAdminRestaurantPage() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		//	Temporairement à 0
+		restaurantId := 1
+		// TODO: get id to have it in the page and link to restaurant / tag
+		session, err := storeSession.Get(request, "session-basic")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		restaurant := h.RestaurantStore.GetRestaurantByID(restaurantId)
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
+			data := restaurantHTTP.TemplateData{Title: "", Content: restaurant}
+			h.RenderHtml(writer, data, "pages/restaurants.admin.gohtml")
+		}
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
+	}
+}

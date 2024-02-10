@@ -82,6 +82,10 @@ func NewHandler(store *database.Store) *Handler {
 
 			r.Get("/become-restaurant", handler.ShowBecomeRestaurantPage())
 
+			r.Get("/admin/{id}", handler.ShowAdminRestaurantPage())
+
+			r.Post("/tag/add", handler.AddTagToRestaurant())
+
 		})
 
 		r.Route("/order", func(r chi.Router) {

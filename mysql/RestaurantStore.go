@@ -29,6 +29,34 @@ func (s *RestaurantStore) AddRestaurant(item entity.Restaurant) (int, error) {
 	return int(id), nil
 }
 
+func (s *RestaurantStore) AddTagToRestaurant(item entity.Tag) (int, error) {
+	res, err := s.DB.Exec("INSERT INTO Tags (name) VALUES ( ? )", item.Name)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
+}
+
+func (s *RestaurantStore) AddTagToRestaurantHasTag(tagID int, restaurantID int) (int, error) {
+	res, err := s.DB.Exec("INSERT INTO RestaurantHasTags (restaurant_id, tag_id) VALUES ( ? , ?)", tagID, restaurantID)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
+}
+
 func (s *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 	var restaurantList []entity.Restaurant
 

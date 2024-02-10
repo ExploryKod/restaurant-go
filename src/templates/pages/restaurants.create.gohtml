@@ -22,22 +22,14 @@
             <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Email:</label>
             <input class="basic-input" type="email" name="restaurant-email" id="restaurant-email" placeholder="nom@gmail.com" required>
         </div>
-
-        <select name="" id="" class="px-2 outline-none appearance-none bg-transparent">
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="02">03</option>
-        </select>
-        <span class="px-2">:</span>
-        <select name="" id="" class="px-2 outline-none appearance-none bg-transparent">
-            <option value="00">00</option>
-            <option value="01">01</option>
-        </select>
-        <select name="" id="" class="px-2 outline-none appearance-none bg-transparent">
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
-        </select>
-
+        <div class="mb-4 flex justify-between">
+            <div class="p-2 mb-1 me-2">
+                <input class="basic-input" type="time" name="restaurant-open" id="restaurant-open" required>
+            </div>
+            <div class="p-2 mb-1 ms-2">
+                <input class="basic-input" type="time" name="restaurant-close" id="restaurant-close" required>
+            </div>
+        </div>
 {{/*        <div class="mb-4">*/}}
 {{/*            <label for="restaurant-open" class="flex flex-col flex-wrap cursor-pointer md:mb-0">*/}}
 {{/*                <span class="font-bold mb-2 block">Validation:</span>*/}}

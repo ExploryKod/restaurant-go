@@ -20,4 +20,6 @@ type RestaurantStoreInterface interface {
 	AddRestaurant(item Restaurant) (int, error)
 	GetAllRestaurants() ([]Restaurant, error)
 	GetRestaurantByID(id int) *Restaurant
+	AddTagToRestaurant(item Tag) (int, error)
+	AddTagToRestaurantHasTag(tagID int, restaurantID int) (int, error)
 }
