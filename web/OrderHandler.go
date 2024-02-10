@@ -87,3 +87,27 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Order created successfully!", "data": orderHasProduct})
 	}
 }
+
+func (h *Handler) GetOrder() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		ID := chi.URLParam(request, "id")
+
+		orderID, _ := strconv.Atoi(ID)
+
+		order := h.OrderStore.GetOrderByID(orderID)
+		if order == nil {
+			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": "order not found"})
+			return
+		}
+
+		orderHasProduct := h.OrderHasProductStore.GetOrderHasProductByOrderID(orderID)
+		if orderHasProduct == nil {
+			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": "order has product not found"})
+			return
+		}
+
+		orderHasProduct.Order = *order
+
+		h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Order found", "data": orderHasProduct})
+	}
+}

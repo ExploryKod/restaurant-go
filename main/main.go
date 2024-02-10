@@ -25,6 +25,7 @@ func main() {
 		DBName:               "restaurantbdd",
 		Net:                  "tcp",
 		AllowNativePasswords: true,
+		ParseTime:            true,
 	}
 
 	db, err := sqlx.Open("mysql", conf.FormatDSN())

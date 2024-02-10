@@ -15,7 +15,6 @@ func NewOrderHasProduct(order Order, products []Product) *OrderHasProduct {
 type OrderHasProductStoreInterface interface {
 	AddOrderHasProduct(item *OrderHasProduct) (int, error)
 	GetAllOrderHasProducts() ([]OrderHasProduct, error)
-	GetOrderHasProductByID(id int) *OrderHasProduct
-	GetOrderHasProductByOrderID(id int) []OrderHasProduct
-	GetOrderHasProductByProductID(id int) []OrderHasProduct
+	GetOrderHasProductByOrderID(id int) *OrderHasProduct
+	GetOrderHasProductByProductID(id int) *OrderHasProduct
 }

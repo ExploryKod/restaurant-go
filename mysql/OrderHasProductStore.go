@@ -1,7 +1,9 @@
 package database
 
 import (
+	"fmt"
 	"github.com/jmoiron/sqlx"
+	"log"
 	"restaurantHTTP/entity"
 )
 
@@ -30,17 +32,24 @@ func (o OrderHasProductStore) GetAllOrderHasProducts() ([]entity.OrderHasProduct
 	panic("implement me")
 }
 
-func (o OrderHasProductStore) GetOrderHasProductByID(id int) *entity.OrderHasProduct {
-	//TODO implement me
-	panic("implement me")
+func (o OrderHasProductStore) GetOrderHasProductByOrderID(id int) *entity.OrderHasProduct {
+	orderHasProduct := &entity.OrderHasProduct{}
+
+	query := `
+			SELECT id, name, price, image, description FROM Products p JOIN Order_has_products op ON p.id = op.product_id WHERE op.order_id = ?
+	`
+
+	err := o.Select(&orderHasProduct.Products, query, id)
+	if err != nil {
+		log.Println("orderhasproduct", err)
+		return nil
+	}
+	fmt.Printf("%#v\n", orderHasProduct.Products)
+
+	return orderHasProduct
 }
 
-func (o OrderHasProductStore) GetOrderHasProductByOrderID(id int) []entity.OrderHasProduct {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (o OrderHasProductStore) GetOrderHasProductByProductID(id int) []entity.OrderHasProduct {
+func (o OrderHasProductStore) GetOrderHasProductByProductID(id int) *entity.OrderHasProduct {
 	//TODO implement me
 	panic("implement me")
 }
