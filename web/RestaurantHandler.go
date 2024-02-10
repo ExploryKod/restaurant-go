@@ -23,7 +23,7 @@ func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 		}
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
+			data := restaurantHTTP.TemplateData{Content: restaurants, Error: "", Success: ""}
 			h.RenderHtml(writer, data, "pages/restaurants.client.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
@@ -45,8 +45,8 @@ func (h *Handler) ShowMenuByRestaurant() http.HandlerFunc {
 		}
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
-			h.RenderHtml(writer, data, "pages/restaurants.menu.gohtml")
+			data := restaurantHTTP.TemplateData{Content: restaurants, Error: "", Success: ""}
+			h.RenderHtml(writer, data, "pages/order/create.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
@@ -69,28 +69,6 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Content: restaurants}
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
-		}
-		http.Redirect(writer, request, "/login", http.StatusSeeOther)
-	}
-}
-
-func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
-	return func(writer http.ResponseWriter, request *http.Request) {
-
-		session, err := storeSession.Get(request, "session-name")
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		//_, err := h.RestaurantStore.GetAllRestaurants()
-		//if err != nil {
-		//	http.Error(writer, err.Error(), http.StatusInternalServerError)
-		//	return
-		//}
-		// TODO: doit se faire en fonction de l'id du restaurant
-		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Title: "Fiche restaurant", Content: ""}
-			h.RenderHtml(writer, data, "pages/restaurants.profile.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}

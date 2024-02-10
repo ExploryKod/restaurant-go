@@ -66,7 +66,7 @@
                         <div class="px-2 pt-2 pb-3 space-y-1">
                             <a href="/restaurant" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Nos restaurants</a>
 
-                            <a href="/profile" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Mes commandes</a>
+                            <a href="/orders" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Mes commandes</a>
                         </div>
                         <a href="/cart" class="block w-full px-5 py-3 text-center font-medium text-cyan-600 bg-gray-50 hover:bg-gray-100">
                             Mon panier
@@ -107,7 +107,7 @@
         </aside>
     </section>
 <!-- Afficher cet espace que si admin + ancre et scroll vers ici si clique sur "mon espace admin" -->
-    <section class="w-screen h-screen font-sans">
+    <section class="w-screen h-screen font-sans" id="dashboard">
 
         <div class="main-content grid grid-cols-1 grid-rows-2 lg:grid-cols-4 lg:grid-rows-1 h-100">
 
@@ -125,13 +125,13 @@
                                             <path fill="#334BCB" d="M464 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zM224 416H64V160h160v256zm224 0H288V160h160v256z"></path>
                                         </svg>
                                         <span class="mx-3">
-                    Dashboard</span>
+                    RestaurantGo - Board Administrateur</span>
                                     </a> </h1>
                                 <div class="">
                                     <div class="hidden lg:flex">
-                                        <a href="#" class="nav-item px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-blue focus:outline-none transition duration-150 ease-in-out">Home</a>
-                                        <a href="#" class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none">Setting</a>
-                                        <a href="#" class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none ">Help</a>
+                                        <a href="/#dashboard" class="nav-item px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-blue focus:outline-none transition duration-150 ease-in-out">Mon board</a>
+                                        <a href="admin/register-restaurant" class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none">Inscrire un restaurant</a>
+                                        <a href="#" class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none ">Emails</a>
 
                                     </div>
                                     <div class="flex lg:hidden">
@@ -184,8 +184,8 @@
                                     </g>
                                 </svg>
                             </p>
-                            <h2 class="text-5xl animate"> $9 </h2>
-                            <h2 class="text-base sm:w-3/5  w-full"> Yearly Tunover</h2>
+                            <h2 class="text-5xl animate"> $90 </h2>
+                            <h2 class="text-base sm:w-3/5  w-full"> CA de RestaurantGo </h2>
 
                         </div>
                         <div class="expand-card shadow-sm text-white bg-secondary-color p-2 rounded-lg">
@@ -212,62 +212,19 @@
                                     </g>
                                 </svg>
                             </p>
-                            <h2 class="text-5xl animate"> 85 </h2>
-                            <h2 class="text-base sm:w-3/5  w-full"> Enterprise Clients</h2>
+                            <h2 class="text-5xl animate"> 10 </h2>
+                            <h2 class="text-base sm:w-3/5  w-full"> restaurants </h2>
                         </div>
 
                     </div>
 
                     <div class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-4 lg:col-span-2 ">
-                        <h2 class="text-xl text-gray-500"> Earnings
-                            <button class="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-blue-200 focus:outline-none focus:text-white focus:text-blue-200 transition duration-150 ease-in-out  float-right" aria-label="refresh" onclick="refresh()">
-                                <svg width="20" height="20" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="sync-alt" class="svg-inline--fa fa-sync-alt fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                    <path fill="currentColor" d="M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z"></path>
-                                </svg>
-                            </button>
-                        </h2>
-                        <h2 class="text-5xl font-medium text-dark mb-5"> $9249.81 </h2>
-
-                        <!--start chart-->
-                        <div class="bar-chart bg-white py-2 px-2  mx-4 w-full sm:w-auto rounded-lg">
-
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block"></div>
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-
-                            </div>
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-
-                            </div>
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-                            </div>
-
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-                            </div>
-
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-                            </div>
-
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-                            </div>
-
-                            <div class="w-full h-line bg-gray-600 mb-2"></div>
-                            <div class="bar-label color-gray-600 inline-block text-sm"> Riyadh </div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">Dammam</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">Jeddah</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">makkah</div>
-
-                            <div class="bar-label color-gray-600 inline-block text-sm">Jubail</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">Al Khobar</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">Abha</div>
-                        </div>
-
-                        <!-- end chart -->
 
                     </div>
 
-                    <difv class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-1 lg:row-span-3 lg:col-span-1">
-                        <h2 class="text-sm text-gray-500"> Riyadh</h2>
-                        <h2 class="text-xl text-dark mb-4"> Saudi Arabisa </h2>
+                    <div class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-1 lg:row-span-3 lg:col-span-1">
+                        <h2 class="text-sm text-gray-500"> Restaurant Le Goéland </h2>
+                        <h2 class="text-xl text-dark mb-4"> Présentation </h2>
                         <div class="bg-gray-200 box-placeholder rounded-lg inline-block">
                             &nbsp;
                         </div>
@@ -280,8 +237,7 @@
                         <div class="bg-gray-200 box-placeholder rounded-lg inline-block">
                             &nbsp;
                         </div>
-
-                    </difv>
+                    </div>
                 </div>
 
             </setion>
