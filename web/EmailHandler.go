@@ -45,11 +45,13 @@ func (h *Handler) AskToAddRestaurantByEmail() http.HandlerFunc {
 		// Message data
 		from := restaurantEmail
 		to := []string{"a_franssen@hetic.eu"}
-		message := []byte("To: a_franssen@hetic.eu\r\n" +
+		message := []byte("" +
+			"To: a_franssen@hetic.eu\r\n" +
 			"From: amaury.fra@restaurantgo.dev\r\n" +
 			"\r\n" +
-			"Subject: " + restaurantSubject + "\r\n" +
-			"\r\n" + restaurantName + restaurantMessage + "\r\n")
+			"Subject: " + restaurantSubject + "\r\n" + "\r\n" +
+			"\r\n" + restaurantName + "\r\n" + restaurantMessage + "\r\n<strong>html is gere </strong>\r\n" +
+			"Content-Type: text/html; charset=utf-8\r\n")
 
 		// Connect to the server and send message
 		smtpUrl := smtpHost + ":25"

@@ -1006,12 +1006,12 @@ video {
   float: right;
 }
 
-.m-auto {
-  margin: auto;
-}
-
 .m-1 {
   margin: 0.25rem;
+}
+
+.m-auto {
+  margin: auto;
 }
 
 .mx-0 {
