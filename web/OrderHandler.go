@@ -24,7 +24,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 			return
 		}
 
-		restaurantIDUrl := request.URL.Query().Get("restaurant_id")
+		restaurantIDUrl := chi.URLParam(request, "id")
 
 		_, claims, err := jwtauth.FromContext(request.Context())
 		if err != nil {
@@ -55,6 +55,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		restaurantID, _ := strconv.Atoi(restaurantIDUrl)
 		restaurant := h.RestaurantStore.GetRestaurantByID(restaurantID)
 		if restaurant == nil {
+			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": "restaurant not found"})
 			return
 		}
 
@@ -84,6 +85,5 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		}
 
 		h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Order created successfully!", "data": orderHasProduct})
-
 	}
 }

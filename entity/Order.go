@@ -35,22 +35,3 @@ type OrderStoreInterface interface {
 	GetOrderByUserID(id int) []Order
 	GetOrderByRestaurantID(id int) []Order
 }
-
-func NewOrder(user User, restaurant Restaurant, status string, totalPrice float64, createdDate time.Time, closedDate time.Time) *Order {
-	return &Order{
-		User:        user,
-		Restaurant:  restaurant,
-		Status:      status,
-		TotalPrice:  totalPrice,
-		CreatedDate: createdDate,
-		ClosedDate:  closedDate,
-	}
-}
-
-type OrderStoreInterface interface {
-	AddOrder(item Order) (int, error)
-	GetAllOrders() ([]Order, error)
-	GetOrderByID(id int) *Order
-	GetOrderByUserID(id int) []Order
-	GetOrderByRestaurantID(id int) []Order
-}

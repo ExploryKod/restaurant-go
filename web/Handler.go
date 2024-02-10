@@ -65,50 +65,39 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Route("/user", func(r chi.Router) {
 			//r.Get("/getAll", handler.GetAllUsers())
-			//r.Get("/get/{id}", handler.GetUser())
+			//r.Get("/{id}/get", handler.GetUser())
 			r.Post("/add", handler.AddUser())
 			r.Delete("/delete/{id}", handler.DeleteUser())
 			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
 		})
 
-		r.Route("/restaurants", func(r chi.Router) {
+		r.Route("/restaurant", func(r chi.Router) {
 			r.Get("/", handler.ShowRestaurantsPage())
-			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
-			r.Get("/get", handler.GetAllRestaurants())
+
+			r.Get("/get/all", handler.GetAllRestaurants())
 			r.Get("/{id}", handler.ShowRestaurantProfile())
-			r.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
-			r.Get("/restaurants/get", handler.GetAllRestaurants())
+			r.Get("/{id}/menu", handler.CreateOrder())
+
+			r.Post("/{id}/create-order", handler.CreateOrder())
+
 			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
 		})
 
-		r.Route("/restaurant", func(r chi.Router) {
-			r.Get("/restaurant/menu/{id}", handler.CreateOrder())
-			r.Post("/restaurant/orders/create", handler.CreateOrder())
+		r.Route("/order", func(r chi.Router) {
+			//r.Get("/get/all", handler.GetAllOrders())
+			//r.Get("/{id}", handler.GetOrder())
+			//r.Post("/add", handler.AddOrder())
+			//r.Delete("/delete/{id}", handler.DeleteOrder())
 		})
 
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})
 
-	//handler.Group(func(r chi.Router) {
-	//	r.Use(jwtauth.Verifier(tokenAuth))
-	//
-	//	r.Use(jwtauth.Authenticator(tokenAuth))
-	//	handler.Get("/restaurants", handler.ShowRestaurantsPage())
-	//	//handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
-	//	handler.Get("/restaurants/get", handler.GetRestaurants())
-	//	handler.Get("/restaurant/add", handler.AddRestaurant())
-	//
-	//	r.Get("/restaurant/menu/{id}", handler.CreateOrder())
-	//	r.Post("/restaurant/orders/create", handler.CreateOrder())
-	//	r.Route("/api", func(r chi.Router) {
-	//		r.Post("/restaurant/register", handler.RegisterRestaurant())
-	//	})
-	//
 	})
 
 	return handler
-})
+}
 
 type Handler struct {
 	*chi.Mux

@@ -331,11 +331,11 @@ document.addEventListener('alpine:init', () => {
         },
         submit() {
 
-            console.log("json :", JSON.stringify(Alpine.store('cart').items))
+            console.log("submit :", JSON.stringify(Alpine.store('cart').items))
 
             const restaurantId = this.$el.getAttribute('data-restaurant-id');
 
-            fetch(`http://localhost:8097/restaurant/orders/create?restaurant_id=${restaurantId}`, {
+            fetch(`http://localhost:8097/restaurant/${restaurantId}/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
