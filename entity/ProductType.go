@@ -12,9 +12,3 @@ type ProductTypeStoreInterface interface {
 	AddProduct(item ProductType) (int, error)
 	DeleteProductType(id int) error
 }
-
-type ProductTypeStoreInterface interface {
-	GetProductTypeByRestaurantId(resturantId string) (*ProductType, error)
-	AddProduct(item ProductType) (int, error)
-	DeleteProductType(id int) error
-}

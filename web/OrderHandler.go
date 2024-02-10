@@ -1,6 +1,7 @@
 package web
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -59,7 +60,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 			fmt.Println(err)
 			return
 		}
-		order := entity.NewOrder(*user, *restaurant, "pending", 10.23, time.Now(), time.Now())
+		order := entity.NewOrder(*user, *restaurant, "pending", totalPrice, 0, time.Now(), sql.NullTime{})
 
 		_, err = h.OrderStore.AddOrder(*order)
 		if err != nil {
