@@ -1,16 +1,27 @@
 package database
 
 import (
-	"github.com/jmoiron/sqlx"
 	"restaurantHTTP/entity"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type Store struct {
-	UserStore entity.UserStoreInterface
+	UserStore            entity.UserStoreInterface
+	RestaurantStore      entity.RestaurantStoreInterface
+	OrderStore           entity.OrderStoreInterface
+	OrderHasProductStore entity.OrderHasProductStoreInterface
+	ProductStore         entity.ProductStoreInterface
+	ProductTypeStore     entity.ProductTypeStoreInterface
 }
 
 func CreateStore(db *sqlx.DB) *Store {
 	return &Store{
-		UserStore: NewUserStore(db),
+		UserStore:            NewUserStore(db),
+		RestaurantStore:      NewRestaurantStore(db),
+		OrderStore:           NewOrderStore(db),
+		OrderHasProductStore: NewOrderHasProductStore(db),
+		ProductStore:         NewProductStore(db),
+		ProductTypeStore:     NewProductTypeStore(db),
 	}
 }

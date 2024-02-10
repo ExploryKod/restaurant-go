@@ -4,9 +4,24 @@ import (
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+	"github.com/go-chi/jwtauth/v5"
+	"html/template"
 	"net/http"
+	"restaurantHTTP"
 	database "restaurantHTTP/mysql"
 )
+
+var tokenAuth *jwtauth.JWTAuth
+
+func init() {
+	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
+}
+
+func makeToken(id int, name string, email string) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": name, "user": email})
+	return tokenString
+}
 
 func NewHandler(store *database.Store) *Handler {
 	handler := &Handler{
@@ -16,22 +31,64 @@ func NewHandler(store *database.Store) *Handler {
 
 	handler.Use(middleware.Logger)
 
+	handler.Use(cors.Handler(cors.Options{
+		AllowedOrigins: []string{"https://*", "http://*"},
+		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
+
 	fs := http.FileServer(http.Dir("src"))
 	handler.Handle("/src/*", http.StripPrefix("/src/", fs))
 
-	handler.Get("/", handler.GetHomePage())
-	handler.Get("/login", handler.Login())
+	handler.Route("/", func(r chi.Router) {
 
-	handler.Post("/login", handler.Login())
+		r.Get("/login", handler.Login())
+		r.Post("/login", handler.Login())
 
-	handler.Get("/signup", func(writer http.ResponseWriter, request *http.Request) {
-		writer.Write([]byte("SIGNUP PAGE !"))
+		r.Get("/signup", handler.Signup())
+		r.Post("/signup", handler.Signup())
+
+		r.Get("/checkEmailAndUsername", handler.checkEmailAndUsername())
 	})
-	handler.Post("/signup", handler.Signup())
 
-	handler.Post("/", handler.AddUser())
-	handler.Delete("/{id}", handler.DeleteUser())
-	handler.Patch("/{id}", handler.ToggleIsSuperadmin())
+	handler.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(tokenAuth))
+
+		r.Use(jwtauth.Authenticator(tokenAuth))
+
+		r.Get("/", handler.GetHomePage())
+		r.Get("/logout", handler.Logout())
+
+		r.Route("/user", func(r chi.Router) {
+			//r.Get("/getAll", handler.GetAllUsers())
+			//r.Get("/get/{id}", handler.GetUser())
+			r.Post("/add", handler.AddUser())
+			r.Delete("/delete/{id}", handler.DeleteUser())
+			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
+		})
+
+		r.Route("/restaurant", func(r chi.Router) {
+			r.Get("/", handler.ShowRestaurantsPage())
+			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/get", handler.GetAllRestaurants())
+			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/menu/{id}", handler.CreateOrder())
+			r.Post("/orders/create", handler.CreateOrder())
+		})
+
+		r.Route("/admin", func(r chi.Router) {
+			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
+		})
+
+		r.Route("/api", func(r chi.Router) {
+			r.Post("/restaurant/register", handler.RegisterRestaurant())
+		})
+
+	})
 
 	return handler
 }
@@ -41,10 +98,24 @@ type Handler struct {
 	*database.Store
 }
 
-func (h *Handler) jsonResponse(w http.ResponseWriter, status int, data interface{}) {
+func (h *Handler) RenderJson(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
+func (h *Handler) RenderHtml(writer http.ResponseWriter, data restaurantHTTP.TemplateData, fileRoute string) {
+	tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout/layout.gohtml", "src/templates/"+fileRoute)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.ExecuteTemplate(writer, "layout", data)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
