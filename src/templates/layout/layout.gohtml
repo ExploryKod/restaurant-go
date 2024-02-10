@@ -7,6 +7,9 @@
         <link href="/src/output.css" rel="stylesheet">
         <link rel="icon" href="/src/assets/restaurantGo.png" type="image/x-icon">
         <script src="/src/app.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+                integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+                crossorigin="anonymous"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     </head>
     <body class="bg-stone-50 font-sans">
@@ -19,7 +22,8 @@
                 </div>
                 <div>
                     {{if .Content}}
-                            <a href="http://localhost:8097/logout" type="submit" class="border border-1 border-red-600 bg-white text-red-500 px-4 py-1.5 rounded-md hover:bg-red-500 hover:text-white">Logout</a>
+                        <a href="http://localhost:8097/logout" type="submit"
+                           class="border border-1 border-red-600 bg-white text-red-500 px-4 py-1.5 rounded-md hover:bg-red-500 hover:text-white">Logout</a>
                     {{end}}
                 </div>
             </div>
@@ -46,6 +50,5 @@
         </div>
     </footer>
     </body>
-
     </html>
 {{end}}

@@ -1,6 +1,7 @@
 package web
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
@@ -72,7 +73,7 @@ func (h *Handler) Login() http.HandlerFunc {
 		match := CheckPasswordHash(password, user.Password)
 
 		if user.Username == username && match {
-			token := makeToken(user.Username)
+			token := makeToken(user.ID, user.Username, user.Mail)
 
 			session, _ := storeSession.Get(request, "session-basic")
 			session.Values["token"] = token
@@ -130,18 +131,10 @@ func (h *Handler) Signup() http.HandlerFunc {
 
 		hashedPassword, _ := HashPassword(password)
 
-		user := &entity.User{
-			Username:     username,
-			Password:     hashedPassword,
-			Name:         name,
-			Firstname:    firstname,
-			Mail:         mail,
-			Phone:        phone,
-			IsSuperadmin: false,
-			Birthday:     []uint8{65, 66, 67, 68, 69},
-		}
+		user := entity.NewUser(username, hashedPassword, name, firstname, mail, phone, false, sql.NullTime{})
 
 		var id int
+
 		id, err = h.UserStore.AddUser(user)
 		if err != nil {
 			log.Println(err)

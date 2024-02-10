@@ -17,6 +17,15 @@ func NewUserStore(db *sqlx.DB) *UserStore {
 	}
 }
 
+func (u *UserStore) GetUserByID(id int) *entity.User {
+	user := &entity.User{}
+	err := u.Get(user, "SELECT id, username, password, name, firstname, mail, phone, is_superadmin, birthday FROM Users WHERE id = ?", id)
+	if err != nil {
+		return nil
+	}
+	return user
+}
+
 func (u *UserStore) GetUserByUsername(username string) (*entity.User, error) {
 
 	user := &entity.User{}

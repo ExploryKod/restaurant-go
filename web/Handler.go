@@ -15,11 +15,11 @@ import (
 var tokenAuth *jwtauth.JWTAuth
 
 func init() {
-	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
+	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
 }
 
-func makeToken(name string) string {
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"username": name})
+func makeToken(id int, username string, mail string) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": username, "mail": mail})
 	return tokenString
 }
 
@@ -74,10 +74,16 @@ func NewHandler(store *database.Store) *Handler {
 	})
 
 	handler.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(tokenAuth))
+
+		r.Use(jwtauth.Authenticator(tokenAuth))
 		handler.Get("/restaurants", handler.ShowRestaurantsPage())
-		handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
+		//handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
 		handler.Get("/restaurants/get", handler.GetRestaurants())
 		handler.Get("/restaurant/add", handler.AddRestaurant())
+
+		r.Get("/restaurant/menu/{id}", handler.CreateOrder())
+		r.Post("/restaurant/orders/create", handler.CreateOrder())
 	})
 
 	return handler
