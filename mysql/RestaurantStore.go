@@ -15,8 +15,8 @@ func NewRestaurantStore(db *sqlx.DB) *RestaurantStore {
 	}
 }
 
-func (t *RestaurantStore) AddRestaurant(item entity.Restaurant) (int, error) {
-	res, err := t.DB.Exec("INSERT INTO Restaurants (name) VALUES (?)", item.Name)
+func (s *RestaurantStore) AddRestaurant(item entity.Restaurant) (int, error) {
+	res, err := s.DB.Exec("INSERT INTO Restaurants (name, logo, mail, is_validated) VALUES ( ? , ? , ?, ?)", item, item, item, item)
 	if err != nil {
 		return 0, err
 	}
@@ -29,10 +29,10 @@ func (t *RestaurantStore) AddRestaurant(item entity.Restaurant) (int, error) {
 	return int(id), nil
 }
 
-func (t *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
+func (s *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 	var restaurantList []entity.Restaurant
 
-	rows, err := t.Query("SELECT id, name, logo, mail, is_validated  FROM Restaurants")
+	rows, err := s.Query("SELECT id, name, logo, mail, is_validated  FROM Restaurants")
 	if err != nil {
 		return []entity.Restaurant{}, err
 	}

@@ -18,8 +18,8 @@ func init() {
 	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
 }
 
-func makeToken(id int, name string, email string) string {
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": name, "user": email})
+func makeToken(id int, username string, mail string) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": username, "mail": mail})
 	return tokenString
 }
 
@@ -65,7 +65,7 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Route("/user", func(r chi.Router) {
 			//r.Get("/getAll", handler.GetAllUsers())
-			//r.Get("/get/{id}", handler.GetUser())
+			//r.Get("/{id}/get", handler.GetUser())
 			r.Post("/add", handler.AddUser())
 			r.Delete("/delete/{id}", handler.DeleteUser())
 			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
@@ -73,10 +73,24 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Route("/restaurant", func(r chi.Router) {
 			r.Get("/", handler.ShowRestaurantsPage())
-			r.Get("/get", handler.GetAllRestaurants())
-			r.Get("/menus/{id}", handler.ShowMenuByRestaurant())
-			r.Get("/order/{id}", handler.CreateOrder())
-			r.Post("/orders/create", handler.CreateOrder())
+
+			r.Get("/get/all", handler.GetAllRestaurants())
+			r.Get("/{id}", handler.ShowRestaurantProfile())
+			r.Get("/{id}/menu", handler.CreateOrder())
+
+			r.Post("/{id}/create-order", handler.CreateOrder())
+
+			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+		})
+
+		r.Route("/order", func(r chi.Router) {
+			//r.Get("/get/all", handler.GetAllOrders())
+			//r.Get("/{id}", handler.GetOrder())
+			//r.Post("/add", handler.AddOrder())
+			//r.Delete("/delete/{id}", handler.DeleteOrder())
+		})
+
+		r.Route("/admin", func(r chi.Router) {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})
 
