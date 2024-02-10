@@ -15,7 +15,7 @@ import (
 var tokenAuth *jwtauth.JWTAuth
 
 func init() {
-	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
+	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
 }
 
 func makeToken(id int, username string, mail string) string {
@@ -71,23 +71,44 @@ func NewHandler(store *database.Store) *Handler {
 			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
 		})
 
-	})
+		r.Route("/restaurants", func(r chi.Router) {
+			r.Get("/", handler.ShowRestaurantsPage())
+			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/get", handler.GetAllRestaurants())
+			r.Get("/{id}", handler.ShowRestaurantProfile())
+			r.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/restaurants/get", handler.GetAllRestaurants())
+			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+		})
 
-	handler.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(tokenAuth))
+		r.Route("/restaurant", func(r chi.Router) {
+			r.Get("/restaurant/menu/{id}", handler.CreateOrder())
+			r.Post("/restaurant/orders/create", handler.CreateOrder())
+		})
 
-		r.Use(jwtauth.Authenticator(tokenAuth))
-		handler.Get("/restaurants", handler.ShowRestaurantsPage())
-		//handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
-		handler.Get("/restaurants/get", handler.GetRestaurants())
-		handler.Get("/restaurant/add", handler.AddRestaurant())
+		r.Route("/admin", func(r chi.Router) {
+			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
+		})
 
-		r.Get("/restaurant/menu/{id}", handler.CreateOrder())
-		r.Post("/restaurant/orders/create", handler.CreateOrder())
+	//handler.Group(func(r chi.Router) {
+	//	r.Use(jwtauth.Verifier(tokenAuth))
+	//
+	//	r.Use(jwtauth.Authenticator(tokenAuth))
+	//	handler.Get("/restaurants", handler.ShowRestaurantsPage())
+	//	//handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
+	//	handler.Get("/restaurants/get", handler.GetRestaurants())
+	//	handler.Get("/restaurant/add", handler.AddRestaurant())
+	//
+	//	r.Get("/restaurant/menu/{id}", handler.CreateOrder())
+	//	r.Post("/restaurant/orders/create", handler.CreateOrder())
+	//	r.Route("/api", func(r chi.Router) {
+	//		r.Post("/restaurant/register", handler.RegisterRestaurant())
+	//	})
+	//
 	})
 
 	return handler
-}
+})
 
 type Handler struct {
 	*chi.Mux

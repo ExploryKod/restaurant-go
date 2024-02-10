@@ -28,7 +28,7 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 
 			username := session.Values["username"].(string)
 			token := session.Values["token"].(string)
-			data := restaurantHTTP.TemplateData{Title: "Home", Content: entity.User{Username: username}, Token: token}
+			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: entity.User{Username: username}, Token: token}
 
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
@@ -134,7 +134,6 @@ func (h *Handler) Signup() http.HandlerFunc {
 		user := entity.NewUser(username, hashedPassword, name, firstname, mail, phone, false, sql.NullTime{})
 
 		var id int
-
 		id, err = h.UserStore.AddUser(user)
 		if err != nil {
 			log.Println(err)

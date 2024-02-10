@@ -6,19 +6,21 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
+	"net/smtp"
 	"os"
 	database "restaurantHTTP/mysql"
 	"restaurantHTTP/web"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file:", err)
+	errdot := godotenv.Load()
+	if errdot != nil {
+		log.Fatal("Error loading .env file:", errdot)
 	}
+
 	conf := mysql.Config{
 		User:                 "root",
-		Passwd:               "password",
+		Passwd:               os.Getenv("BDD_PASSWORD"),
 		Addr:                 os.Getenv("BDD_PORT"),
 		DBName:               "restaurantbdd",
 		Net:                  "tcp",
@@ -48,4 +50,71 @@ func main() {
 		return
 	}
 
+}
+
+func sendMail() {
+	//m := mail.NewMessage()
+	//
+	//m.SetHeader("From", "a_franssen@hetic.eu")
+	//
+	//m.SetHeader("To", "amauryfranssen@gmail.com", "a_franssen@hetic.eu")
+	//
+	//m.SetAddressHeader("Cc", "", "")
+	//
+	//m.SetHeader("Subject", "Hello!")
+	//
+	//m.SetBody("text/html", "Hello <b>Kate</b> and <i>Noah</i>!")
+	//
+	//m.Attach("")
+	//
+	//d := mail.NewDialer("smtp.gmail.com", 587, "amauryfranssen@gmail.com", "")
+
+	//if err := d.DialAndSend(m); err != nil {
+	//
+	//	panic(err)
+	//
+	//}
+
+	// Mailtrap account config
+
+	username := "953143d5103e03"
+
+	password := "143f5c5914b162"
+
+	smtpHost := "sandbox.smtp.mailtrap.io"
+
+	// Prod:
+	//username := "api"
+	//
+	//password := "<secret_token>"
+	//
+	//smtpHost := "live.smtp.mailtrap.io"
+
+	// Choose auth method and set it up
+
+	auth := smtp.PlainAuth("", username, password, smtpHost)
+
+	// Message data
+
+	from := "amaury.fra@restaurantgo.dev"
+
+	to := []string{"a_franssen@hetic.eu"}
+
+	message := []byte("To: kate.doe@example.com\r\n" +
+		"From: john.doe@your.domain\r\n" +
+		"\r\n" +
+		"Subject: Why aren't you using Mailtrap yet?\r\n" +
+		"\r\n" +
+		"Here's the space for your great sales pitch\r\n")
+
+	// Connect to the server and send message
+
+	smtpUrl := smtpHost + ":25"
+
+	err := smtp.SendMail(smtpUrl, auth, from, to, message)
+	if err != nil {
+
+		log.Fatal(err)
+
+	}
 }

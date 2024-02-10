@@ -3,7 +3,7 @@ version: "3.8"
 services:
     database:
         container_name: restaurant_database
-        image: mariadb
+        image: mariadb:10.8
         restart: always
         ports:
             - "3309:3306"
@@ -14,6 +14,11 @@ services:
             MYSQL_DATABASE: restaurantbdd
             MYSQL_ROOT_PASSWORD: password
         command: --bind-address=0.0.0.0
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$BDD_PASSWORD" ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
 
     phpmyadmin:
         image: phpmyadmin
@@ -22,6 +27,23 @@ services:
             - '8080:80'
         environment:
             - PMA_ARBITRARY=1
+
+    web:
+        build:
+            context: .
+            dockerfile: dev.Dockerfile
+        container_name: restaurant-go
+        restart: always
+        tty: true
+        environment:
+            MARIADB_ROOT_PASSWORD: ${BDD_PASSWORD:-password}
+            MARIADB_DATABASE: ${BDD_NAME:-restaurantbdd}
+        ports:
+            - "8097:8097"
+        volumes:
+            - ./:/app
+
+
 
 volumes:
     db-data:

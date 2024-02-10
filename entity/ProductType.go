@@ -6,3 +6,9 @@ type ProductType struct {
 	Icon       string     `json:"icon" db:"icon"`
 	Restaurant Restaurant `json:"restaurant" db:"restaurant_id"`
 }
+
+type ProductTypeStoreInterface interface {
+	GetProductTypeByRestaurantId(restaurantId string) (*ProductType, error)
+	AddProduct(item ProductType) (int, error)
+	DeleteProductType(id int) error
+}

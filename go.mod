@@ -12,7 +12,7 @@ require (
 	github.com/gorilla/sessions v1.2.2
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.5.1
-	golang.org/x/crypto v0.17.0
+	golang.org/x/crypto v0.19.0
 )
 
 require (
@@ -27,5 +27,5 @@ require (
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 )
