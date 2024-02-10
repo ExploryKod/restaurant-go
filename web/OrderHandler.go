@@ -53,8 +53,11 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 
 		/*order*/
 		restaurantID, _ := strconv.Atoi(restaurantIDUrl)
-		restaurant := h.RestaurantStore.GetRestaurantByID(restaurantID)
-
+		restaurant, err := h.RestaurantStore.GetRestaurantByID(restaurantID)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		order := entity.NewOrder(*user, *restaurant, "pending", 10.23, time.Now(), time.Now())
 
 		_, err = h.OrderStore.AddOrder(*order)
