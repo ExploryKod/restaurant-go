@@ -10,7 +10,6 @@ ENV GOOS=$GOOS
 ENV GOARCH=$GOARCH
 
 WORKDIR /app
-ENV MODE "dev-docker"
 COPY . /app
 
 #RUN go install github.com/cosmtrek/air@latest

@@ -8,12 +8,12 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-// ProductStore Product Represents a product with restaurant
+// Product Represents a product with restaurant
 type ProductStore struct {
 	*sqlx.DB
 }
 
-// NewProductStore New Product creates and returns a new Product instance
+// New Product creates and returns a new Product instance
 // Parameters:
 // - db: Object of Product
 // Returns:
@@ -24,7 +24,7 @@ func NewProductStore(db *sqlx.DB) *ProductStore {
 	}
 }
 
-// GetProductByRestaurantId Get Product by restaurant id
+// Get Product by restaurant id
 // Parameters:
 // - resturantId: Id of the restaurant
 // Returns:
@@ -43,32 +43,32 @@ func (t *ProductStore) GetProductByRestaurantId(resturantId string) (*entity.Pro
 	return product, nil
 }
 
-// AddProduct Add Product
+// Add Product
 // Parameters:
 // - item: Object Product
 // Returns:
 // - Id of inserted Product
 func (t *ProductStore) AddProduct(item entity.Product) (int, error) {
-	//res, err := t.DB.Exec("INSERT INTO Product ( , ) VALUES ( , )", item, item)
-	//if err != nil {
-	//	return 0, err
-	//}
-	//
-	//id, err := res.LastInsertId()
-	//if err != nil {
-	//	return 0, err
-	//}
+	res, err := t.DB.Exec("INSERT INTO Product ( , ) VALUES ( , )", item, item)
+	if err != nil {
+		return 0, err
+	}
 
-	return int(10), nil
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
 }
 
-// DeleteProduct Delete Product
+// Delete Product
 // Parameters:
 // - id: The is of Product
 // Returns:
 // - nil
 func (t *ProductStore) DeleteProduct(id int) error {
-	_, err := t.DB.Exec("DELETE FROM Products WHERE id = ?", id)
+	_, err := t.DB.Exec("DELETE FROM Product WHERE id = ?", id)
 	if err != nil {
 		return err
 	}

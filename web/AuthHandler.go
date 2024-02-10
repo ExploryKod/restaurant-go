@@ -1,7 +1,6 @@
 package web
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
@@ -28,7 +27,7 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 
 			username := session.Values["username"].(string)
 			token := session.Values["token"].(string)
-			data := restaurantHTTP.TemplateData{Title: "Home", Content: entity.User{Username: username}, Token: token}
+			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: entity.User{Username: username}, Token: token}
 
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
@@ -123,7 +122,6 @@ func (h *Handler) Signup() http.HandlerFunc {
 			fmt.Println(response)
 			return
 		}
-
 		if response != nil {
 			h.RenderHtml(writer, restaurantHTTP.TemplateData{Title: "Signup", Error: "Username already taken !"}, "auth/signup.gohtml")
 			return
@@ -131,10 +129,17 @@ func (h *Handler) Signup() http.HandlerFunc {
 
 		hashedPassword, _ := HashPassword(password)
 
-		user := entity.NewUser(username, hashedPassword, name, firstname, mail, phone, false, sql.NullTime{})
+		user := &entity.User{
+			Username:     username,
+			Password:     hashedPassword,
+			Name:         name,
+			Firstname:    firstname,
+			Mail:         mail,
+			Phone:        phone,
+			IsSuperadmin: false,
+		}
 
 		var id int
-
 		id, err = h.UserStore.AddUser(user)
 		if err != nil {
 			log.Println(err)

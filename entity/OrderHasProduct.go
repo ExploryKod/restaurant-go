@@ -1,8 +1,8 @@
 package entity
 
 type OrderHasProduct struct {
-	Order    Order     `json:"order" db:"order"`
-	Products []Product `json:"products" db:"products"`
+	Order    Order     `json:"order"`
+	Products []Product `json:"products"`
 }
 
 func NewOrderHasProduct(order Order, products []Product) *OrderHasProduct {
@@ -13,7 +13,7 @@ func NewOrderHasProduct(order Order, products []Product) *OrderHasProduct {
 }
 
 type OrderHasProductStoreInterface interface {
-	AddOrderHasProduct(item *OrderHasProduct) (int, error)
+	AddOrderHasProduct(item OrderHasProduct) (int, error)
 	GetAllOrderHasProducts() ([]OrderHasProduct, error)
 	GetOrderHasProductByID(id int) *OrderHasProduct
 	GetOrderHasProductByOrderID(id int) []OrderHasProduct

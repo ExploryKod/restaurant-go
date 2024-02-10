@@ -15,11 +15,11 @@ import (
 var tokenAuth *jwtauth.JWTAuth
 
 func init() {
-	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
+	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
 }
 
-func makeToken(id int, username string, mail string) string {
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": username, "mail": mail})
+func makeToken(id int, name string, email string) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": name, "user": email})
 	return tokenString
 }
 
@@ -71,23 +71,24 @@ func NewHandler(store *database.Store) *Handler {
 			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
 		})
 
+		r.Route("/restaurant", func(r chi.Router) {
+			r.Get("/", handler.ShowRestaurantsPage())
+			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/get", handler.GetAllRestaurants())
+			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/menu/{id}", handler.CreateOrder())
+			r.Post("/orders/create", handler.CreateOrder())
+		})
+
+		r.Route("/admin", func(r chi.Router) {
+			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
+		})
+
+		r.Route("/api", func(r chi.Router) {
+			r.Post("/restaurant/register", handler.RegisterRestaurant())
+		})
+
 	})
-
-	handler.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(tokenAuth))
-
-		r.Use(jwtauth.Authenticator(tokenAuth))
-		handler.Get("/restaurants", handler.ShowRestaurantsPage())
-		//handler.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
-		handler.Get("/restaurants/get", handler.GetRestaurants())
-		handler.Get("/restaurant/add", handler.AddRestaurant())
-
-		r.Get("/restaurant/menu/{id}", handler.CreateOrder())
-		r.Post("/restaurant/orders/create", handler.CreateOrder())
-	})
-
-	// Product
-	handler.Get("/productType", handler.GetProductTypePage())
 
 	return handler
 }

@@ -11,8 +11,5 @@
     "dev": "npx tailwindcss -i src/input.css -o src/output.css --watch"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "flowbite": "^2.2.1"
-  }
+  "license": "ISC"
 }

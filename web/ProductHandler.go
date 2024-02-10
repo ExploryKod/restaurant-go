@@ -18,12 +18,11 @@ func (h *Handler) GetProductTypePage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 
 			username := session.Values["username"].(string)
-			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: entity.User{Username: username}, Error: "", Success: ""}
-
+			data := restaurantHTTP.TemplateData{Title: "Choix catégorie produit", Content: entity.User{Username: username}, Error: "", Success: ""}
 			h.RenderHtml(writer, data, "product/productType.gohtml")
 			return
 		}
 
-		http.Redirect(writer, request, "product/productType.gohtml", http.StatusSeeOther)
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
 }

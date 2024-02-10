@@ -1,9 +1,7 @@
 package database
 
 import (
-	"fmt"
 	"github.com/jmoiron/sqlx"
-	"log"
 	"restaurantHTTP/entity"
 )
 
@@ -19,26 +17,17 @@ func NewOrderStore(db *sqlx.DB) *OrderStore {
 
 func (o OrderStore) AddOrder(item entity.Order) (int, error) {
 
-	var currentOrderNumber int
-	currentDate := item.CreatedDate.Format("2006-01-02")
-
-	err := o.QueryRow("SELECT MAX(number) FROM Orders WHERE restaurant_id = ? AND DATE(created_date) = ? AND (SELECT COUNT(id) FROM Orders WHERE restaurant_id = ? AND DATE(created_date) = ?) > 0", item.Restaurant.ID, currentDate, item.Restaurant.ID, currentDate).Scan(&currentOrderNumber)
-	if err != nil {
-		currentOrderNumber = 0
-		log.Println(err)
-	}
-	nextOrderNumber := currentOrderNumber + 1
-
-	res, err := o.DB.Exec("INSERT INTO Orders (user_id, restaurant_id, status, total_price, number, created_date, closed_date) VALUES ( ? , ? , ?, ?, ?, ?, ?)", item.User.ID, item.Restaurant.ID, item.Status, item.TotalPrice, nextOrderNumber, item.CreatedDate, item.ClosedDate)
+	res, err := o.DB.Exec("INSERT INTO Orders (user_id, restaurant_id, date, total_price, is_delivered) VALUES ( ? , ? , ?, ?, ?)", item.User.ID, item.Restaurant.ID, item.TotalPrice, item.CreatedDate, item.ClosedDate)
 	if err != nil {
 		return 0, err
 	}
 
 	id, err := res.LastInsertId()
+
 	if err != nil {
 		return 0, err
+
 	}
-	fmt.Println()
 	return int(id), nil
 }
 

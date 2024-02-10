@@ -342,7 +342,7 @@ document.addEventListener('alpine:init', () => {
                 },
                 body: JSON.stringify(Alpine.store('cart').items),
             })
-                .then(response => (response.json()))
+                .then(response => response.json())
                 .then(data => {
                     console.log('Success:', data);
                     this.toggle();
