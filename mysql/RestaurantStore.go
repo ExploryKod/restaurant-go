@@ -16,7 +16,8 @@ func NewRestaurantStore(db *sqlx.DB) *RestaurantStore {
 }
 
 func (s *RestaurantStore) AddRestaurant(item entity.Restaurant) (int, error) {
-	res, err := s.DB.Exec("INSERT INTO Restaurants (name, logo, mail, is_validated) VALUES ( ? , ? , ?, ?)", item, item, item, item)
+	res, err := s.DB.Exec("INSERT INTO Restaurants (name, logo, image, phone, mail, is_open, opening_time, closing_time, grade, is_validated) VALUES ( ? , ? , ?, ?, ?, ?, ?, ?, ?, ?)",
+		item.Name, item.Logo, item.Image, item.Phone, item.Mail, item.IsOpen, item.OpeningTime, item.ClosingTime, item.Grade, item.IsValidated)
 	if err != nil {
 		return 0, err
 	}
@@ -60,7 +61,7 @@ func (s *RestaurantStore) AddTagToRestaurantHasTag(tagID int, restaurantID int) 
 func (s *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 	var restaurantList []entity.Restaurant
 
-	rows, err := s.Query("SELECT id, name, logo, mail, is_validated  FROM Restaurants")
+	rows, err := s.Query("SELECT name, logo, image, phone, mail, is_open, opening_time, closing_time, grade, is_validated  FROM Restaurants")
 	if err != nil {
 		return []entity.Restaurant{}, err
 	}
@@ -83,11 +84,31 @@ func (s *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 
 func (s *RestaurantStore) GetRestaurantByID(id int) *entity.Restaurant {
 	restaurant := &entity.Restaurant{}
-	err := s.Get(restaurant, "SELECT id, name, logo, mail, is_validated FROM Restaurants WHERE id = ?", id)
+	err := s.Get(restaurant, "SELECT name, logo, image, phone, mail, is_open, opening_time, closing_time, grade, is_validated FROM Restaurants WHERE id = ?", id)
 	if err != nil {
 		return nil
 	}
 	return restaurant
+}
+
+func (s *UserStore) UpdateRestaurant(item entity.Restaurant) error {
+
+	_, err := s.DB.Exec("UPDATE Restaurant SET name = ?, logo = ?, image = ?, phone = ?, mail = ?, is_open = ?, opening_time = ?, closing_time = ?, grade = ?, is_validated = ?  WHERE id = ?", item.Name, item.Logo, item.Image, item.Phone, item.IsOpen, item.Mail, item.IsOpen, item.OpeningTime, item.ClosingTime, item.Grade, item.IsValidated, item.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (s *UserStore) DeleteRestaurantById(id int) error {
+	_, err := s.DB.Exec("DELETE FROM Restaurants WHERE id = ?", id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 //func (t *RestaurantStore) GetRestaurantByID(id int) (*entity.Restaurant, error) {

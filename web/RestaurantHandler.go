@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
@@ -187,5 +188,67 @@ func (h *Handler) ShowAdminRestaurantPage() http.HandlerFunc {
 			h.RenderHtml(writer, data, "pages/restaurants.admin.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
+	}
+}
+
+func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		restaurantName := r.FormValue("restaurant-name")
+		restaurantID := r.FormValue("restaurant-id")
+		restaurantLogo := r.FormValue("restaurant-logo")
+		restaurantImage := r.FormValue("restaurant-image")
+		restaurantPhone := r.FormValue("restaurant-phone")
+		restaurantMail := r.FormValue("restaurant-mail")
+		restaurantIsOpen := r.FormValue("restaurant-isopen") == "open"
+		// TODO: need conversion time.tIME
+		restaurantOpeningTime := r.FormValue("restaurant-openingtime")
+		restaurantClosingTime := r.FormValue("restaurant-closingtime")
+
+		restaurantGrade, err := strconv.Atoi(r.FormValue("restaurant-grade"))
+		if err != nil {
+			fmt.Println("restaurant grade parsing type failed")
+			return
+		}
+		restaurantIsValidated := r.FormValue("restaurant-isvalidated") == "validated"
+
+		id, _ := strconv.Atoi(restaurantID)
+
+		err = h.RestaurantStore.UpdateRestaurant(entity.Restaurant{
+			ID:          id,
+			Name:        restaurantName,
+			Logo:        restaurantLogo,
+			Image:       restaurantImage,
+			Phone:       restaurantPhone,
+			Mail:        restaurantMail,
+			IsOpen:      restaurantIsOpen,
+			Grade:       restaurantGrade,
+			ClosingTime: restaurantClosingTime,
+			OpeningTime: restaurantOpeningTime,
+			IsValidated: restaurantIsValidated})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		h.jsonResponse(w, http.StatusOK, map[string]interface{}{"message": "Salle modifiée", "name": name, "theme": description})
+
+	}
+}
+
+func (h *Handler) DeleteRestaurantHandler() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		QueryId := chi.URLParam(request, "id")
+
+		id, _ := strconv.Atoi(QueryId)
+
+		err := h.Store.DeleteRoomById(id)
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		h.jsonResponse(writer, http.StatusOK, map[string]interface{}{"message": "Room " + strconv.Itoa(id) + " deleted"})
+		http.Redirect(writer, request, "/chat", http.StatusSeeOther)
+
 	}
 }

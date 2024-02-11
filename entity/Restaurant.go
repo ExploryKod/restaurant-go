@@ -18,6 +18,7 @@ type Restaurant struct {
 
 type RestaurantStoreInterface interface {
 	AddRestaurant(item Restaurant) (int, error)
+	UpdateRestaurant(item Restaurant) error
 	GetAllRestaurants() ([]Restaurant, error)
 	GetRestaurantByID(id int) *Restaurant
 	AddTagToRestaurant(item Tag) (int, error)
