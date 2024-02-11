@@ -18,8 +18,8 @@ func init() {
 	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
 }
 
-func makeToken(id int, username string, mail string) string {
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": username, "mail": mail})
+func makeToken(id int, username string, mail string, isSuperadmin bool) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": username, "mail": mail, "isSuperadmin": isSuperadmin})
 	return tokenString
 }
 
@@ -89,8 +89,9 @@ func NewHandler(store *database.Store) *Handler {
 		})
 
 		r.Route("/order", func(r chi.Router) {
-			//r.Get("/get/all", handler.GetAllOrders())
-			//r.Get("/{id}", handler.GetOrder())
+			r.Get("/", handler.ShowOrdersPage())
+			r.Get("/get/all", handler.GetAllOrders())
+			r.Get("/{id}", handler.GetOrder())
 			//r.Post("/add", handler.AddOrder())
 			//r.Delete("/delete/{id}", handler.DeleteOrder())
 		})
