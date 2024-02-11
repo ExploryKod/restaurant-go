@@ -13,3 +13,6 @@ fi
 if [ "$1" == "gorun" ]; then
   docker exec -it restaurant-go sh -c "go run main/main.go"
 fi
+
+
+

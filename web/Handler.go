@@ -91,6 +91,14 @@ func NewHandler(store *database.Store) *Handler {
 			//r.Delete("/delete/{id}", handler.DeleteOrder())
 		})
 
+		r.Route("/product", func(r chi.Router) {
+			r.Get("/type/create", handler.AddProductType())
+			r.Post("/type/create", handler.AddProductType())
+
+			r.Get("/create", handler.AddProduct())
+			r.Post("/create", handler.AddProduct())
+		})
+
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})

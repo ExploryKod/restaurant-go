@@ -33,7 +33,7 @@ func (t *ProductStore) GetProductByRestaurantId(resturantId string) (*entity.Pro
 
 	product := &entity.Product{}
 
-	err := t.Get(product, "SELECT * FROM Product WHERE restaurantId = ?", resturantId)
+	err := t.Get(product, "SELECT * FROM Products WHERE restaurant_id = ?", resturantId)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	} else if err != nil {
@@ -49,7 +49,8 @@ func (t *ProductStore) GetProductByRestaurantId(resturantId string) (*entity.Pro
 // Returns:
 // - Id of inserted Product
 func (t *ProductStore) AddProduct(item entity.Product) (int, error) {
-	res, err := t.DB.Exec("INSERT INTO Product ( , ) VALUES ( , )", item, item)
+
+	res, err := t.DB.Exec("INSERT INTO Products (product_type_id, restaurant_id, name, price, image, description) VALUES (?,?,?,?,?,?)", item.ProductType.ID, item.Restaurant.ID, item.Name, item.Price, item.Image, item.Description)
 	if err != nil {
 		return 0, err
 	}
@@ -68,10 +69,38 @@ func (t *ProductStore) AddProduct(item entity.Product) (int, error) {
 // Returns:
 // - nil
 func (t *ProductStore) DeleteProduct(id int) error {
-	_, err := t.DB.Exec("DELETE FROM Product WHERE id = ?", id)
+	_, err := t.DB.Exec("DELETE FROM Products WHERE id = ?", id)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// Get List of allergies
+// Parameters:
+// Returns:
+// - Allergens
+func (t *ProductStore) GetAllergiesList() ([]entity.Allergen, error) {
+	var allergiesList []entity.Allergen
+
+	rows, err := t.Query("SELECT id, name FROM Allergens")
+	if err != nil {
+		return []entity.Allergen{}, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var allergy entity.Allergen
+		if err = rows.Scan(&allergy.ID, &allergy.Name); err != nil {
+			return []entity.Allergen{}, err
+		}
+		allergiesList = append(allergiesList, allergy)
+	}
+
+	if err = rows.Err(); err != nil {
+		return []entity.Allergen{}, err
+	}
+	return allergiesList, nil
 }
