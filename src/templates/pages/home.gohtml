@@ -3,8 +3,7 @@
 
 
         {{if .Content }}
-        console.log("hello")
-        {{ if .Content.RestaurantId}}
+        {{ if .Content.UserRestaurantID}}
         localStorage.setItem("UserRestaurantID","{{ .Content.UserRestaurantID }}")
 
         {{end}}
