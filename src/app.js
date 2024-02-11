@@ -362,4 +362,90 @@ document.addEventListener('alpine:init', () => {
                 });
         }
     }));
+    Alpine.data('manageOrder', () => ({
+        username: '',
+        email: '',
+        validateOrder(id) {
+            fetch('http://localhost:8097/restaurant/order/validate/' + id)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la requête.');
+                    }
+                    return response.json()
+                })
+                .then((json) => {
+
+                    // this.error.username = json.username?.exists ? json.username.message : null;
+                    // this.success.username = !json.username?.exists ? json.username.message : null;
+
+                    // this.error.email = json.email?.exists ? json.email.message : null;
+                    // this.success.email = !json.email?.exists ? json.email.message : null;
+
+                })
+                .catch((error) => {
+                    console.log('Error during checking:', error)
+                })
+        },
+        readyOrder(id) {
+            fetch('http://localhost:8097/restaurant/order/ready/' + id)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la requête.');
+                    }
+                    return response.json()
+                })
+                .then((json) => {
+
+                    // this.error.username = json.username?.exists ? json.username.message : null;
+                    // this.success.username = !json.username?.exists ? json.username.message : null;
+
+                    // this.error.email = json.email?.exists ? json.email.message : null;
+                    // this.success.email = !json.email?.exists ? json.email.message : null;
+
+                })
+                .catch((error) => {
+                    console.log('Error during checking:', error)
+                })
+        },
+        completeOrder(id) {
+            fetch('http://localhost:8097/restaurant/order/done/' + id)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la requête.');
+                    }
+                    return response.json()
+                })
+                .then((json) => {
+
+                    // this.error.username = json.username?.exists ? json.username.message : null;
+                    // this.success.username = !json.username?.exists ? json.username.message : null;
+
+                    // this.error.email = json.email?.exists ? json.email.message : null;
+                    // this.success.email = !json.email?.exists ? json.email.message : null;
+
+                })
+                .catch((error) => {
+                    console.log('Error during checking:', error)
+                })
+        },
+        filterOrder(e) {
+            // console.log(e.target.value)
+            window.location.href = 'http://localhost:8097/restaurant/order/get/' + e.target.value;
+            // fetch('http://localhost:8097/restaurant/order/get/' + id)
+            //     .then((response) => {
+            //         if (!response.ok) {
+            //             throw new Error('Erreur lors de la requête.');
+            //         }
+            //         return response.json()
+            //     })
+            //     .then((json) => {
+
+
+            //     })
+            //     .catch((error) => {
+            //         console.log('Error during checking:', error)
+            //     })
+        }
+    }))
+    
 })

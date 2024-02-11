@@ -17,4 +17,5 @@ type OrderHasProductStoreInterface interface {
 	GetAllOrderHasProducts() ([]OrderHasProduct, error)
 	GetOrderHasProductByOrderID(id int) *OrderHasProduct
 	GetOrderHasProductByProductID(id int) *OrderHasProduct
+	GetAllOrderHasProductsByRestaurantId(id int) ([]OrderHasProduct, error)
 }

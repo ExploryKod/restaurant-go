@@ -2,9 +2,10 @@ package database
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"log"
 	"restaurantHTTP/entity"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type OrderStore struct {
@@ -172,8 +173,99 @@ func (o *OrderStore) GetOrderByUserID(id int) []entity.Order {
 	//TODO implement me
 	panic("implement me")
 }
+func (o *OrderStore) ValidateOrder(id int) (any, error) {
+	query := `UPDATE Orders
+	SET status = "preparation"
+	WHERE id = ?`
+	rows, err := o.Queryx(query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-func (o *OrderStore) GetOrderByRestaurantID(id int) []entity.Order {
-	//TODO implement me
-	panic("implement me")
+	return true, nil
+}
+func (o *OrderStore) ReadyOrder(id int) (bool, error) {
+	query := `UPDATE Orders
+	SET status = "ready"
+	WHERE id = ?`
+	rows, err := o.Queryx(query, id)
+	if err != nil {
+		return false, err
+	}
+	defer rows.Close()
+
+	return true, nil
+}
+
+func (o *OrderStore) CompleteOrder(id int) (bool, error) {
+	query := `UPDATE Orders
+	SET closed_date = CURRENT_DATE,
+	status = "delivered"
+	WHERE id = ?`
+	rows, err := o.Queryx(query, id)
+	if err != nil {
+		return false, err
+	}
+	defer rows.Close()
+
+	return true, nil
+}
+
+func (o *OrderStore) GetOrderByRestaurantIDIncoming(id int) ([]entity.Order, error) {
+	var orderList []entity.Order
+	query := `
+    SELECT 
+	o.id,
+	o.status,
+	o.total_price,
+	o.number,
+	o.created_date,
+	o.closed_date,
+	o.user_id,
+	u.username AS user_username,
+	u.password AS user_password,
+	u.name AS user_name,
+	u.firstname AS user_firstname,
+	u.mail AS user_mail,
+	u.phone AS user_phone,
+	u.is_superadmin AS user_is_superadmin,
+	u.birthday AS user_birthday,
+	o.restaurant_id, 
+	r.name AS restaurant_name,
+	r.logo AS restaurant_logo,
+	r.image AS restaurant_image,
+	r.phone AS restaurant_phone,
+	r.mail AS restaurant_mail,
+	r.is_open AS restaurant_is_open,
+	r.grade AS restaurant_grade,
+	r.is_validated AS restaurant_is_validated
+    FROM
+        Orders o 
+    JOIN 
+        Users u ON o.user_id = u.id 
+    JOIN 
+        Restaurants r ON o.restaurant_id = r.id 
+    WHERE o.restaurant_id = ?
+	AND o.closed_date IS NULL`
+
+	rows, err := o.Queryx(query, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var order entity.Order
+		if err = rows.Scan(&order.ID, &order.Status, &order.TotalPrice, &order.Number, &order.CreatedDate, &order.ClosedDate, &order.User.ID, &order.User.Username, &order.User.Password, &order.User.Name, &order.User.Firstname, &order.User.Mail, &order.User.Phone, &order.User.IsSuperadmin, &order.User.Birthday, &order.Restaurant.ID, &order.Restaurant.Name, &order.Restaurant.Logo, &order.Restaurant.Image, &order.Restaurant.Phone, &order.Restaurant.Mail, &order.Restaurant.IsOpen, &order.Restaurant.Grade, &order.Restaurant.IsValidated); err != nil {
+			return nil, err
+		}
+		orderList = append(orderList, order)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return orderList, nil
 }

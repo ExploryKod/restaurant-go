@@ -33,6 +33,9 @@ type OrderStoreInterface interface {
 	GetAllOrders() ([]Order, error)
 	GetOrderByID(id int) *Order
 	GetOrderByUserID(id int) []Order
-	GetOrderByRestaurantID(id int) []Order
+	GetOrderByRestaurantIDIncoming(id int) ([]Order, error)
+	ValidateOrder(id int) (any, error)
+	CompleteOrder(id int) (bool, error)
+	ReadyOrder(id int) (bool, error)
 	//GetOrderProductsByOrderID(id int) []OrderHasProduct
 }
