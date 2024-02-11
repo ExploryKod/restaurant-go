@@ -159,7 +159,7 @@ func (h *Handler) Logout() http.HandlerFunc {
 		}
 
 		http.SetCookie(writer, &http.Cookie{
-			Name:     "token",
+			Name:     "jwt",
 			Value:    "",
 			Expires:  time.Now(),
 			Path:     "/",
