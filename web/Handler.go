@@ -64,12 +64,12 @@ func NewHandler(store *database.Store) *Handler {
 		r.Get("/logout", handler.Logout())
 
 		r.Route("/restaurantUser", func(r chi.Router) {
-			r.Get("/list", handler.RestaurantUserList())
-			r.Get("/create", handler.RestaurantUserCreate())
-			r.Post("/create", handler.RestaurantUserCreate())
-			r.Get("/update/{id}", handler.RestaurantUserUpdate())
-			r.Post("/update/{id}", handler.RestaurantUserUpdate())
-			r.Get("/delete/{id}", handler.RestaurantUserDelete())
+			r.Get("/list/{restaurantId}", handler.RestaurantUserList())
+			r.Get("/create/{restaurantId}", handler.RestaurantUserCreate())
+			r.Post("/create/{restaurantId}", handler.RestaurantUserCreate())
+			r.Get("/update/{id}/{restaurantId}", handler.RestaurantUserUpdate())
+			r.Post("/update/{id}/{restaurantId}", handler.RestaurantUserUpdate())
+			r.Get("/delete/{id}/{restaurantId}", handler.RestaurantUserDelete())
 		})
 		r.Route("/user", func(r chi.Router) {
 			//r.Get("/getAll", handler.GetAllUsers())

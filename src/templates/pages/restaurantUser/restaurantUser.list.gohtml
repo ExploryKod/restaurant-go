@@ -1,4 +1,7 @@
 {{define "content"}}
+    <script>
+        console.log("{{.Content.Users}}");
+    </script>
     <h1 class="text-2xl font-bold mb-4 ml-5">Liste des utilisateurs du restaurant</h1>
     <table class="table-auto w-full mb-4">
         <thead>
@@ -11,20 +14,20 @@
         </tr>
         </thead>
         <tbody>
-        {{range .Content}}
+        {{range .Content.Users}}
             <tr class="border-b border-gray-200 text-center">
                 <td class="px-4 py-2">{{.User.Username}}</td>
                 <td class="px-4 py-2">{{.User.Mail}}</td>
                 <td class="px-4 py-2">{{.Role}}</td>
                 <td class="px-4 py-2">{{if .IsAdmin}}Oui{{else}}Non{{end}}</td>
                 <td class="px-4 py-2">
-                    <a class="text-blue-500 hover:underline" href="/restaurantUser/update/{{.User.ID}}">Modifier</a>
-                    <a class="text-red-500 hover:underline" href="/restaurantUser/delete/{{.User.ID}}">Supprimer</a>
+                    <a class="text-blue-500 hover:underline" href="/restaurantUser/update/{{.User.ID}}/{{$.Content.RestaurantId}}">Modifier</a>
+                    <a class="text-red-500 hover:underline" href="/restaurantUser/delete/{{.User.ID}}/{{$.Content.RestaurantId}}">Supprimer</a>
                 </td>
             </tr>
         {{end}}
         </tbody>
     </table>
     <a class="border ml-5 border-1 border-blue-600 bg-white text-blue-600 px-4 py-1.5 rounded-md hover:bg-blue-600 hover:text-white"
-       href="/restaurantUser/create">Ajouter un utilisateur</a>
+       href="/restaurantUser/create/{{.Content.RestaurantId}}">Ajouter un utilisateur</a>
 {{end}}
