@@ -19,9 +19,8 @@ func (h *Handler) RestaurantUserList() http.HandlerFunc {
 func (h *Handler) RestaurantUserCreate() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method == http.MethodPost {
-			userIdStr := request.FormValue("id")
-			userId, _ := strconv.Atoi(userIdStr)
-			user := h.UserStore.GetUserByID(userId)
+			email := request.FormValue("email")
+			user, _ := h.UserStore.GetUserByMail(email)
 			role := request.FormValue("role")
 			isAdminStr := request.FormValue("is_admin")
 			isAdmin, _ := strconv.ParseBool(isAdminStr)
