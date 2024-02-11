@@ -95,6 +95,7 @@ func NewHandler(store *database.Store) *Handler {
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 			r.Get("/orders", handler.ShowAddRestaurantAdminPage())
+			r.Get("/orders/list", handler.GetAllOrdersByRestaurantId())
 		})
 
 	})

@@ -133,8 +133,8 @@ func (h *Handler) GetAllOrders() http.HandlerFunc {
 
 func (h *Handler) GetAllOrdersByRestaurantId() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-
-		orders, err := h.OrderStore.GetOrderByRestaurantID()
+		restaurantId := 1
+		orders, err := h.OrderStore.GetOrderByRestaurantID(restaurantId)
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "getallorderhasproduct Internal Server Error"})
@@ -143,7 +143,7 @@ func (h *Handler) GetAllOrdersByRestaurantId() http.HandlerFunc {
 
 		data := restaurantHTTP.TemplateData{Title: "Mes commandes", Content: orders}
 
-		h.RenderHtml(writer, data, "pages/order/index.gohtml")
+		h.RenderHtml(writer, data, "pages/order/list.admin.gohtml")
 		//h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": orders})
 
 	}
