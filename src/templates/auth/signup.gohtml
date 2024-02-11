@@ -1,0 +1,95 @@
+{{define "content"}}
+    <div class="max-w-md mx-auto my-8">
+        <h1 class="text-red-800 text-3xl font-bold mb-2">Register account</h1>
+
+        {{if .Error}}
+            <div class="bg-red-500 text-white p-2 rounded mb-2">{{.Error}}</div>
+        {{end}}
+
+        <form class="bg-white rounded-lg shadow-md p-8" action="/signup" method="post"
+              x-data="{stepper :stepper(), checker: checker()}" >
+            <div>
+
+            </div>
+            <div x-show="stepper.selected === 1" x-transition>
+                <div class="mb-2">
+                    <label class="flex justify-between text-gray-700 text-sm font-bold mb-2" for="username">
+                        <span>Username</span>
+                        <span x-text="checker.error.username || checker.success.username"
+                              :class="{'text-red-500 text-xs': checker.error.username, 'text-emerald-500 text-xs': checker.success.username}"></span>
+                    </label>
+                    <input x-model="checker.username" @change="checker.checkUsername($event.target.value,'username')"
+                           :class="{ 'basic-input-error': checker.error.username, 'basic-input-success': checker.success.username, 'basic-input': !checker.error.username && !checker.success.username }"
+                           type="text" name="username" id="username"
+                           placeholder="Username"
+                           required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
+                    <input class="basic-input" type="password" name="password" id="password" placeholder="Password"
+                           required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password2">Confirm Password</label>
+                    <input class="basic-input" type="password" name="password2" id="password2"
+                           placeholder="Confirm Password" required>
+                </div>
+            </div>
+
+            <div x-show="stepper.selected === 2" x-transition>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
+                    <input class="basic-input" type="text" name="name" id="name" placeholder="Name" required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="firstname">Firstname</label>
+                    <input class="basic-input" type="text" name="firstname" id="firstname" placeholder="Firstname"
+                           required>
+                </div>
+                <div class="mb-2">
+                    <label class="flex justify-between text-gray-700 text-sm font-bold mb-2" for="mail">
+                        <span>
+                            Email
+                        </span>
+                        <span
+                                x-text="checker.error.email || checker.success.email"
+                                :class="{'text-red-500 text-xs': checker.error.email, 'text-emerald-500 text-xs': checker.success.email}"
+                        ></span>
+                    </label>
+                    <input x-model="checker.email" @change="checker.checkUsername($event.target.value,'email')"
+                           :class="{ 'basic-input-error': checker.error.email, 'basic-input-success': checker.success.email, 'basic-input': !checker.error.email && !checker.success.email }"
+                           type="email" name="mail" id="mail" placeholder="Email"
+                           pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
+                    <input class="basic-input" type="text" name="phone" id="phone" placeholder="Phone" required>
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="birthday">Birthday</label>
+                    <input class="basic-input" type="date" name="birthday" id="birthday" placeholder="Birthday"
+                    >
+                </div>
+                <div class="mt-4">
+                    <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
+                        Sign Up
+                    </button>
+                </div>
+            </div>
+            <div class="mb-2 flex flex-row justify-items-end">
+                <a class="text-cyan-500 hover:text-cyan-700" href="/login">Already have an account ?
+                    Sign in!</a>
+            </div>
+            <div class="relative">
+                <button @click="stepper.previous()" x-show="stepper.selected > 1" type="button"
+                        class="absolute start-0 font-semibold text-red-700"><- Previous
+                </button>
+                <button @click="stepper.next()" x-show="stepper.selected < 2" type="button"
+                        class="absolute end-0 font-semibold text-red-700">Next ->
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+{{end}}
