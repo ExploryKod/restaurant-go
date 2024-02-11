@@ -14,4 +14,6 @@ type RestaurantUserStoreInterface interface {
 	UpdateRestaurantUser(item RestaurantHasUsers) error
 	DeleteRestaurantUser(userId int) error
 	GetRestaurantUsers(restaurantId int) ([]RestaurantHasUsers, error)
+	GetRestaurantUserByUserID(userId int) (*RestaurantHasUsers, error)
+	GetRestaurantIDByUserID(userId int) (*int, error)
 }

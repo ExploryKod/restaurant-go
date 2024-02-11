@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 	"restaurantHTTP"
@@ -66,7 +67,8 @@ func (h *Handler) RestaurantUserUpdate() http.HandlerFunc {
 			_ = h.RestaurantUserStore.UpdateRestaurantUser(*RestaurantUser)
 			http.Redirect(writer, request, "/restaurantUser/list", http.StatusSeeOther)
 		} else {
-			h.RenderHtml(writer, restaurantHTTP.TemplateData{}, "pages/restaurantUser/restaurantUser.update.gohtml")
+			user, _ := h.RestaurantUserStore.GetRestaurantUserByUserID(id)
+			h.RenderHtml(writer, restaurantHTTP.TemplateData{Content: user}, "pages/restaurantUser/restaurantUser.update.gohtml")
 		}
 	}
 }
@@ -74,9 +76,10 @@ func (h *Handler) RestaurantUserUpdate() http.HandlerFunc {
 func (h *Handler) RestaurantUserDelete() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		id, _ := strconv.Atoi(chi.URLParam(request, "id"))
-		if request.Method == http.MethodPost {
-			_ = h.RestaurantUserStore.DeleteRestaurantUser(id)
-			http.Redirect(writer, request, "/restaurantUser/list", http.StatusSeeOther)
-		}
+		fmt.Println(request.Method)
+
+		_ = h.RestaurantUserStore.DeleteRestaurantUser(id)
+		http.Redirect(writer, request, "/restaurantUser/list", http.StatusSeeOther)
+
 	}
 }

@@ -1,5 +1,5 @@
 {{define "content"}}
-    <h1 class="text-2xl font-bold mb-4">Liste des utilisateurs du restaurant</h1>
+    <h1 class="text-2xl font-bold mb-4 ml-5">Liste des utilisateurs du restaurant</h1>
     <table class="table-auto w-full mb-4">
         <thead>
         <tr class="bg-gray-100">
@@ -25,5 +25,6 @@
         {{end}}
         </tbody>
     </table>
-    <a class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" href="/restaurantUser/create">Ajouter un utilisateur</a>
+    <a class="border ml-5 border-1 border-blue-600 bg-white text-blue-600 px-4 py-1.5 rounded-md hover:bg-blue-600 hover:text-white"
+       href="/restaurantUser/create">Ajouter un utilisateur</a>
 {{end}}

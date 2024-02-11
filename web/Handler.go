@@ -62,13 +62,14 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Get("/", handler.GetHomePage())
 		r.Get("/logout", handler.Logout())
+
 		r.Route("/restaurantUser", func(r chi.Router) {
 			r.Get("/list", handler.RestaurantUserList())
 			r.Get("/create", handler.RestaurantUserCreate())
 			r.Post("/create", handler.RestaurantUserCreate())
 			r.Get("/update/{id}", handler.RestaurantUserUpdate())
 			r.Post("/update/{id}", handler.RestaurantUserUpdate())
-			r.Post("/delete/{id}", handler.RestaurantUserDelete())
+			r.Get("/delete/{id}", handler.RestaurantUserDelete())
 		})
 		r.Route("/user", func(r chi.Router) {
 			//r.Get("/getAll", handler.GetAllUsers())

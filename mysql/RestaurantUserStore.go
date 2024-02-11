@@ -37,16 +37,15 @@ func (t *ProductStore) UpdateRestaurantUser(item entity.RestaurantHasUsers) erro
 	return nil
 }
 
-// fun delete
 func (t *ProductStore) DeleteRestaurantUser(userId int) error {
 	_, err := t.DB.Exec("DELETE FROM Restaurant_has_users WHERE user_id = ?", userId)
 	if err != nil {
 		return err
 	}
+	println(userId)
 	return nil
 }
 
-// func GetRestaurantUsers only with restaurant id dont use user
 func (t *ProductStore) GetRestaurantUsers(restaurantId int) ([]entity.RestaurantHasUsers, error) {
 	var restaurantHasUsers []entity.RestaurantHasUsers
 
@@ -70,4 +69,25 @@ func (t *ProductStore) GetRestaurantUsers(restaurantId int) ([]entity.Restaurant
 	}
 
 	return restaurantHasUsers, nil
+}
+
+func (t *ProductStore) GetRestaurantUserByUserID(userId int) (*entity.RestaurantHasUsers, error) {
+	var restaurantHasUser entity.RestaurantHasUsers
+
+	err := t.QueryRow("SELECT * FROM Restaurant_has_users WHERE user_id = ?", userId).Scan(&restaurantHasUser.Restaurant.ID, &restaurantHasUser.User.ID, &restaurantHasUser.IsAdmin, &restaurantHasUser.Role)
+	if err != nil {
+		return nil, err
+	}
+
+	return &restaurantHasUser, nil
+}
+func (t *ProductStore) GetRestaurantIDByUserID(userId int) (*int, error) {
+	var restaurantId *int
+	err := t.QueryRow("SELECT restaurant_id FROM Restaurant_has_users WHERE user_id = ?", userId).Scan(&restaurantId)
+	if err != nil {
+
+		return nil, err
+
+	}
+	return restaurantId, nil
 }

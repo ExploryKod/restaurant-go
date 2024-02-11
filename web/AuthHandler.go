@@ -27,9 +27,19 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 
 			username := session.Values["username"].(string)
-			token := session.Values["token"].(string)
-			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: entity.User{Username: username}, Token: token}
+			userRestaurantID := session.Values["userRestaurantID"].(int)
 
+			token := session.Values["token"].(string)
+			content := struct {
+				entity.User
+				UserRestaurantID int
+			}{
+				entity.User{Username: username},
+				userRestaurantID,
+			}
+
+			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: content, Token: token}
+			fmt.Println("data", data)
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
 		}
@@ -73,14 +83,16 @@ func (h *Handler) Login() http.HandlerFunc {
 		match := CheckPasswordHash(password, user.Password)
 
 		if user.Username == username && match {
+			userRestaurantID, err := h.RestaurantUserStore.GetRestaurantIDByUserID(user.ID)
 			token := makeToken(user.ID, user.Username, user.Mail, user.IsSuperadmin)
 
 			session, _ := storeSession.Get(request, "session-basic")
 			session.Values["token"] = token
 			session.Values["authenticated"] = true
 			session.Values["username"] = user.Username
+			session.Values["userRestaurantID"] = userRestaurantID
 
-			err := session.Save(request, writer)
+			err = session.Save(request, writer)
 			if err != nil {
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
