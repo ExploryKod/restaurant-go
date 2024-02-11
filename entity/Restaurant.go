@@ -20,8 +20,8 @@ type Restaurant struct {
 
 type RestaurantStoreInterface interface {
 	AddRestaurant(item Restaurant) (int, error)
-	UpdateRestaurant(item Restaurant) error
-	DeleteRestaurantById(id int) error
+	UpdateRestaurant(item Restaurant, restaurantID int) error
+	DeleteRestaurantById(restaurantID int) error
 	GetAllRestaurants() ([]Restaurant, error)
 	GetRestaurantByID(id int) *Restaurant
 	AddTagToRestaurant(item Tag) (int, error)

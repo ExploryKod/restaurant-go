@@ -1,15 +1,19 @@
 {{define "content"}}
 <div class="restaugo-title-wrapper">
-    <h1 class="text-center restogo-title-xl">Profile restaurateur</h1>
+    <h1 class="text-center restogo-title-xl">Administration des restaurants</h1>
 </div>
-<div class="max-w-md mx-auto my-8">
+<div class="max-w-[1440px] mx-auto flex flex-col items-center">
+<div class="px-5 py-2 bg-cyan-800 my-2">
+    <h1 class="text-center text-white font-semibold text-lg">Inscription du restaurant</h1>
+</div>
+<section class="w-full max-w-[1440px] mx-auto my-8">
     {{if .Error}}
-        <div class="bg-red-500 text-white p-2 rounded mb-4">{{.Error}}</div>
+        <div class="max-w-lg bg-red-500 text-white p-2 rounded mb-4">{{.Error}}</div>
     {{end}}
     {{if .Success}}
-        <div class="bg-emerald-500 text-white p-2 rounded mb-4">{{.Success}}</div>
+        <div class="max-w-lg bg-emerald-500 text-white p-2 rounded mb-4">{{.Success}}</div>
     {{end}}
-    <form class="bg-white rounded-lg shadow-md p-8" action="/api/restaurant/register" method="post">
+    <form class="mx-auto max-w-xl bg-white rounded-lg shadow-md p-8" action="/restaurant/register" method="post">
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-name">Nom du restaurant:</label>
             <input class="basic-input" type="text" name="restaurant-name" id="restaurant-name" placeholder="Nom du restaurant" required>
@@ -24,52 +28,112 @@
         </div>
         <div class="mb-4 flex justify-between">
             <div class="p-2 mb-1 me-2">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Heures d'ouverture:</label>
                 <input class="basic-input" type="time" name="restaurant-open" id="restaurant-open" required>
             </div>
             <div class="p-2 mb-1 ms-2">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Heures de fermeture:</label>
                 <input class="basic-input" type="time" name="restaurant-close" id="restaurant-close" required>
             </div>
         </div>
-{{/*        <div class="mb-4">*/}}
-{{/*            <label for="restaurant-open" class="flex flex-col flex-wrap cursor-pointer md:mb-0">*/}}
-{{/*                <span class="font-bold mb-2 block">Validation:</span>*/}}
-{{/*                <div class="relative">*/}}
-{{/*                    <input name="restaurant-open" id="restaurant-open" type="checkbox" class="hidden">*/}}
-{{/*                    <div class="toggle__line w-12 h-6 bg-gray-200 rounded-full shadow-inner"></div>*/}}
-{{/*                    <div class="toggle__dot absolute w-5 h-5 bg-white rounded-full shadow inset-y-0 left-0"></div>*/}}
-{{/*                </div>*/}}
-{{/*            </label>*/}}
-{{/*        </div>*/}}
 
-        <div class="mb-4">
-            <div class="mb-10 custom-number-input h-10 w-32">
+        <div class="mb-5">
+            <div class="mb-5 h-20 w-32">
                 <label for="custom-input-number" class="block text-gray-700 text-sm font-bold mb-2">Note restaurateur de départ:</label>
                 <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
                     <button type="button" data-action="decrement" class="
                     bg-cyan-500 text-cyan-100 hover:text-cyan-950
-                    hover:bg-cyan-800 h-full w-20 rounded-l cursor-pointer outline-none">
-                        <span class="text-white m-auto text-lg">−</span>
+                    hover:bg-red-500 h-full w-20 rounded-l cursor-pointer outline-none">
+                        <span class="text-white font-semibold m-auto text-lg">−</span>
                     </button>
                     <input type="number"
                            class="h-full border-none focus:outline-none text-center w-full
                             bg-cyan-800 font-semiboldtext-sm
-                            hover:text-black focus:text-black
-                            md:text-basecursor-default flex items-center text-gray-700  outline-none"
-                           name="restaurant-grade" value="0"/>
+                            hover:text-red-500 text-white focus:text-white
+                            flex items-center text-white font-semibold outline-none"
+                           name="restaurant-grade" value="0" min="0" max="6"/>
                     <button type="button" data-action="increment"
                             class="bg-cyan-500 text-cyan-100-600 hover:text-cyan-950
-                            hover:bg-cyan-800 h-full w-20 rounded-r cursor-pointer">
-                        <span class="text-white m-auto text-lg">+</span>
+                            hover:bg-red-500 h-full w-20 rounded-r cursor-pointer">
+                        <span class="text-white font-semibold m-auto text-lg">+</span>
                     </button>
                 </div>
             </div>
         </div>
-        <div class="mt-2">
-            <button class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
+        <div class="mt-5">
+            <button class="mt-1 bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
                 Valider la souscription
             </button>
         </div>
     </form>
+</section>
+<section id="restaurant-board">
+    <div class="px-5 py-2 bg-cyan-800 my-5">
+        <h1 class="text-center text-white font-semibold text-lg">Gestion des restaurants</h1>
+    </div>
+    <div class="mt-2 flex flex-col mt-6">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div class="overflow-hidden border-b border-gray-200 rounded-md shadow-md">
+                    <table class="min-w-full overflow-x-scroll divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th
+                                    scope="col"
+                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                            >
+                                Coordonnées
+                            </th>
+                            <th
+                                    scope="col"
+                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                            >
+                                Fermeture / Ouverture
+                            </th>
+                            <th
+                                    scope="col"
+                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                            >
+                                Statut
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                        {{ range .Content }}
+                            <tr class="transition-all hover:bg-gray-100 hover:shadow-lg">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">{{ .ID }} - {{ .Name }}</div>
+                                            <div class="text-sm text-gray-500">{{ .Mail }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 flex flex-col">
+                                    <div class="text-xs font-semibold text-cyan-500 text-ellipsis">{{ .ClosingTime }}</div>
+                                    <div class="text-xs font-semibold text-cyan-500 text-ellipsis">{{ .OpeningTime }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">
+                                        Ouvert
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 flex flex-col text-sm font-medium text-right whitespace-nowrap">
+                                    <a href="/restaurant/show/restaurant-update/{{ .ID }}" class="text-cyan-600 hover:text-cyan-900">Modifier</a>
+                                    <a href="/restaurant/delete/{{ .ID }}" class="text-red-600 hover:text-red-900">Supprimer</a>
+                                </td>
+                            </tr>
+                        {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </div>
 {{ end }}
 

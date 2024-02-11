@@ -116,9 +116,9 @@ func (s *RestaurantStore) GetRestaurantByID(id int) *entity.Restaurant {
 	return restaurant
 }
 
-func (s *RestaurantStore) UpdateRestaurant(item entity.Restaurant) error {
+func (s *RestaurantStore) UpdateRestaurant(item entity.Restaurant, restaurantID int) error {
 
-	_, err := s.DB.Exec("UPDATE Restaurant SET name = ?, logo = ?, image = ?, phone = ?, mail = ?, is_open = ?, opening_time = ?, closing_time = ?, grade = ?, is_validated = ?  WHERE id = ?", item.Name, item.Logo, item.Image, item.Phone, item.IsOpen, item.Mail, item.IsOpen, item.OpeningTime, item.ClosingTime, item.Grade, item.IsValidated, item.ID)
+	_, err := s.DB.Exec("UPDATE Restaurant SET name = ?, logo = ?, image = ?, phone = ?, mail = ?, is_open = ?, opening_time = ?, closing_time = ?, grade = ?, is_validated = ?  WHERE id = ?", item.Name, item.Logo, item.Image, item.Phone, item.IsOpen, item.Mail, item.IsOpen, item.OpeningTime, item.ClosingTime, item.Grade, item.IsValidated, restaurantID)
 	if err != nil {
 		return err
 	}
@@ -127,8 +127,8 @@ func (s *RestaurantStore) UpdateRestaurant(item entity.Restaurant) error {
 
 }
 
-func (s *RestaurantStore) DeleteRestaurantById(id int) error {
-	_, err := s.DB.Exec("DELETE FROM Restaurants WHERE id = ?", id)
+func (s *RestaurantStore) DeleteRestaurantById(restaurantID int) error {
+	_, err := s.DB.Exec("DELETE FROM Restaurants WHERE id = ?", restaurantID)
 	if err != nil {
 		return err
 	}

@@ -192,11 +192,39 @@ func (h *Handler) ShowAdminRestaurantPage() http.HandlerFunc {
 	}
 }
 
+func (h *Handler) ShowRestaurantUpdatePage() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		//	Temporairement à 0
+		restaurantId := chi.URLParam(request, "id")
+		restaurantIdInt, _ := strconv.Atoi(restaurantId)
+		// TODO: get id to have it in the page and link to restaurant / tag
+		session, err := storeSession.Get(request, "session-basic")
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		restaurant := h.RestaurantStore.GetRestaurantByID(restaurantIdInt)
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
+			data := restaurantHTTP.TemplateData{Title: "", Content: restaurant}
+			h.RenderHtml(writer, data, "pages/restaurants.update.gohtml")
+		}
+		http.Redirect(writer, request, "/restaurant/manage-restaurants", http.StatusSeeOther)
+	}
+}
+
 func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		restaurantName := r.FormValue("restaurant-name")
-		restaurantID := r.FormValue("restaurant-id")
+		restaurantID, err := strconv.Atoi(r.FormValue("restaurant-id"))
+		if err != nil {
+			println("restaurantId parsing failed %s", err)
+			return
+		}
 		restaurantLogo := r.FormValue("restaurant-logo")
 		restaurantImage := r.FormValue("restaurant-image")
 		restaurantPhone := r.FormValue("restaurant-phone")
@@ -213,8 +241,6 @@ func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
 		}
 		restaurantIsValidated := r.FormValue("restaurant-isvalidated") == "validated"
 
-		id, _ := strconv.Atoi(restaurantID)
-
 		//layout := "2006-01-02 15:04:05"
 		layout := "15:04:05"
 		restaurantOpeningHours, _ := time.Parse(layout, restaurantOpeningTime)
@@ -223,7 +249,7 @@ func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
 		fmt.Printf("closing time parsing: %v\n", restaurantOpeningHours)
 
 		err = h.RestaurantStore.UpdateRestaurant(entity.Restaurant{
-			ID:          id,
+			ID:          restaurantID,
 			Name:        restaurantName,
 			Logo:        restaurantLogo,
 			Image:       restaurantImage,
@@ -233,7 +259,7 @@ func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
 			Grade:       restaurantGrade,
 			ClosingTime: restaurantClosingHours,
 			OpeningTime: restaurantOpeningHours,
-			IsValidated: restaurantIsValidated})
+			IsValidated: restaurantIsValidated}, restaurantID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -252,8 +278,8 @@ func (h *Handler) DeleteRestaurantHandler() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		//h.renderJson(writer, http.StatusOK, map[string]interface{}{"message": "Restaurant " + strconv.Itoa(id) + " deleted"})
-		http.Redirect(writer, request, "/chat", http.StatusSeeOther)
+
+		http.Redirect(writer, request, "/restaurant/manage-restaurants", http.StatusSeeOther)
 
 	}
 }
