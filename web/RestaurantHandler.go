@@ -7,6 +7,7 @@ import (
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
+	"time"
 )
 
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
@@ -214,6 +215,13 @@ func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
 
 		id, _ := strconv.Atoi(restaurantID)
 
+		//layout := "2006-01-02 15:04:05"
+		layout := "15:04:05"
+		restaurantOpeningHours, _ := time.Parse(layout, restaurantOpeningTime)
+		restaurantClosingHours, _ := time.Parse(layout, restaurantClosingTime)
+		fmt.Printf("opening time parsing: %v\n", restaurantOpeningHours)
+		fmt.Printf("closing time parsing: %v\n", restaurantOpeningHours)
+
 		err = h.RestaurantStore.UpdateRestaurant(entity.Restaurant{
 			ID:          id,
 			Name:        restaurantName,
@@ -223,8 +231,8 @@ func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
 			Mail:        restaurantMail,
 			IsOpen:      restaurantIsOpen,
 			Grade:       restaurantGrade,
-			ClosingTime: restaurantClosingTime,
-			OpeningTime: restaurantOpeningTime,
+			ClosingTime: restaurantClosingHours,
+			OpeningTime: restaurantOpeningHours,
 			IsValidated: restaurantIsValidated})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
