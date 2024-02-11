@@ -22,8 +22,13 @@ func (h *Handler) RestaurantUserCreate() http.HandlerFunc {
 			email := request.FormValue("email")
 			user, _ := h.UserStore.GetUserByMail(email)
 			role := request.FormValue("role")
+			//isAdminStr := request.FormValue("is_admin")
+			//isAdmin, _ := strconv.ParseBool(isAdminStr)
 			isAdminStr := request.FormValue("is_admin")
-			isAdmin, _ := strconv.ParseBool(isAdminStr)
+			isAdmin := false
+			if isAdminStr != "" {
+				isAdmin = true
+			}
 			restaurantId := 1
 			restaurant := h.RestaurantStore.GetRestaurantByID(restaurantId)
 			RestaurantUser := &entity.RestaurantHasUsers{
