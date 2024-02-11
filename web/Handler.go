@@ -90,7 +90,7 @@ func NewHandler(store *database.Store) *Handler {
 
 			r.Post("/update", handler.UpdateRestaurantHandler())
 
-			r.Get("/show/restaurant-update/{{ .ID }}", handler.ShowRestaurantUpdatePage())
+			r.Get("/show/restaurant-update/{id}", handler.ShowRestaurantUpdatePage())
 
 			r.Get("/admin/{id}", handler.ShowAdminRestaurantPage())
 			// TODO: ajout de {id} ici pour isoler l'id restaurant et l'adjoindre dans le handler pour populer la rable restaurantHasTag

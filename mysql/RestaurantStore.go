@@ -2,8 +2,8 @@ package database
 
 import (
 	"github.com/jmoiron/sqlx"
+	"log"
 	"restaurantHTTP/entity"
-	"time"
 )
 
 type RestaurantStore struct {
@@ -71,33 +71,23 @@ func (s *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 
 	for rows.Next() {
 		var restaurant entity.Restaurant
-		var openingTimeStr, closingTimeStr string // Temporary variables for string representation
 
-		if err = rows.Scan(&restaurant.ID,
+		if err = rows.Scan(
+			&restaurant.ID,
 			&restaurant.Name,
 			&restaurant.Logo,
 			&restaurant.Image,
 			&restaurant.Phone,
 			&restaurant.Mail,
 			&restaurant.IsOpen,
-			&openingTimeStr,
-			&closingTimeStr,
+			&restaurant.OpeningTime,
+			&restaurant.ClosingTime,
 			&restaurant.Grade,
 			&restaurant.IsValidated); err != nil {
 			return []entity.Restaurant{}, err
 		}
 
-		// Convert opening_time and closing_time strings to time.Time
-		restaurant.OpeningTime, err = time.Parse("15:04:05", openingTimeStr)
-		if err != nil {
-			return []entity.Restaurant{}, err
-		}
-
-		restaurant.ClosingTime, err = time.Parse("15:04:05", closingTimeStr)
-		if err != nil {
-			return []entity.Restaurant{}, err
-		}
-
+		// Format the time as HH:mm:ss
 		restaurantList = append(restaurantList, restaurant)
 	}
 
@@ -111,6 +101,7 @@ func (s *RestaurantStore) GetRestaurantByID(id int) *entity.Restaurant {
 	restaurant := &entity.Restaurant{}
 	err := s.Get(restaurant, "SELECT name, logo, image, phone, mail, is_open, opening_time, closing_time, grade, is_validated FROM Restaurants WHERE id = ?", id)
 	if err != nil {
+		log.Println(err)
 		return nil
 	}
 	return restaurant
@@ -118,7 +109,12 @@ func (s *RestaurantStore) GetRestaurantByID(id int) *entity.Restaurant {
 
 func (s *RestaurantStore) UpdateRestaurant(item entity.Restaurant, restaurantID int) error {
 
-	_, err := s.DB.Exec("UPDATE Restaurant SET name = ?, logo = ?, image = ?, phone = ?, mail = ?, is_open = ?, opening_time = ?, closing_time = ?, grade = ?, is_validated = ?  WHERE id = ?", item.Name, item.Logo, item.Image, item.Phone, item.IsOpen, item.Mail, item.IsOpen, item.OpeningTime, item.ClosingTime, item.Grade, item.IsValidated, restaurantID)
+	//_, err := s.DB.Exec("UPDATE Restaurants SET name = ?, logo = ?, image = ?, phone = ?, mail = ?, is_open = ?, opening_time = ?, closing_time = ?, grade = ?, is_validated = ?  WHERE id = ?", item.Name, item.Logo, item.Image, item.Phone, item.Mail, item.IsOpen, item.OpeningTime, item.ClosingTime, item.Grade, item.IsValidated, restaurantID)
+	//if err != nil {
+	//	return err
+	//}
+
+	_, err := s.DB.Exec("UPDATE Restaurants SET name = ?  WHERE id = ?", item.Name, restaurantID)
 	if err != nil {
 		return err
 	}

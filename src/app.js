@@ -363,4 +363,14 @@ const serverUrl = location.hostname;
                 });
         }
     }));
+
+    // Alpine.data('time', () => (// Parse the timestamp using Moment.js
+    //     {
+    //         parsedTime: "",
+    //         parser(timeStamp) {
+    //             // Format the timestamp as HH:mm:ss
+    //             this.parseTime = moment(timeStamp).format("HH:mm:ss")
+    //         }
+    //     }
+    // ))
 })

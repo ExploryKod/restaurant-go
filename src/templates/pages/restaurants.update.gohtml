@@ -17,57 +17,57 @@
             {{ end }}
         </div>
         <form class="bg-white rounded-lg shadow-md p-8" action="/restaurant/update" method="post">
-            <input type="hidden" name="restaurant-id" value="{{ .Content.Name }}">
-{{/*            <div class="mb-4">*/}}
-{{/*                <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-name">Nom du restaurant:</label>*/}}
-{{/*                <input value="{{ .Content.Name }}" class="basic-input" type="text" name="restaurant-name" id="restaurant-name" placeholder="Nom du restaurant">*/}}
-{{/*            </div>*/}}
-{{/*            <div class="mb-4">*/}}
-{{/*                <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-tel">Téléphone du restaurant:</label>*/}}
-{{/*                <input value="{{ .Content.Phone }}" class="basic-input" type="tel" name="restaurant-tel" id="restaurant-tel" placeholder="+33 (0)3 22 36 56 89">*/}}
-{{/*            </div>*/}}
-{{/*            <div class="mb-4">*/}}
-{{/*                <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Email:</label>*/}}
-{{/*                <input value="{{ .Content.Mail }}" class="basic-input" type="email" name="restaurant-email" id="restaurant-email" placeholder="nom@gmail.com">*/}}
-{{/*            </div>*/}}
-{{/*            <div class="mb-4 flex justify-between">*/}}
-{{/*                <div class="p-2 mb-1 me-2">*/}}
-{{/*                    <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Heures d'ouverture:</label>*/}}
-{{/*                    <input value="{{ .Content.OpeningTime }}" class="basic-input" type="time" name="restaurant-open" id="restaurant-open">*/}}
-{{/*                </div>*/}}
-{{/*                <div class="p-2 mb-1 ms-2">*/}}
-{{/*                    <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Heures de fermeture:</label>*/}}
-{{/*                    <input value={{ .Content.ClosingTime }}class="basic-input" type="time" name="restaurant-close" id="restaurant-close">*/}}
-{{/*                </div>*/}}
-{{/*            </div>*/}}
-{{/*            <div class="mb-5">*/}}
-{{/*                <div class="mb-5 h-20 w-32">*/}}
-{{/*                    <label for="custom-input-number" class="block text-gray-700 text-sm font-bold mb-2">Note restaurateur de départ:</label>*/}}
-{{/*                    <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">*/}}
-{{/*                        <button type="button" data-action="decrement" class="*/}}
-{{/*                    bg-cyan-500 text-cyan-100 hover:text-cyan-950*/}}
-{{/*                    hover:bg-red-500 h-full w-20 rounded-l cursor-pointer outline-none">*/}}
-{{/*                            <span class="text-white font-semibold m-auto text-lg">−</span>*/}}
-{{/*                        </button>*/}}
-{{/*                        <input type="number"*/}}
-{{/*                               class="h-full border-none focus:outline-none text-center w-full*/}}
-{{/*                            bg-cyan-800 font-semiboldtext-sm*/}}
-{{/*                            hover:text-red-500 text-white focus:text-white*/}}
-{{/*                            flex items-center text-white font-semibold outline-none"*/}}
-{{/*                               name="restaurant-grade" value="{{ .Content.Grade }}" min="0" max="6"/>*/}}
-{{/*                        <button type="button" data-action="increment"*/}}
-{{/*                                class="bg-cyan-500 text-cyan-100-600 hover:text-cyan-950*/}}
-{{/*                            hover:bg-red-500 h-full w-20 rounded-r cursor-pointer">*/}}
-{{/*                            <span class="text-white font-semibold m-auto text-lg">+</span>*/}}
-{{/*                        </button>*/}}
-{{/*                    </div>*/}}
-{{/*                </div>*/}}
-{{/*            </div>*/}}
-{{/*            <div class="mt-5">*/}}
-{{/*                <button class="mt-1 bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">*/}}
-{{/*                    Modifier*/}}
-{{/*                </button>*/}}
-{{/*            </div>*/}}
+            <input type="hidden" name="restaurant-id" value="{{ .Content.ID }}">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-name">Nom du restaurant:</label>
+                <input value="{{ .Content.Name }}" class="basic-input" type="text" name="restaurant-name" id="restaurant-name" placeholder="Nom du restaurant">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-tel">Téléphone du restaurant:</label>
+                <input value="{{ .Content.Phone }}" class="basic-input" type="tel" name="restaurant-tel" id="restaurant-tel" placeholder="+33 (0)3 22 36 56 89">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Email:</label>
+                <input value="{{ .Content.Mail }}" class="basic-input" type="email" name="restaurant-email" id="restaurant-email" placeholder="nom@gmail.com">
+            </div>
+            <div class="mb-4 flex justify-between">
+                <div class="p-2 mb-1 me-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Heures d'ouverture:</label>
+                    <input value="{{ .Content.OpeningTime }}" class="basic-input" type="time" name="restaurant-open" id="restaurant-open">
+                </div>
+                <div class="p-2 mb-1 ms-2">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="restaurant-email">Heures de fermeture:</label>
+                    <input value="{{ .Content.ClosingTime }}" class="basic-input" type="time" name="restaurant-close" id="restaurant-close">
+                </div>
+            </div>
+            <div class="mb-5">
+                <div class="mb-5 h-20 w-32">
+                    <label for="custom-input-number" class="block text-gray-700 text-sm font-bold mb-2">Note restaurateur de départ:</label>
+                    <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+                        <button type="button" data-action="decrement" class="
+                    bg-cyan-500 text-cyan-100 hover:text-cyan-950
+                    hover:bg-red-500 h-full w-20 rounded-l cursor-pointer outline-none">
+                            <span class="text-white font-semibold m-auto text-lg">−</span>
+                        </button>
+                        <input type="number"
+                               class="h-full border-none focus:outline-none text-center w-full
+                            bg-cyan-800 font-semiboldtext-sm
+                            hover:text-red-500 text-white focus:text-white
+                            flex items-center text-white font-semibold outline-none"
+                               name="restaurant-grade" value="{{ .Content.Grade }}" min="0" max="6"/>
+                        <button type="button" data-action="increment"
+                                class="bg-cyan-500 text-cyan-100-600 hover:text-cyan-950
+                            hover:bg-red-500 h-full w-20 rounded-r cursor-pointer">
+                            <span class="text-white font-semibold m-auto text-lg">+</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <button class="mt-1 bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-700" type="submit">
+                    Modifier
+                </button>
+            </div>
         </form>
     </section>
 {{ end }}

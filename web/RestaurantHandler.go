@@ -3,11 +3,11 @@ package web
 import (
 	"fmt"
 	"github.com/go-chi/chi/v5"
+	"log"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
-	"time"
 )
 
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
@@ -64,9 +64,11 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 		}
 		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
+			log.Println(err)
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		// TODO: limiter à un accés admin seulement (il créé le restaurant à la suite d'un email > formulaire de contact restaurateur > admin)
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Content: restaurants}
@@ -170,7 +172,7 @@ func (h *Handler) AddTagToRestaurant() http.HandlerFunc {
 
 func (h *Handler) ShowAdminRestaurantPage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		//	Temporairement à 0
+
 		restaurantId := 1
 		// TODO: get id to have it in the page and link to restaurant / tag
 		session, err := storeSession.Get(request, "session-basic")
@@ -194,7 +196,7 @@ func (h *Handler) ShowAdminRestaurantPage() http.HandlerFunc {
 
 func (h *Handler) ShowRestaurantUpdatePage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		//	Temporairement à 0
+
 		restaurantId := chi.URLParam(request, "id")
 		restaurantIdInt, _ := strconv.Atoi(restaurantId)
 		// TODO: get id to have it in the page and link to restaurant / tag
@@ -204,7 +206,7 @@ func (h *Handler) ShowRestaurantUpdatePage() http.HandlerFunc {
 			return
 		}
 		restaurant := h.RestaurantStore.GetRestaurantByID(restaurantIdInt)
-		if err != nil {
+		if restaurant == nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -218,52 +220,59 @@ func (h *Handler) ShowRestaurantUpdatePage() http.HandlerFunc {
 }
 
 func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		restaurantName := r.FormValue("restaurant-name")
-		restaurantID, err := strconv.Atoi(r.FormValue("restaurant-id"))
+	return func(writer http.ResponseWriter, request *http.Request) {
+		restaurantName := request.FormValue("restaurant-name")
+		restaurantID, err := strconv.Atoi(request.FormValue("restaurant-id"))
 		if err != nil {
 			println("restaurantId parsing failed %s", err)
 			return
 		}
-		restaurantLogo := r.FormValue("restaurant-logo")
-		restaurantImage := r.FormValue("restaurant-image")
-		restaurantPhone := r.FormValue("restaurant-phone")
-		restaurantMail := r.FormValue("restaurant-mail")
-		restaurantIsOpen := r.FormValue("restaurant-isopen") == "open"
-		// TODO: need conversion time.tIME
-		restaurantOpeningTime := r.FormValue("restaurant-openingtime")
-		restaurantClosingTime := r.FormValue("restaurant-closingtime")
-
-		restaurantGrade, err := strconv.Atoi(r.FormValue("restaurant-grade"))
-		if err != nil {
-			fmt.Println("restaurant grade parsing type failed")
-			return
-		}
-		restaurantIsValidated := r.FormValue("restaurant-isvalidated") == "validated"
+		//restaurantLogo := r.FormValue("restaurant-logo")
+		//restaurantImage := r.FormValue("restaurant-image")
+		//restaurantPhone := r.FormValue("restaurant-phone")
+		//restaurantMail := r.FormValue("restaurant-mail")
+		//restaurantIsOpen := r.FormValue("restaurant-isopen") == "open"
+		//// TODO: need conversion time.tIME
+		//restaurantOpeningTime := r.FormValue("restaurant-openingtime")
+		//restaurantClosingTime := r.FormValue("restaurant-closingtime")
+		//
+		//restaurantGrade, err := strconv.Atoi(r.FormValue("restaurant-grade"))
+		//if err != nil {
+		//	fmt.Println("restaurant grade parsing type failed")
+		//	return
+		//}
+		//restaurantIsValidated := r.FormValue("restaurant-isvalidated") == "validated"
 
 		//layout := "2006-01-02 15:04:05"
-		layout := "15:04:05"
-		restaurantOpeningHours, _ := time.Parse(layout, restaurantOpeningTime)
-		restaurantClosingHours, _ := time.Parse(layout, restaurantClosingTime)
-		fmt.Printf("opening time parsing: %v\n", restaurantOpeningHours)
-		fmt.Printf("closing time parsing: %v\n", restaurantOpeningHours)
+		//layout := "15:04:05"
+		//restaurantOpeningHours, _ := time.Parse(layout, restaurantOpeningTime)
+		//restaurantClosingHours, _ := time.Parse(layout, restaurantClosingTime)
+		//fmt.Printf("opening time parsing: %v\n", restaurantOpeningHours)
+		//fmt.Printf("closing time parsing: %v\n", restaurantOpeningHours)
 
 		err = h.RestaurantStore.UpdateRestaurant(entity.Restaurant{
-			ID:          restaurantID,
-			Name:        restaurantName,
-			Logo:        restaurantLogo,
-			Image:       restaurantImage,
-			Phone:       restaurantPhone,
-			Mail:        restaurantMail,
-			IsOpen:      restaurantIsOpen,
-			Grade:       restaurantGrade,
-			ClosingTime: restaurantClosingHours,
-			OpeningTime: restaurantOpeningHours,
-			IsValidated: restaurantIsValidated}, restaurantID)
+			ID:   restaurantID,
+			Name: restaurantName,
+			//Logo:        restaurantLogo,
+			//Image:       restaurantImage,
+			//Phone:       restaurantPhone,
+			//Mail:        restaurantMail,
+			//IsOpen:      restaurantIsOpen,
+			//Grade:       restaurantGrade,
+			//ClosingTime: restaurantClosingHours,
+			//OpeningTime: restaurantOpeningHours,
+			//IsValidated: restaurantIsValidated
+		},
+			restaurantID)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Println(err)
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
+		data := restaurantHTTP.TemplateData{Title: "", Success: restaurantName + "modifié"}
+		h.RenderHtml(writer, data, "pages/restaurants.update.gohtml")
+		return
 	}
 }
 
