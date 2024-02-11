@@ -7,6 +7,7 @@ import (
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
+	"strings"
 )
 
 func (h *Handler) AddProductType() http.HandlerFunc {
@@ -14,11 +15,11 @@ func (h *Handler) AddProductType() http.HandlerFunc {
 		if request.Method == http.MethodPost {
 			menu := request.FormValue("menu")
 			icon := request.FormValue("icon")
-			// restaurantId := 12
+			restaurantId := 1
 			productType := &entity.ProductType{
 				Name:         menu,
 				Icon:         icon,
-				RestaurantId: 1,
+				RestaurantId: restaurantId,
 			}
 			var id int
 			var err error // declare err here
@@ -38,17 +39,18 @@ func (h *Handler) AddProductType() http.HandlerFunc {
 
 	}
 }
+
 func (h *Handler) AddProduct() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+		restaurantId := 1
 		if request.Method == http.MethodPost {
 			fmt.Println("Error parsing formsss:")
 			productName := request.FormValue("productName")
 			menuVal := request.FormValue("menuDropdown")
 			priceString := request.FormValue("price")
-			image := request.FormValue("image")
+			image := "https://source.unsplash.com/300x150/?" + request.FormValue("image") + strings.ReplaceAll(productName, " ", "")
 			description := request.FormValue("description")
 			// allergyVal := request.FormValue("allergyDropDown")
-			restaurantId := 1
 			menuValInt, _ := strconv.Atoi(menuVal)
 			priceFloat, _ := strconv.ParseFloat(priceString, 64)
 			restaurant := h.RestaurantStore.GetRestaurantByID(restaurantId)
@@ -74,14 +76,15 @@ func (h *Handler) AddProduct() http.HandlerFunc {
 			encodedMessage := url.QueryEscape(message)
 			fmt.Println("Error parsing form:", encodedMessage)
 		}
-		allergies, err := h.ProductStore.GetAllergiesList()
-		if err != nil {
-
-		}
-		fmt.Println("Error parsing form:", allergies)
-		data := restaurantHTTP.TemplateData{Error: "Echec de l'inscription du restaurant", Content: allergies}
+		productsType, _ := h.ProductTypeStore.GetProductTypeByRestaurantId(restaurantId)
+		//  Allergy
+		// allergies, err := h.ProductStore.GetAllergiesList()
+		// obj := ProductTypeAllergy{
+		// 	productType: productsType,
+		// 	allergies:   allergies,
+		// }
+		data := restaurantHTTP.TemplateData{Error: "Echec de l'ajouter un produit", Content: productsType}
 		h.RenderHtml(writer, data, "pages/product/product.create.gohtml")
 		return
-
 	}
 }

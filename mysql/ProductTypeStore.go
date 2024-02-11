@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"restaurantHTTP/entity"
 
 	"github.com/jmoiron/sqlx"
@@ -24,18 +25,34 @@ func NewProductTypeStore(db *sqlx.DB) *ProductTypeStore {
 // - resturantId: Id of the restaurant
 // Returns:
 // - A list of product type
-func (t *ProductTypeStore) GetProductTypeByRestaurantId(resturantId string) (*entity.ProductType, error) {
+func (t *ProductTypeStore) GetProductTypeByRestaurantId(resturantId int) ([]entity.ProductType, error) {
+	var productTypeList []entity.ProductType
 
-	product := &entity.ProductType{}
-
-	err := t.Get(product, "SELECT * FROM Product_type WHERE restaurantId = ?", resturantId)
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	} else if err != nil {
+	query := "SELECT id, name, icon, restaurant_id FROM Product_type WHERE restaurant_id = ?"
+	rows, err := t.Query(query, resturantId)
+	if err != nil {
+		// Log error and return it
+		log.Println("Error fetching product types:", err)
 		return nil, err
 	}
+	defer rows.Close()
 
-	return product, nil
+	for rows.Next() {
+		var productType entity.ProductType
+		if err := rows.Scan(&productType.ID, &productType.Name, &productType.Icon, &productType.RestaurantId); err != nil {
+			// Log error and return it
+			log.Println("Error scanning product type row:", err)
+			return nil, err
+		}
+		productTypeList = append(productTypeList, productType)
+	}
+
+	if err := rows.Err(); err != nil {
+		// Log error and return it
+		log.Println("Error iterating over product type rows:", err)
+		return nil, err
+	}
+	return productTypeList, nil
 }
 
 func (t *ProductTypeStore) GetProductTypeById(id int) (*entity.ProductType, error) {

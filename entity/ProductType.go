@@ -8,7 +8,7 @@ type ProductType struct {
 }
 
 type ProductTypeStoreInterface interface {
-	GetProductTypeByRestaurantId(resturantId string) (*ProductType, error)
+	GetProductTypeByRestaurantId(resturantId int) ([]ProductType, error)
 	AddProductType(item ProductType) (int, error)
 	DeleteProductType(id int) error
 	GetProductTypeById(id int) (*ProductType, error)
