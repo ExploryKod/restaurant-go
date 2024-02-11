@@ -1,0 +1,22 @@
+{{define "content"}}
+    <form class="bg-white rounded-lg shadow-md p-8" action="/restaurantUser/create" method="post">
+        <h1>Ajouter un utilisateur au restaurant</h1>
+        <div class="mb-4 mt-5">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+            <input class="basic-input" type="email" name="email" id="email" placeholder="Email" required>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="role">Role</label>
+            <input class="basic-input" type="text" name="role" id="role" placeholder="Role" required>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="is_admin">Admin</label>
+            <input class="basic-input" type="checkbox" name="is_admin" id="is_admin">
+        </div>
+        <div>
+            <button class="btn-lg" type="submit">
+                Ajouter
+            </button>
+        </div>
+    </form>
+{{end}}

@@ -50,7 +50,7 @@ func (t *ProductStore) DeleteRestaurantUser(userId int) error {
 func (t *ProductStore) GetRestaurantUsers(restaurantId int) ([]entity.RestaurantHasUsers, error) {
 	var restaurantHasUsers []entity.RestaurantHasUsers
 
-	rows, err := t.Query("SELECT * FROM Restaurant_has_users WHERE restaurant_id = ?", restaurantId)
+	rows, err := t.Query("SELECT r.*, u.username, u.mail FROM Restaurant_has_users r JOIN Users u ON r.user_id = u.id WHERE restaurant_id = ?", restaurantId)
 	if err != nil {
 		return []entity.RestaurantHasUsers{}, err
 	}
@@ -59,7 +59,7 @@ func (t *ProductStore) GetRestaurantUsers(restaurantId int) ([]entity.Restaurant
 
 	for rows.Next() {
 		var restaurantHasUser entity.RestaurantHasUsers
-		if err = rows.Scan(&restaurantHasUser.Restaurant.ID, &restaurantHasUser.User.ID, &restaurantHasUser.IsAdmin, &restaurantHasUser.Role); err != nil {
+		if err = rows.Scan(&restaurantHasUser.Restaurant.ID, &restaurantHasUser.User.ID, &restaurantHasUser.IsAdmin, &restaurantHasUser.Role, &restaurantHasUser.User.Username, &restaurantHasUser.User.Mail); err != nil {
 			return []entity.RestaurantHasUsers{}, err
 		}
 		restaurantHasUsers = append(restaurantHasUsers, restaurantHasUser)

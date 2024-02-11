@@ -1,0 +1,18 @@
+{{define "content"}}
+    <form class="bg-white rounded-lg shadow-md p-8" action="/restaurantUser/update/{{.Content.User.ID}}" method="post">
+        <h1>Modifier un utilisateur du restaurant</h1>
+        <div class="mb-4 mt-5">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="role">Role</label>
+            <input class="basic-input" type="text" name="role" id="role" placeholder="Role" value="{{.Content.Role}}" required>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="is_admin">Admin</label>
+            <input class="basic-input" type="checkbox" name="is_admin" id="is_admin" {{if .Content.IsAdmin}}checked{{end}}>
+        </div>
+        <div>
+            <button class="btn-lg" type="submit">
+                Modifier
+            </button>
+        </div>
+    </form>
+{{end}}

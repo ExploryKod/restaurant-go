@@ -12,7 +12,7 @@ func (h *Handler) RestaurantUserList() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		restaurantId := 1
 		users, _ := h.RestaurantUserStore.GetRestaurantUsers(restaurantId)
-		h.RenderHtml(writer, restaurantHTTP.TemplateData{Content: users}, "pages/restaurantUser/list.gohtml")
+		h.RenderHtml(writer, restaurantHTTP.TemplateData{Content: users}, "pages/restaurantUser/restaurantUser.list.gohtml")
 	}
 }
 
@@ -37,7 +37,7 @@ func (h *Handler) RestaurantUserCreate() http.HandlerFunc {
 			_, _ = h.RestaurantUserStore.AddRestaurantUser(*RestaurantUser)
 			http.Redirect(writer, request, "/restaurantUser/list", http.StatusSeeOther)
 		} else {
-			h.RenderHtml(writer, restaurantHTTP.TemplateData{}, "pages/restaurantUser/create.gohtml")
+			h.RenderHtml(writer, restaurantHTTP.TemplateData{}, "pages/restaurantUser/restaurantUser.create.gohtml")
 		}
 	}
 }
@@ -60,6 +60,8 @@ func (h *Handler) RestaurantUserUpdate() http.HandlerFunc {
 			}
 			_ = h.RestaurantUserStore.UpdateRestaurantUser(*RestaurantUser)
 			http.Redirect(writer, request, "/restaurantUser/list", http.StatusSeeOther)
+		} else {
+			h.RenderHtml(writer, restaurantHTTP.TemplateData{}, "pages/restaurantUser/restaurantUser.update.gohtml")
 		}
 	}
 }
