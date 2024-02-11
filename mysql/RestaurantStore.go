@@ -3,6 +3,7 @@ package database
 import (
 	"github.com/jmoiron/sqlx"
 	"restaurantHTTP/entity"
+	"time"
 )
 
 type RestaurantStore struct {
@@ -61,7 +62,7 @@ func (s *RestaurantStore) AddTagToRestaurantHasTag(tagID int, restaurantID int) 
 func (s *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 	var restaurantList []entity.Restaurant
 
-	rows, err := s.Query("SELECT name, logo, image, phone, mail, is_open, opening_time, closing_time, grade, is_validated  FROM Restaurants")
+	rows, err := s.Query("SELECT id, name, logo, image, phone, mail, is_open, opening_time, closing_time, grade, is_validated  FROM Restaurants")
 	if err != nil {
 		return []entity.Restaurant{}, err
 	}
@@ -70,9 +71,33 @@ func (s *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 
 	for rows.Next() {
 		var restaurant entity.Restaurant
-		if err = rows.Scan(&restaurant.ID, &restaurant.Name, &restaurant.Logo, &restaurant.Mail, &restaurant.IsValidated); err != nil {
+		var openingTimeStr, closingTimeStr string // Temporary variables for string representation
+
+		if err = rows.Scan(&restaurant.ID,
+			&restaurant.Name,
+			&restaurant.Logo,
+			&restaurant.Image,
+			&restaurant.Phone,
+			&restaurant.Mail,
+			&restaurant.IsOpen,
+			&openingTimeStr,
+			&closingTimeStr,
+			&restaurant.Grade,
+			&restaurant.IsValidated); err != nil {
 			return []entity.Restaurant{}, err
 		}
+
+		// Convert opening_time and closing_time strings to time.Time
+		restaurant.OpeningTime, err = time.Parse("15:04:05", openingTimeStr)
+		if err != nil {
+			return []entity.Restaurant{}, err
+		}
+
+		restaurant.ClosingTime, err = time.Parse("15:04:05", closingTimeStr)
+		if err != nil {
+			return []entity.Restaurant{}, err
+		}
+
 		restaurantList = append(restaurantList, restaurant)
 	}
 

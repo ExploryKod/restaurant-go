@@ -82,6 +82,8 @@ func NewHandler(store *database.Store) *Handler {
 
 			r.Get("/become-restaurant", handler.ShowBecomeRestaurantPage())
 
+			r.Get("/manage-restaurants", handler.ShowAddRestaurantAdminPage())
+
 			r.Get("/admin/{id}", handler.ShowAdminRestaurantPage())
 			// TODO: ajout de {id} ici pour isoler l'id restaurant et l'adjoindre dans le handler pour populer la rable restaurantHasTag
 			r.Post("/tag/add", handler.AddTagToRestaurant())
@@ -94,10 +96,6 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/{id}", handler.GetOrder())
 			//r.Post("/add", handler.AddOrder())
 			//r.Delete("/delete/{id}", handler.DeleteOrder())
-		})
-
-		r.Route("/admin", func(r chi.Router) {
-			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})
 
 		r.Route("/email", func(r chi.Router) {
