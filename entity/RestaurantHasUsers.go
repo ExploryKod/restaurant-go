@@ -7,3 +7,11 @@ type RestaurantHasUsers struct {
 	IsAdmin    bool       `json:"is_admin"`
 	Role       string     `json:"role"`
 }
+
+// RestaurantUserStoreInterface represent a struct
+type RestaurantUserStoreInterface interface {
+	AddRestaurantUser(item RestaurantHasUsers) (int, error)
+	UpdateRestaurantUser(item RestaurantHasUsers) error
+	DeleteRestaurantUser(userId int) error
+	GetRestaurantUsers(restaurantId int) ([]RestaurantHasUsers, error)
+}

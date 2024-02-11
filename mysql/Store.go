@@ -13,6 +13,7 @@ type Store struct {
 	OrderHasProductStore entity.OrderHasProductStoreInterface
 	ProductStore         entity.ProductStoreInterface
 	ProductTypeStore     entity.ProductTypeStoreInterface
+	RestaurantUserStore  entity.RestaurantUserStoreInterface
 }
 
 func CreateStore(db *sqlx.DB) *Store {
@@ -23,5 +24,6 @@ func CreateStore(db *sqlx.DB) *Store {
 		OrderHasProductStore: NewOrderHasProductStore(db),
 		ProductStore:         NewProductStore(db),
 		ProductTypeStore:     NewProductTypeStore(db),
+		RestaurantUserStore:  NewRestaurantUserStore(db),
 	}
 }
