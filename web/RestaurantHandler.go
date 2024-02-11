@@ -230,9 +230,6 @@ func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
-		h.jsonResponse(w, http.StatusOK, map[string]interface{}{"message": "Salle modifiée", "name": name, "theme": description})
-
 	}
 }
 
@@ -242,12 +239,12 @@ func (h *Handler) DeleteRestaurantHandler() http.HandlerFunc {
 
 		id, _ := strconv.Atoi(QueryId)
 
-		err := h.Store.DeleteRoomById(id)
+		err := h.RestaurantStore.DeleteRestaurantById(id)
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		h.jsonResponse(writer, http.StatusOK, map[string]interface{}{"message": "Room " + strconv.Itoa(id) + " deleted"})
+		//h.renderJson(writer, http.StatusOK, map[string]interface{}{"message": "Restaurant " + strconv.Itoa(id) + " deleted"})
 		http.Redirect(writer, request, "/chat", http.StatusSeeOther)
 
 	}
