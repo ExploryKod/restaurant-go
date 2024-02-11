@@ -344,7 +344,13 @@ document.addEventListener('alpine:init', () => {
             })
                 .then(response => (response.json()))
                 .then(data => {
-                    console.log('Success:', data);
+                    if (localStorage.getItem('orderData') !== null) {
+                        let oldOrderData = JSON.parse(localStorage.getItem('orderData'));
+                        localStorage.setItem('orderData', JSON.stringify([...oldOrderData, data]));
+                    } else {
+                        localStorage.setItem('orderData', JSON.stringify([data]));
+                    }
+
                     this.toggle();
                     Alpine.store('cart').items = [];
                     Alpine.store('cart').total = 0;

@@ -32,12 +32,13 @@
         <div class="bg-white text-cyan-500 px-4 border-b-4 border-cyan-700 ">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                    <a href="/" >
+                    <a href="/">
                         <img src="/src/assets/restaurantGo.png" alt="Logo" class="pb-2 h-20 w-20 mr-2">
                     </a>
                     <h1 class="text-3xl font-bold">RestaurantGo</h1>
                 </div>
                 <div>
+                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande</a>
                     {{if .Content}}
                         <a href="/admin"
                            class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon

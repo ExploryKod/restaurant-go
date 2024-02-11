@@ -111,3 +111,28 @@ func (h *Handler) GetOrder() http.HandlerFunc {
 		h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Order found", "data": orderHasProduct})
 	}
 }
+
+func (h *Handler) GetAllOrders() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		orders, err := h.OrderHasProductStore.GetAllOrderHasProducts()
+		if err != nil {
+			log.Println(err)
+			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "getallorderhasproduct Internal Server Error"})
+			return
+		}
+
+		data := restaurantHTTP.TemplateData{Title: "Mes commandes", Content: orders}
+
+		h.RenderHtml(writer, data, "pages/order/index.gohtml")
+		//h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": orders})
+
+	}
+}
+
+func (h *Handler) ShowOrdersPage() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		data := restaurantHTTP.TemplateData{Title: "Mes commandes"}
+		h.RenderHtml(writer, data, "pages/order/index.gohtml")
+	}
+}

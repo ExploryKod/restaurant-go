@@ -43,8 +43,57 @@ func (o *OrderStore) AddOrder(order entity.Order) (int, error) {
 }
 
 func (o *OrderStore) GetAllOrders() ([]entity.Order, error) {
-	//TODO implement me
-	panic("implement me")
+	var orderList []entity.Order
+
+	query := `
+		SELECT 
+			o.id,
+			o.status,
+			o.total_price,
+			o.number,
+			o.created_date,
+			o.closed_date,
+			o.user_id,
+			u.username AS user_username,
+			u.password AS user_password,
+			u.name AS user_name,
+			u.firstname AS user_firstname,
+			u.mail AS user_mail,
+			u.phone AS user_phone,
+			u.is_superadmin AS user_is_superadmin,
+			u.birthday AS user_birthday,
+			o.restaurant_id, 
+			r.name AS restaurant_name,
+			r.logo AS restaurant_logo,
+			r.image AS restaurant_image,
+			r.phone AS restaurant_phone,
+			r.mail AS restaurant_mail,
+			r.is_open AS restaurant_is_open,
+			r.opening_time AS restaurant_opening_time,
+			r.closing_time AS restaurant_closing_time,
+			r.grade AS restaurant_grade,
+			r.is_validated AS restaurant_is_validated
+		FROM
+			Orders o 
+		JOIN 
+			Users u ON o.user_id = u.id 
+		JOIN 
+			Restaurants r ON o.restaurant_id = r.id`
+
+	rows, err := o.Queryx(query)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	for rows.Next() {
+		order := entity.Order{}
+		err = rows.Scan(&order.ID, &order.Status, &order.TotalPrice, &order.Number, &order.CreatedDate, &order.ClosedDate, &order.User.ID, &order.User.Username, &order.User.Password, &order.User.Name, &order.User.Firstname, &order.User.Mail, &order.User.Phone, &order.User.IsSuperadmin, &order.User.Birthday, &order.Restaurant.ID, &order.Restaurant.Name, &order.Restaurant.Logo, &order.Restaurant.Image, &order.Restaurant.Phone, &order.Restaurant.Mail, &order.Restaurant.IsOpen, &order.Restaurant.OpeningTime, &order.Restaurant.ClosingTime, &order.Restaurant.Grade, &order.Restaurant.IsValidated)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		orderList = append(orderList, order)
+	}
+	return orderList, nil
 }
 
 func (o *OrderStore) GetOrderByID(id int) *entity.Order {
@@ -101,6 +150,23 @@ func (o *OrderStore) GetOrderByID(id int) *entity.Order {
 	}
 	return order
 }
+
+/*func (o *OrderStore) GetOrderProductsByOrderID(id int) *entity.OrderHasProduct {
+	orderHasProduct := &entity.OrderHasProduct{}
+
+	query := `
+			SELECT id, name, price, image, description FROM Products p JOIN Order_has_products op ON p.id = op.product_id WHERE op.order_id = ?
+	`
+
+	err := o.Select(&orderHasProduct.Products, query, id)
+	if err != nil {
+		log.Println("order", err)
+		return nil
+	}
+	fmt.Printf("%#v\n", orderHasProduct.Products)
+
+	return orderHasProduct
+}*/
 
 func (o *OrderStore) GetOrderByUserID(id int) []entity.Order {
 	//TODO implement me

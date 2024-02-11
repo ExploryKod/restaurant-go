@@ -34,4 +34,5 @@ type OrderStoreInterface interface {
 	GetOrderByID(id int) *Order
 	GetOrderByUserID(id int) []Order
 	GetOrderByRestaurantID(id int) []Order
+	//GetOrderProductsByOrderID(id int) []OrderHasProduct
 }

@@ -84,7 +84,8 @@ func NewHandler(store *database.Store) *Handler {
 		})
 
 		r.Route("/order", func(r chi.Router) {
-			//r.Get("/get/all", handler.GetAllOrders())
+			r.Get("/", handler.ShowOrdersPage())
+			r.Get("/get/all", handler.GetAllOrders())
 			r.Get("/{id}", handler.GetOrder())
 			//r.Post("/add", handler.AddOrder())
 			//r.Delete("/delete/{id}", handler.DeleteOrder())
