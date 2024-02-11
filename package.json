@@ -11,5 +11,8 @@
     "dev": "npx tailwindcss -i src/input.css -o src/output.css --watch"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.2"
+  }
 }

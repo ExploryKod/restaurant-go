@@ -1,4 +1,5 @@
 document.addEventListener('alpine:init', () => {
+const serverUrl = location.hostname;
 
     Alpine.store('user', {
         id: null,
@@ -37,7 +38,7 @@ document.addEventListener('alpine:init', () => {
                 this.success.email = false
                 return
             }
-            fetch('http://localhost:8097/checkEmailAndUsername?username=' + (type === 'username' ? value : '') + '&email=' + (type === 'email' ? value : ''))
+            fetch(`${serverUrl}/checkEmailAndUsername?username=` + (type === 'username' ? value : '') + '&email=' + (type === 'email' ? value : ''))
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -335,7 +336,7 @@ document.addEventListener('alpine:init', () => {
 
             const restaurantId = this.$el.getAttribute('data-restaurant-id');
 
-            fetch(`http://localhost:8097/restaurant/${restaurantId}/create-order`, {
+            fetch(`${serverUrl}/restaurant/${restaurantId}/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
