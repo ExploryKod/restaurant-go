@@ -2,14 +2,15 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
-	"github.com/go-chi/jwtauth/v5"
 	"html/template"
 	"net/http"
 	"restaurantHTTP"
 	database "restaurantHTTP/mysql"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+	"github.com/go-chi/jwtauth/v5"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -93,6 +94,7 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
+			r.Get("/orders", handler.ShowAddRestaurantAdminPage())
 		})
 
 	})

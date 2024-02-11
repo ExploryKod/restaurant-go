@@ -3,14 +3,15 @@ package web
 import (
 	"database/sql"
 	"encoding/json"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/jwtauth/v5"
 	"log"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
 	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth/v5"
 )
 
 func (h *Handler) CreateOrder() http.HandlerFunc {
@@ -116,6 +117,24 @@ func (h *Handler) GetAllOrders() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
 		orders, err := h.OrderHasProductStore.GetAllOrderHasProducts()
+		if err != nil {
+			log.Println(err)
+			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "getallorderhasproduct Internal Server Error"})
+			return
+		}
+
+		data := restaurantHTTP.TemplateData{Title: "Mes commandes", Content: orders}
+
+		h.RenderHtml(writer, data, "pages/order/index.gohtml")
+		//h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": orders})
+
+	}
+}
+
+func (h *Handler) GetAllOrdersByRestaurantId() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		orders, err := h.OrderStore.GetOrderByRestaurantID()
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "getallorderhasproduct Internal Server Error"})

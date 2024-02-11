@@ -38,6 +38,7 @@
                     <h1 class="text-3xl font-bold">RestaurantGo</h1>
                 </div>
                 <div>
+                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Mes Commandes</a>
                     <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande</a>
                     {{if .Content}}
                         <a href="/admin"

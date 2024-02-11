@@ -2,9 +2,10 @@ package database
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"log"
 	"restaurantHTTP/entity"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type OrderStore struct {
@@ -173,7 +174,40 @@ func (o *OrderStore) GetOrderByUserID(id int) []entity.Order {
 	panic("implement me")
 }
 
-func (o *OrderStore) GetOrderByRestaurantID(id int) []entity.Order {
-	//TODO implement me
-	panic("implement me")
+func (o *OrderStore) GetOrderByRestaurantID(id int) ([]entity.Order, error) {
+	var orderList []entity.Order
+	query := `
+        SELECT 
+            o.id,
+            o.status,
+            o.total_price,
+            o.number,
+            o.created_date,
+            o.closed_date,
+            o.user_id,
+            o.restaurant_id
+        FROM
+            Orders o
+			JOIN Restaurants r ON o.restaurant_id = r.id 
+			WHERE o.restaurant_id = ?`
+
+	rows, err := o.Queryx(query, id)
+	if err != nil {
+		return []entity.Order{}, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var order entity.Order
+		if err = rows.Scan(&order.ID, &order.Status, &order.TotalPrice, &order.Number, &order.CreatedDate, &order.ClosedDate, &order.Restaurant.ID); err != nil {
+			return []entity.Order{}, err
+		}
+		orderList = append(orderList, order)
+	}
+
+	if err = rows.Err(); err != nil {
+		return []entity.Order{}, err
+	}
+	return orderList, nil
 }
