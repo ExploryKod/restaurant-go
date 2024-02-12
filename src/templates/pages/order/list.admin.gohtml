@@ -1,0 +1,59 @@
+{{define "content"}}
+<div class="max-w-4xl mx-auto py-8">
+    <div class="text-center">
+        <h1 class="text-3xl font-bold mb-4">Menu</h1>
+    </div>
+    <section x-data="manageOrder">
+        <div class="overflow-x-auto">
+        {{/* <label for="dropdown">Affichage:</label>
+        <select id="dropdown" @change="filterOrder(event)">
+           <option :value="1" :selected="selectedTypeId == 1 ? 'selected' : ''">Tous</option>
+            <option :value="2" :selected="selectedTypeId == 2 ? 'selected' : ''">En cours</option>
+             <option :value="3" :selected="selectedTypeId == 3 ? 'selected' : ''">Historique</option>
+        <!-- Add more options as needed -->
+        </select> */}}
+            <table class="table-auto w-full border-collapse border border-gray-400">
+                <thead >
+                    <tr>
+                        <th class="px-4 py-2 bg-gray-200 border border-gray-400">Number</th>
+                        <th class="px-4 py-2 bg-gray-200 border border-gray-400">Prix</th>
+                        <th class="px-4 py-2 bg-gray-200 border border-gray-400">Produits</th>
+                        <th class="px-4 py-2 bg-gray-200 border border-gray-400">Status</th>
+                        <th class="px-4 py-2 bg-gray-200 border border-gray-400">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Content.PendingOrders}}
+                    <tr>
+                        <td class="px-4 py-2 border border-gray-400">{{.Order.Number}}</td>
+                        <td class="px-4 py-2 border border-gray-400">{{.Order.TotalPrice}}</td>
+                        <td class="px-4 py-2 border border-gray-400">
+                            <ul>
+                                {{range .Products}}
+                                <li>{{.Name}}</li>
+                                {{end}}
+                            </ul>
+                        </td>
+                                                <td class="px-4 py-2 border border-gray-400">{{.Order.Status}}</td>
+                        <td class="px-4 py-2 border border-grey-400">
+                        {{if eq .Order.Status "pending"}}
+                           <button  class="font-medium border border-1 border-cyan-500 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2"
+                            @click="validateOrder({{.Order.ID}})">Validate</button>
+                        {{end}}
+                        {{if eq .Order.Status "preparation"}}
+                           <button  class="font-medium border border-1 border-cyan-500 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2"
+                            @click="readyOrder({{.Order.ID}})">Pret</button>
+                        {{end}}
+                        {{if eq .Order.Status "ready"}}
+                           <button  class="font-medium border border-1 border-cyan-500 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2"
+                            @click="completeOrder({{.Order.ID}})">Livree</button>
+                        {{end}}
+                        </td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{{end}}

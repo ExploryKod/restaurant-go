@@ -7,19 +7,23 @@ import (
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
+
 	"strings"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func (h *Handler) AddProductType() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+		restaurantId := chi.URLParam(request, "restaurantId")
+		restaurantIdInt, _ := strconv.Atoi(restaurantId)
 		if request.Method == http.MethodPost {
 			menu := request.FormValue("menu")
 			icon := request.FormValue("icon")
-			restaurantId := 1
 			productType := &entity.ProductType{
 				Name:         menu,
 				Icon:         icon,
-				RestaurantId: restaurantId,
+				RestaurantId: restaurantIdInt,
 			}
 			var id int
 			var err error // declare err here
@@ -42,9 +46,9 @@ func (h *Handler) AddProductType() http.HandlerFunc {
 
 func (h *Handler) AddProduct() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		restaurantId := 1
+		restaurantId := chi.URLParam(request, "restaurantId")
+		restaurantIdInt, _ := strconv.Atoi(restaurantId)
 		if request.Method == http.MethodPost {
-			fmt.Println("Error parsing formsss:")
 			productName := request.FormValue("productName")
 			menuVal := request.FormValue("menuDropdown")
 			priceString := request.FormValue("price")
@@ -53,7 +57,7 @@ func (h *Handler) AddProduct() http.HandlerFunc {
 			// allergyVal := request.FormValue("allergyDropDown")
 			menuValInt, _ := strconv.Atoi(menuVal)
 			priceFloat, _ := strconv.ParseFloat(priceString, 64)
-			restaurant := h.RestaurantStore.GetRestaurantByID(restaurantId)
+			restaurant := h.RestaurantStore.GetRestaurantByID(restaurantIdInt)
 			productType, _ := h.ProductTypeStore.GetProductTypeById(menuValInt)
 
 			product := &entity.Product{
@@ -76,7 +80,7 @@ func (h *Handler) AddProduct() http.HandlerFunc {
 			encodedMessage := url.QueryEscape(message)
 			fmt.Println("Error parsing form:", encodedMessage)
 		}
-		productsType, _ := h.ProductTypeStore.GetProductTypeByRestaurantId(restaurantId)
+		productsType, _ := h.ProductTypeStore.GetProductTypeByRestaurantId(restaurantIdInt)
 		//  Allergy
 		// allergies, err := h.ProductStore.GetAllergiesList()
 		// obj := ProductTypeAllergy{
@@ -86,5 +90,44 @@ func (h *Handler) AddProduct() http.HandlerFunc {
 		data := restaurantHTTP.TemplateData{Error: "Echec de l'ajouter un produit", Content: productsType}
 		h.RenderHtml(writer, data, "pages/product/product.create.gohtml")
 		return
+	}
+}
+func (h *Handler) ListProducts() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		restaurantId := chi.URLParam(request, "restaurantId")
+		restaurantIdInt, _ := strconv.Atoi(restaurantId)
+		productsList, _ := h.ProductStore.GetProductByRestaurantId(restaurantIdInt)
+		//  Allergy
+		// allergies, err := h.ProductStore.GetAllergiesList()
+		// obj := ProductTypeAllergy{
+		// 	productType: productsType,
+		// 	allergies:   allergies,
+		// }
+		// h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": productsList})
+		data := restaurantHTTP.TemplateData{Error: "Echec de l'ajouter un produit", Content: productsList}
+		h.RenderHtml(writer, data, "pages/product/product.list.gohtml")
+		return
+	}
+}
+func (h *Handler) DeleteProducts() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		id := chi.URLParam(request, "id")
+		resId := chi.URLParam(request, "restaurantId")
+		idInt, _ := strconv.Atoi(id)
+		resIdInt, _ := strconv.Atoi(resId)
+		productsList, _ := h.ProductStore.DeleteProduct(idInt)
+		if productsList {
+			fmt.Println("Error in productlist")
+		}
+		http.Redirect(writer, request, fmt.Sprintf("/product/list/%d", resIdInt), http.StatusSeeOther)
+		//  Allergy
+
+		// allergies, err := h.ProductStore.GetAllergiesList()
+		// obj := ProductTypeAllergy{
+		// 	productType: productsType,
+		// 	allergies:   allergies,
+		// }
+		// h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": productsList})
 	}
 }
