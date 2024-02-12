@@ -2,14 +2,15 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
-	"github.com/go-chi/jwtauth/v5"
 	"html/template"
 	"net/http"
 	"restaurantHTTP"
 	database "restaurantHTTP/mysql"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+	"github.com/go-chi/jwtauth/v5"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -79,7 +80,10 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/{id}/menu", handler.CreateOrder())
 
 			r.Post("/{id}/create-order", handler.CreateOrder())
-
+			r.Get("/order/get/{type}", handler.GetAllOrdersByRestaurantId())
+			r.Get("/order/validate/{id}", handler.ValidateOrderById())
+			r.Get("/order/done/{id}", handler.CompleteOrderById())
+			r.Get("/order/ready/{id}", handler.ReadyOrderById())
 			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
 		})
 
@@ -87,16 +91,18 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/", handler.ShowOrdersPage())
 			r.Get("/get/all", handler.GetAllOrders())
 			r.Get("/{id}", handler.GetOrder())
+
 			//r.Post("/add", handler.AddOrder())
 			//r.Delete("/delete/{id}", handler.DeleteOrder())
 		})
 
 		r.Route("/product", func(r chi.Router) {
+			r.Get("/list", handler.ListProducts())
 			r.Get("/type/create", handler.AddProductType())
 			r.Post("/type/create", handler.AddProductType())
 
-			r.Get("/create", handler.AddProduct())
-			r.Post("/create", handler.AddProduct())
+			r.Get("/create/{restaurantId}", handler.AddProduct())
+			r.Post("/create/{restaurantId}", handler.AddProduct())
 		})
 
 		r.Route("/admin", func(r chi.Router) {
