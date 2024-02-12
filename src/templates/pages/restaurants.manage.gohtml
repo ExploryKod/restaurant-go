@@ -1,0 +1,16 @@
+{{define "content"}}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-2xl font-bold mb-4 ml-5">Gérer mon restaurant</h1>
+            </div>
+            <div class="col-md-12 ml-5">
+                <a href="/restaurant/order/get/{{.Content}}" class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Gérer les commandes</a>
+                <a href="/restaurantUser/list/{{.Content}}" class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Gérer les employés</a>
+                <a href="/product/list/{{.Content}}" class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Gérer les produits</a>
+            </div>
+        </div>
+    </div>
+{{end}}
+`
+)
