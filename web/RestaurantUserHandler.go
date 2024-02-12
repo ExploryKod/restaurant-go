@@ -29,14 +29,23 @@ func (h *Handler) RestaurantUserCreate() http.HandlerFunc {
 		RestaurantId, _ := strconv.Atoi(chi.URLParam(request, "restaurantId"))
 		if request.Method == http.MethodPost {
 			email := request.FormValue("email")
-			user, _ := h.UserStore.GetUserByMail(email)
+			user, err := h.UserStore.GetUserByMail(email)
+			if err != nil || user == nil {
+				h.RenderHtml(writer, restaurantHTTP.TemplateData{Content: RestaurantId, Error: "Erreur : L'utilisateur n'existe pas"}, "pages/restaurantUser/restaurantUser.create.gohtml")
+				return
+			}
 			role := request.FormValue("role")
 			isAdminStr := request.FormValue("is_admin")
 			isAdmin := false
 			if isAdminStr != "" {
 				isAdmin = true
 			}
-
+			existingUser, _ := h.RestaurantUserStore.GetRestaurantUserByUserID(user.ID)
+			if existingUser != nil {
+				// Pass the error message to the model
+				h.RenderHtml(writer, restaurantHTTP.TemplateData{Content: RestaurantId, Error: "Erreur : L'utilisateur est deja dans un restaurant"}, "pages/restaurantUser/restaurantUser.create.gohtml")
+				return
+			}
 			restaurant := h.RestaurantStore.GetRestaurantByID(RestaurantId)
 			RestaurantUser := &entity.RestaurantHasUsers{
 				User:       *user,
