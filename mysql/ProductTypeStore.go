@@ -76,7 +76,7 @@ func (t *ProductTypeStore) GetProductTypeById(id int) (*entity.ProductType, erro
 // - Id of inserted Product Type
 func (t *ProductTypeStore) AddProductType(item entity.ProductType) (int, error) {
 	fmt.Println(item, item)
-	res, err := t.DB.Exec("INSERT INTO Product_type (name, icon ) VALUES (?, ?)", item.Name, item.Icon)
+	res, err := t.DB.Exec("INSERT INTO Product_type (name, icon, restaurant_id ) VALUES (?, ?, ?)", item.Name, item.Icon, item.RestaurantId)
 	if err != nil {
 		return 0, err
 	}

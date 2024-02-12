@@ -35,6 +35,7 @@ func (h *Handler) AddProductType() http.HandlerFunc {
 			message := "Account created successfully with id: " + fmt.Sprintf("%d", id)
 			encodedMessage := url.QueryEscape(message)
 			fmt.Println("Error parsing form:", encodedMessage)
+			http.Redirect(writer, request, fmt.Sprintf("/product/list/%d", restaurantIdInt), http.StatusSeeOther)
 		}
 		fmt.Println("Error adding product type to the database:", request.Method)
 		data := restaurantHTTP.TemplateData{Error: "Echec de l'inscription du restaurant"}
