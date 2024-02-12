@@ -54,7 +54,7 @@ func (t *ProductStore) GetProductByRestaurantId(resturantId int) ([]entity.Produ
 		JOIN 
 			Restaurants r ON p.restaurant_id = r.id
 		JOIN 
-			Product_type pt ON p.restaurant_id = pt.restaurant_id
+			Product_type pt ON p.product_type_id = pt.id
 		WHERE 
 			p.restaurant_id = ?
 	)
@@ -128,13 +128,13 @@ func (t *ProductStore) AddProduct(item entity.Product) (int, error) {
 // - id: The is of Product
 // Returns:
 // - nil
-func (t *ProductStore) DeleteProduct(id int) error {
+func (t *ProductStore) DeleteProduct(id int) (bool, error) {
 	_, err := t.DB.Exec("DELETE FROM Products WHERE id = ?", id)
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	return nil
+	return true, nil
 }
 
 // Get List of allergies

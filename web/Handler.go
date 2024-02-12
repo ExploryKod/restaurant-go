@@ -80,7 +80,7 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/{id}/menu", handler.CreateOrder())
 
 			r.Post("/{id}/create-order", handler.CreateOrder())
-			r.Get("/order/get/{type}", handler.GetAllOrdersByRestaurantId())
+			r.Get("/order/get/{restaurantId}", handler.GetAllOrdersByRestaurantId())
 			r.Get("/order/validate/{id}", handler.ValidateOrderById())
 			r.Get("/order/done/{id}", handler.CompleteOrderById())
 			r.Get("/order/ready/{id}", handler.ReadyOrderById())
@@ -97,9 +97,10 @@ func NewHandler(store *database.Store) *Handler {
 		})
 
 		r.Route("/product", func(r chi.Router) {
-			r.Get("/list", handler.ListProducts())
-			r.Get("/type/create", handler.AddProductType())
-			r.Post("/type/create", handler.AddProductType())
+			r.Get("/list/{restaurantId}", handler.ListProducts())
+			r.Get("/list/delete/{id}", handler.DeleteProducts())
+			r.Get("/type/create/{restaurantId}", handler.AddProductType())
+			r.Post("/type/create/{restaurantId}", handler.AddProductType())
 
 			r.Get("/create/{restaurantId}", handler.AddProduct())
 			r.Post("/create/{restaurantId}", handler.AddProduct())

@@ -447,5 +447,23 @@ document.addEventListener('alpine:init', () => {
             //     })
         }
     }))
+    Alpine.data('manageProduct', () => ({
+        deleteProduct(id) {
+            fetch('http://localhost:8097/product/list/delete/' + id)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la requête.');
+                    }
+                    return response.json()
+                })
+                .then((json) => {
+
+
+                })
+                .catch((error) => {
+                    console.log('Error during checking:', error)
+                })
+        },
+    }))
     
 })
