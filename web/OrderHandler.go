@@ -60,6 +60,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 			fmt.Println(err)
 			return
 		}
+		totalPrice := float64(0)
 		order := entity.NewOrder(*user, *restaurant, "pending", totalPrice, 0, time.Now(), sql.NullTime{})
 
 		_, err = h.OrderStore.AddOrder(*order)
