@@ -103,6 +103,29 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})
 
+		/*pusherClient := pusher.Client{
+			AppID:   os.Getenv("PUSHER_APP_ID"),
+			Key:     os.Getenv("PUSHER_KEY"),
+			Secret:  os.Getenv("PUSHER_SECRET"),
+			Cluster: os.Getenv("PUSHER_CLUSTER"),
+			Secure:  true,
+		}*/
+		r.Route("/api", func(r chi.Router) {
+			/*r.Get("/pusher/auth", func(w http.ResponseWriter, r *http.Request) {
+				params, _ := r.URL.Query()["channel_name"]
+				channelName := params[0]
+				userID := r.Context().Value("jwt").(*jwtauth.Token).Claims["id"].(float64)
+				userIDString := fmt.Sprintf("%v", userID)
+				response, err := pusherClient.AuthenticatePrivateChannel(channelName, userIDString)
+				if err != nil {
+					http.Error(w, "Forbidden", http.StatusForbidden)
+					return
+				}
+				handler.RenderJson(w, http.StatusOK, response)
+			})*/
+			r.Post("/order/{id}/create", handler.CreateOrder())
+		})
+
 	})
 
 	return handler
