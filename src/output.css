@@ -1261,7 +1261,6 @@ input:checked + .toggle-bg {
   }
 }
 
-<<<<<<< HEAD
 .btn-home-primary {
   display: flex;
   width: 100%;
@@ -1336,8 +1335,6 @@ input:checked + .toggle-bg {
   }
 }
 
-=======
->>>>>>> feature/choose-restaurant
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1434,7 +1431,6 @@ input:checked + .toggle-bg {
 
 .z-20 {
   z-index: 20;
-<<<<<<< HEAD
 }
 
 .z-30 {
@@ -1539,12 +1535,6 @@ input:checked + .toggle-bg {
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
-=======
-}
-
-.z-30 {
-  z-index: 30;
->>>>>>> feature/choose-restaurant
 }
 
 .z-40 {

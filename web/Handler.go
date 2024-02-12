@@ -149,21 +149,21 @@ func NewHandler(store *database.Store) *Handler {
 				handler.RenderJson(w, http.StatusOK, response)
 			})*/
 			r.Post("/order/{id}/create", handler.CreateOrder())
-		r.Route("/api", func(r chi.Router) {
+			r.Route("/api", func(r chi.Router) {
 			r.Post("/restaurant/register", handler.RegisterRestaurant())
+			})
 		})
 
-	})
 
 	return handler
-}
+	})
 
 type Handler struct {
 	*chi.Mux
 	*database.Store
 }
 
-func (h *Handler) RenderJson(w http.ResponseWriter, status int, data interface{}) {
+func (h *Handler) RenderJson(writer http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
