@@ -37,7 +37,7 @@ document.addEventListener('alpine:init', () => {
                 this.success.email = false
                 return
             }
-            fetch('http://localhost:8097/checkEmailAndUsername?username=' + (type === 'username' ? value : '') + '&email=' + (type === 'email' ? value : ''))
+            fetch('/checkEmailAndUsername?username=' + (type === 'username' ? value : '') + '&email=' + (type === 'email' ? value : ''))
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -335,7 +335,7 @@ document.addEventListener('alpine:init', () => {
 
             const restaurantId = this.$el.getAttribute('data-restaurant-id');
 
-            fetch(`http://localhost:8097/restaurant/${restaurantId}/create-order`, {
+            fetch(`/restaurant/${restaurantId}/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -366,7 +366,7 @@ document.addEventListener('alpine:init', () => {
         username: '',
         email: '',
         validateOrder(id) {
-            fetch('http://localhost:8097/restaurant/order/validate/' + id)
+            fetch('/restaurant/order/validate/' + id)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -387,7 +387,7 @@ document.addEventListener('alpine:init', () => {
                 })
         },
         readyOrder(id) {
-            fetch('http://localhost:8097/restaurant/order/ready/' + id)
+            fetch('/restaurant/order/ready/' + id)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -408,7 +408,7 @@ document.addEventListener('alpine:init', () => {
                 })
         },
         completeOrder(id) {
-            fetch('http://localhost:8097/restaurant/order/done/' + id)
+            fetch('/restaurant/order/done/' + id)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -430,8 +430,8 @@ document.addEventListener('alpine:init', () => {
         },
         filterOrder(e) {
             // console.log(e.target.value)
-            window.location.href = 'http://localhost:8097/restaurant/order/get/' + e.target.value;
-            // fetch('http://localhost:8097/restaurant/order/get/' + id)
+            window.location.href = '/restaurant/order/get/' + e.target.value;
+            // fetch('/restaurant/order/get/' + id)
             //     .then((response) => {
             //         if (!response.ok) {
             //             throw new Error('Erreur lors de la requête.');
@@ -450,7 +450,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('manageProduct', () => ({
         deleteProduct(id) {
             const restaurantId = localStorage.getItem('UserRestaurantID')
-            fetch('http://localhost:8097/product/list/delete/' + id +"/"+restaurantId)
+            fetch('/product/list/delete/' + id +"/"+restaurantId)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');

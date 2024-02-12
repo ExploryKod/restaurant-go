@@ -79,6 +79,9 @@ func (h *Handler) AddProduct() http.HandlerFunc {
 			message := "Product created successfully with id: " + fmt.Sprintf("%d", id)
 			encodedMessage := url.QueryEscape(message)
 			fmt.Println("Error parsing form:", encodedMessage)
+			RestaurantId, _ := strconv.Atoi(chi.URLParam(request, "restaurantId"))
+
+			http.Redirect(writer, request, fmt.Sprintf("/product/list/%d", RestaurantId), http.StatusSeeOther)
 		}
 		productsType, _ := h.ProductTypeStore.GetProductTypeByRestaurantId(restaurantIdInt)
 		//  Allergy

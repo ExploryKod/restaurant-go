@@ -4,9 +4,9 @@
         <h1 class="text-3xl font-bold mb-4">Menu</h1>
     </div>
     <section x-data="manageProduct">
-     <a :href="'http://localhost:8097/product/create/' + localStorage.getItem('UserRestaurantID')"
+     <a :href="'/product/create/' + localStorage.getItem('UserRestaurantID')"
                            class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Ajouter Produit</a>
-                           <a :href="'http://localhost:8097/product/type/create/' + localStorage.getItem('UserRestaurantID')"
+                           <a :href="'/product/type/create/' + localStorage.getItem('UserRestaurantID')"
                            class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Ajouter Produit Type</a>
         <div class="overflow-x-auto">
             <table class="table-auto w-full border-collapse border border-gray-400">
