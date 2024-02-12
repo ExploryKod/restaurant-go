@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
@@ -95,7 +96,13 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
 }
+func (h *Handler) ManageRestaurant() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		RestaurantId, _ := strconv.Atoi(chi.URLParam(request, "restaurantId"))
+		h.RenderHtml(writer, restaurantHTTP.TemplateData{Content: RestaurantId}, "pages/restaurants.manage.gohtml")
 
+	}
+}
 func (h *Handler) GetAllRestaurants() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		restaurants, err := h.RestaurantStore.GetAllRestaurants()

@@ -38,7 +38,7 @@
                     <h1 class="text-3xl font-bold">RestaurantGo</h1>
                 </div>
                 <div>
-                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande</a>
+                    <a x-show="localStorage.getItem('orderData') !== null" href="/order" class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Ma commande</a>
                     {{if .Content}}
                         <a href="/admin"
                            class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon
