@@ -67,14 +67,14 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 
 		order := entity.NewOrder(*user, *restaurant, "pending", totalPrice, 0, time.Now(), sql.NullTime{})
 
-		var lastOrderID int
-		lastOrderID, err = h.OrderStore.AddOrder(*order)
+		lastOrderID, orderNumber, err := h.OrderStore.AddOrder(order)
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
 			return
 		}
 		order.ID = lastOrderID
+		order.Number = orderNumber
 
 		orderHasProduct := entity.NewOrderHasProduct(*order, *products)
 
@@ -82,6 +82,12 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+			return
+		}
+
+		err = h.Client.Trigger("restaurant-"+strconv.Itoa(restaurantID), "new-order", map[string]any{"data": orderHasProduct, "message": "New order !"})
+		if err != nil {
+			log.Println(err)
 			return
 		}
 
@@ -133,9 +139,10 @@ func (h *Handler) GetAllOrders() http.HandlerFunc {
 
 func (h *Handler) GetAllOrdersByRestaurantId() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		restaurantId := 1
-		typeId := chi.URLParam(request, "type")
-		typeInt, _ := strconv.Atoi(typeId)
+		restaurantIDUrl := chi.URLParam(request, "restaurantId")
+		restaurantId, _ := strconv.Atoi(restaurantIDUrl)
+
+		req := request.URL.Query().Get("req")
 
 		orders, err := h.OrderHasProductStore.GetAllOrderHasProductsByRestaurantId(restaurantId)
 		if err != nil {
@@ -144,33 +151,18 @@ func (h *Handler) GetAllOrdersByRestaurantId() http.HandlerFunc {
 			return
 		}
 
-		// Filtering Orders with type
-		var pendingOrders []entity.OrderHasProduct
-		for _, order := range orders {
-			if typeInt == 2 {
-				if order.Order.Status == "pending" {
-					pendingOrders = append(pendingOrders, order)
-				}
-			} else if typeInt == 3 {
-				if order.Order.Status == "delivered" {
-					pendingOrders = append(pendingOrders, order)
-				}
-			} else {
-				pendingOrders = append(pendingOrders, order)
-			}
+		if req == "json" {
+			h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": orders})
+			return
 		}
-		// fmt.Println(pendingOrders)
 
 		data := restaurantHTTP.TemplateData{Title: "Mes commandes", Content: struct {
-			PendingOrders []entity.OrderHasProduct
-			TypeId        int
+			Orders []entity.OrderHasProduct `json:"orders"`
 		}{
-			PendingOrders: pendingOrders,
-			TypeId:        typeInt,
+			Orders: orders,
 		}}
 
 		h.RenderHtml(writer, data, "pages/order/list.admin.gohtml")
-		// h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": pendingOrders})
 
 	}
 }

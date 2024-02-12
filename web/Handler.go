@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"github.com/pusher/pusher-http-go/v5"
 	"html/template"
 	"net/http"
 	"restaurantHTTP"
@@ -24,10 +25,11 @@ func makeToken(id int, username string, mail string, isSuperadmin bool) string {
 	return tokenString
 }
 
-func NewHandler(store *database.Store) *Handler {
+func NewHandler(store *database.Store, pusherClient *pusher.Client) *Handler {
 	handler := &Handler{
 		chi.NewRouter(),
 		store,
+		pusherClient,
 	}
 
 	handler.Use(middleware.Logger)
@@ -80,7 +82,7 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/{id}/menu", handler.CreateOrder())
 
 			r.Post("/{id}/create-order", handler.CreateOrder())
-			r.Get("/order/get/{type}", handler.GetAllOrdersByRestaurantId())
+			r.Get("/order/get/{restaurantId}", handler.GetAllOrdersByRestaurantId())
 			r.Get("/order/validate/{id}", handler.ValidateOrderById())
 			r.Get("/order/done/{id}", handler.CompleteOrderById())
 			r.Get("/order/ready/{id}", handler.ReadyOrderById())
@@ -109,27 +111,9 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})
 
-		/*pusherClient := pusher.Client{
-			AppID:   os.Getenv("PUSHER_APP_ID"),
-			Key:     os.Getenv("PUSHER_KEY"),
-			Secret:  os.Getenv("PUSHER_SECRET"),
-			Cluster: os.Getenv("PUSHER_CLUSTER"),
-			Secure:  true,
-		}*/
 		r.Route("/api", func(r chi.Router) {
-			/*r.Get("/pusher/auth", func(w http.ResponseWriter, r *http.Request) {
-				params, _ := r.URL.Query()["channel_name"]
-				channelName := params[0]
-				userID := r.Context().Value("jwt").(*jwtauth.Token).Claims["id"].(float64)
-				userIDString := fmt.Sprintf("%v", userID)
-				response, err := pusherClient.AuthenticatePrivateChannel(channelName, userIDString)
-				if err != nil {
-					http.Error(w, "Forbidden", http.StatusForbidden)
-					return
-				}
-				handler.RenderJson(w, http.StatusOK, response)
-			})*/
-			r.Post("/order/{id}/create", handler.CreateOrder())
+			//r.Get("/order/get/all", handler.GetAllOrders())
+			//r.Get("/order/get/{id}", handler.GetOrdersByRestaurantId())
 		})
 
 	})
@@ -140,6 +124,7 @@ func NewHandler(store *database.Store) *Handler {
 type Handler struct {
 	*chi.Mux
 	*database.Store
+	*pusher.Client
 }
 
 func (h *Handler) RenderJson(w http.ResponseWriter, status int, data interface{}) {

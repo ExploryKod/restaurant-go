@@ -29,7 +29,7 @@ func NewOrder(user User, restaurant Restaurant, status string, totalPrice float6
 }
 
 type OrderStoreInterface interface {
-	AddOrder(item Order) (int, error)
+	AddOrder(item *Order) (int, int, error)
 	GetAllOrders() ([]Order, error)
 	GetOrderByID(id int) *Order
 	GetOrderByUserID(id int) []Order

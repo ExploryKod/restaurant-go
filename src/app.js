@@ -37,7 +37,7 @@ document.addEventListener('alpine:init', () => {
                 this.success.email = false
                 return
             }
-            fetch('http://localhost:8097/checkEmailAndUsername?username=' + (type === 'username' ? value : '') + '&email=' + (type === 'email' ? value : ''))
+            fetch('/checkEmailAndUsername?username=' + (type === 'username' ? value : '') + '&email=' + (type === 'email' ? value : ''))
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -335,7 +335,7 @@ document.addEventListener('alpine:init', () => {
 
             const restaurantId = this.$el.getAttribute('data-restaurant-id');
 
-            fetch(`http://localhost:8097/restaurant/${restaurantId}/create-order`, {
+            fetch(`/restaurant/${restaurantId}/create-order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -362,90 +362,46 @@ document.addEventListener('alpine:init', () => {
                 });
         }
     }));
+
     Alpine.data('manageOrder', () => ({
-        username: '',
-        email: '',
-        validateOrder(id) {
-            fetch('http://localhost:8097/restaurant/order/validate/' + id)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la requête.');
-                    }
-                    return response.json()
-                })
-                .then((json) => {
-
-                    // this.error.username = json.username?.exists ? json.username.message : null;
-                    // this.success.username = !json.username?.exists ? json.username.message : null;
-
-                    // this.error.email = json.email?.exists ? json.email.message : null;
-                    // this.success.email = !json.email?.exists ? json.email.message : null;
-
+        orders: [],
+        getAllOrdersByRestaurantId() {
+            fetch(`/restaurant/order/get/${1}?req=json`)
+                .then(response => (response.json()))
+                .then(data => {
+                    this.orders = data.data;
                 })
                 .catch((error) => {
-                    console.log('Error during checking:', error)
-                })
+                    console.error('Error:', error);
+                });
+        },
+        init() {
+            this.getAllOrdersByRestaurantId();
+            // Initialisez la réception des notifications Pusher
+            const pusher = new Pusher('ec7d4445ff7ce87c929e', {
+                cluster: 'eu'
+            });
+
+            // Remplacez 'my-channel' et 'my-event' par vos propres valeurs de canal et d'événement
+            const channel = pusher.subscribe('restaurant-1');
+            channel.bind('new-order', (data) => {
+                // Traitez la nouvelle commande reçue via Pusher
+                const newOrder = data.data;
+                console.log(JSON.stringify(newOrder));
+                this.orders.push(newOrder); // Ajoutez la nouvelle commande au tableau des commandes
+            });
+        },
+        validateOrder(id) {
+            // Logique de validation de commande
         },
         readyOrder(id) {
-            fetch('http://localhost:8097/restaurant/order/ready/' + id)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la requête.');
-                    }
-                    return response.json()
-                })
-                .then((json) => {
-
-                    // this.error.username = json.username?.exists ? json.username.message : null;
-                    // this.success.username = !json.username?.exists ? json.username.message : null;
-
-                    // this.error.email = json.email?.exists ? json.email.message : null;
-                    // this.success.email = !json.email?.exists ? json.email.message : null;
-
-                })
-                .catch((error) => {
-                    console.log('Error during checking:', error)
-                })
+            // Logique de commande prête
         },
         completeOrder(id) {
-            fetch('http://localhost:8097/restaurant/order/done/' + id)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la requête.');
-                    }
-                    return response.json()
-                })
-                .then((json) => {
-
-                    // this.error.username = json.username?.exists ? json.username.message : null;
-                    // this.success.username = !json.username?.exists ? json.username.message : null;
-
-                    // this.error.email = json.email?.exists ? json.email.message : null;
-                    // this.success.email = !json.email?.exists ? json.email.message : null;
-
-                })
-                .catch((error) => {
-                    console.log('Error during checking:', error)
-                })
+            // Logique de commande terminée
         },
         filterOrder(e) {
-            // console.log(e.target.value)
-            window.location.href = 'http://localhost:8097/restaurant/order/get/' + e.target.value;
-            // fetch('http://localhost:8097/restaurant/order/get/' + id)
-            //     .then((response) => {
-            //         if (!response.ok) {
-            //             throw new Error('Erreur lors de la requête.');
-            //         }
-            //         return response.json()
-            //     })
-            //     .then((json) => {
-
-
-            //     })
-            //     .catch((error) => {
-            //         console.log('Error during checking:', error)
-            //     })
+            // Logique de filtrage des commandes
         }
-    }))
-    
+    }));
 })
