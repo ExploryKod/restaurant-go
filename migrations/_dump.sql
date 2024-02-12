@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : lun. 12 fév. 2024 à 01:18
+-- Généré le : sam. 10 fév. 2024 à 10:26
 -- Version du serveur : 10.8.8-MariaDB-1:10.8.8+maria~ubu2204
 -- Version de PHP : 8.2.15
 
@@ -49,6 +49,13 @@ CREATE TABLE `Orders` (
   `closed_date` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `Orders`
+--
+
+INSERT INTO `Orders` (`id`, `user_id`, `restaurant_id`, `status`, `total_price`, `number`, `created_date`, `closed_date`) VALUES
+(21, 10, 1, 'pending', 70, '1', '2024-02-10 00:32:56', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -59,6 +66,16 @@ CREATE TABLE `Order_has_products` (
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `Order_has_products`
+--
+
+INSERT INTO `Order_has_products` (`order_id`, `product_id`) VALUES
+(21, 3),
+(21, 13),
+(21, 15),
+(21, 4);
 
 -- --------------------------------------------------------
 
@@ -102,8 +119,7 @@ INSERT INTO `Products` (`id`, `product_type_id`, `restaurant_id`, `name`, `price
 (19, 6, 1, 'Salad with vegetables', 8, 'https://source.unsplash.com/300x150/?salad', 'Salad with vegetables'),
 (20, 7, 1, 'Pasta with tomato sauce', 12, 'https://source.unsplash.com/300x150/?Pasta', 'Pasta with tomato sauce'),
 (21, 7, 1, 'Pasta with cheese', 12, 'https://source.unsplash.com/300x150/?Pasta', 'Pasta with cheese'),
-(22, 8, 1, 'Sandwich with fish', 6, 'https://source.unsplash.com/300x150/?Sandwich', 'Sandwich with fish'),
-(23, 2, 1, 'okaoska', 23, 'https://source.unsplash.com/300x150/?okaoska', 'okok');
+(22, 8, 1, 'Sandwich with fish', 6, 'https://source.unsplash.com/300x150/?Sandwich', 'Sandwich with fish');
 
 -- --------------------------------------------------------
 
@@ -157,8 +173,8 @@ CREATE TABLE `Restaurants` (
   `phone` varchar(255) NOT NULL,
   `mail` varchar(255) NOT NULL,
   `is_open` tinyint(1) NOT NULL,
-  `opening_time` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
-  `closing_time` timestamp NULL DEFAULT NULL,
+  `opening_time` TIMESTAMP NOT NULL,
+  `closing_time` TIMESTAMP NOT NULL,
   `grade` int(11) NOT NULL,
   `is_validated` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -168,10 +184,10 @@ CREATE TABLE `Restaurants` (
 --
 
 INSERT INTO `Restaurants` (`id`, `name`, `logo`, `image`, `phone`, `mail`, `is_open`, `opening_time`, `closing_time`, `grade`, `is_validated`) VALUES
-(1, 'Pegasus', 'logo/restaurant-1.jpg', 'image/restaurant-1.jpg', '+1234567890', 'pegasus@example.com', 1, '2024-02-10 08:00:05', '2024-02-10 22:06:00', 4, 1),
-(2, 'Italica', 'logo/restaurant-2.jpg', 'image/restaurant-2.jpg', '+1274566890', 'italica@example.com', 1, '2024-02-10 08:00:00', '2024-02-10 22:00:00', 2, 0),
-(3, 'Greca', 'logo/restaurant-3.jpg', 'image/restaurant-3.jpg', '+1274566890', 'greca@example.com', 1, '2024-02-10 08:00:00', '2024-02-10 22:00:00', 3, 1),
-(4, 'Algeria', 'logo/restaurant-4.jpg', 'image/restaurant-4.jpg', '+1274769890', 'algeria@example.com', 1, '2024-02-10 08:00:00', '2024-02-10 22:00:00', 4, 1);
+(1, 'Pegasus', 'logo/restaurant-1.jpg', 'image/restaurant-1.jpg', '+1234567890', 'pegasus@example.com', 1, '08:00:05', '22:06:00', 4, 1),
+(2, 'Italica', 'logo/restaurant-2.jpg', 'image/restaurant-2.jpg', '+1274566890', 'italica@example.com', 1, '08:00:00', '22:00:00', 2, 0),
+(3, 'Greca', 'logo/restaurant-3.jpg', 'image/restaurant-3.jpg', '+1274566890', 'greca@example.com', 1, '08:00:00', '22:00:00', 3, 1),
+(4, 'Algeria', 'logo/restaurant-4.jpg', 'image/restaurant-4.jpg', '+1274769890', 'algeria@example.com', 1, '08:00:00', '22:00:00', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -330,13 +346,13 @@ ALTER TABLE `Allergens`
 -- AUTO_INCREMENT pour la table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT pour la table `Products`
 --
 ALTER TABLE `Products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT pour la table `Product_type`
@@ -370,14 +386,14 @@ ALTER TABLE `Users`
 -- Contraintes pour la table `Orders`
 --
 ALTER TABLE `Orders`
-  ADD CONSTRAINT `order_restaurant_id` FOREIGN KEY (`restaurant_id`) REFERENCES `Restaurants` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_user_id` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `order_restaurant_id` FOREIGN KEY (`restaurant_id`) REFERENCES `Restaurants` (`id`),
+  ADD CONSTRAINT `order_user_id` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`);
 
 --
 -- Contraintes pour la table `Order_has_products`
 --
 ALTER TABLE `Order_has_products`
-  ADD CONSTRAINT `orders_order_id` FOREIGN KEY (`order_id`) REFERENCES `Orders` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `orders_order_id` FOREIGN KEY (`order_id`) REFERENCES `Orders` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `orders_product_id` FOREIGN KEY (`product_id`) REFERENCES `Products` (`id`) ON DELETE CASCADE;
 
 --
@@ -385,7 +401,7 @@ ALTER TABLE `Order_has_products`
 --
 ALTER TABLE `Products`
   ADD CONSTRAINT `product_restaurant_id` FOREIGN KEY (`restaurant_id`) REFERENCES `Restaurants` (`id`),
-  ADD CONSTRAINT `product_type` FOREIGN KEY (`product_type_id`) REFERENCES `Product_type` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `product_type` FOREIGN KEY (`product_type_id`) REFERENCES `Product_type` (`id`);
 
 --
 -- Contraintes pour la table `Product_has_allergens`
