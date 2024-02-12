@@ -2,11 +2,12 @@ package web
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5"
 	"net/http"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
@@ -24,7 +25,7 @@ func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 		}
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
+			data := restaurantHTTP.TemplateData{Title: "Restaurant Page", Content: restaurants, Error: "Nous n'avons pas compris votre requête", Success: "Bienvenue"}
 			h.RenderHtml(writer, data, "pages/restaurants.client.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
@@ -61,7 +62,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetAllRestaurants()
+		restaurants, err := h.RestaurantStore.GetRestaurant()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -83,14 +84,14 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		//_, err := h.RestaurantStore.GetAllRestaurants()
-		//if err != nil {
-		//	http.Error(writer, err.Error(), http.StatusInternalServerError)
-		//	return
-		//}
+		restaurants, err := h.RestaurantStore.GetRestaurant()
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		// TODO: doit se faire en fonction de l'id du restaurant
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Title: "Fiche restaurant", Content: ""}
+			data := restaurantHTTP.TemplateData{Title: "Fiche restaurant", Content: restaurants}
 			h.RenderHtml(writer, data, "pages/restaurants.profile.gohtml")
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)

@@ -82,7 +82,8 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Route("/restaurant", func(r chi.Router) {
 			r.Get("/", handler.ShowRestaurantsPage())
-
+			r.Get("/restaurant/menu/{id}", handler.CreateOrder())
+			r.Post("/restaurant/orders/create", handler.CreateOrder())
 			r.Get("/get/all", handler.GetAllRestaurants())
 			r.Get("/{id}", handler.ShowRestaurantProfile())
 			r.Get("/{id}/menu", handler.CreateOrder())
@@ -114,7 +115,15 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/create/{restaurantId}", handler.AddProduct())
 			r.Post("/create/{restaurantId}", handler.AddProduct())
 		})
-
+		r.Route("/restaurants", func(r chi.Router) {
+			r.Get("/", handler.ShowRestaurantsPage())
+			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/get", handler.GetAllRestaurants())
+			r.Get("/{id}", handler.ShowRestaurantProfile())
+			r.Get("/restaurants/menu/{id}", handler.ShowMenuByRestaurant())
+			r.Get("/restaurants/get", handler.GetAllRestaurants())
+			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+		})
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})
@@ -140,6 +149,8 @@ func NewHandler(store *database.Store) *Handler {
 				handler.RenderJson(w, http.StatusOK, response)
 			})*/
 			r.Post("/order/{id}/create", handler.CreateOrder())
+		r.Route("/api", func(r chi.Router) {
+			r.Post("/restaurant/register", handler.RegisterRestaurant())
 		})
 
 	})

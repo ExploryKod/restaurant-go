@@ -1,8 +1,9 @@
 package database
 
 import (
-	"github.com/jmoiron/sqlx"
 	"restaurantHTTP/entity"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type RestaurantStore struct {

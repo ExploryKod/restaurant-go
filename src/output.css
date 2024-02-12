@@ -1261,6 +1261,7 @@ input:checked + .toggle-bg {
   }
 }
 
+<<<<<<< HEAD
 .btn-home-primary {
   display: flex;
   width: 100%;
@@ -1335,6 +1336,8 @@ input:checked + .toggle-bg {
   }
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1431,6 +1434,7 @@ input:checked + .toggle-bg {
 
 .z-20 {
   z-index: 20;
+<<<<<<< HEAD
 }
 
 .z-30 {
@@ -1535,11 +1539,24 @@ input:checked + .toggle-bg {
 .my-5 {
   margin-top: 1.25rem;
   margin-bottom: 1.25rem;
+=======
 }
 
-.my-8 {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+.z-30 {
+  z-index: 30;
+>>>>>>> feature/choose-restaurant
+}
+
+.z-40 {
+  z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.m-auto {
+  margin: auto;
 }
 
 .my-auto {
@@ -1551,8 +1568,46 @@ input:checked + .toggle-bg {
   margin-right: -0.5rem;
 }
 
+<<<<<<< HEAD
 .mb-0 {
   margin-bottom: 0px;
+=======
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-12 {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+>>>>>>> feature/choose-restaurant
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
+
+.my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.mx-0 {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.-mr-2 {
+  margin-right: -0.5rem;
 }
 
 .mb-1 {
@@ -1615,10 +1670,13 @@ input:checked + .toggle-bg {
   margin-right: 0.5rem;
 }
 
+<<<<<<< HEAD
 .mt-0 {
   margin-top: 0px;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -1627,6 +1685,7 @@ input:checked + .toggle-bg {
   margin-top: 2.5rem;
 }
 
+<<<<<<< HEAD
 .mt-12 {
   margin-top: 3rem;
 }
@@ -1635,6 +1694,8 @@ input:checked + .toggle-bg {
   margin-top: 4rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -1643,10 +1704,13 @@ input:checked + .toggle-bg {
   margin-top: 5rem;
 }
 
+<<<<<<< HEAD
 .mt-28 {
   margin-top: 7rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .mt-3 {
   margin-top: 0.75rem;
 }
@@ -1659,6 +1723,37 @@ input:checked + .toggle-bg {
   margin-top: 1.25rem;
 }
 
+<<<<<<< HEAD
+=======
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.ml-10 {
+  margin-left: 2.5rem;
+}
+
+.ml-3 {
+  margin-left: 0.75rem;
+}
+
+.mt-0 {
+  margin-top: 0px;
+}
+
+.mt-12 {
+  margin-top: 3rem;
+}
+
+.mt-16 {
+  margin-top: 4rem;
+}
+
+.mt-28 {
+  margin-top: 7rem;
+}
+
+>>>>>>> feature/choose-restaurant
 .mt-8 {
   margin-top: 2rem;
 }
@@ -1715,10 +1810,13 @@ input:checked + .toggle-bg {
   height: 5rem;
 }
 
+<<<<<<< HEAD
 .h-24 {
   height: 6rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .h-4 {
   height: 1rem;
 }
@@ -1739,10 +1837,13 @@ input:checked + .toggle-bg {
   height: 1.5rem;
 }
 
+<<<<<<< HEAD
 .h-72 {
   height: 18rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .h-8 {
   height: 2rem;
 }
@@ -1751,10 +1852,13 @@ input:checked + .toggle-bg {
   height: 2.25rem;
 }
 
+<<<<<<< HEAD
 .h-96 {
   height: 24rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .h-full {
   height: 100%;
 }
@@ -1763,6 +1867,17 @@ input:checked + .toggle-bg {
   height: 100vh;
 }
 
+<<<<<<< HEAD
+=======
+.h-72 {
+  height: 18rem;
+}
+
+.h-96 {
+  height: 24rem;
+}
+
+>>>>>>> feature/choose-restaurant
 .max-h-20 {
   max-height: 5rem;
 }
@@ -1791,10 +1906,13 @@ input:checked + .toggle-bg {
   width: 5rem;
 }
 
+<<<<<<< HEAD
 .w-3 {
   width: 0.75rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .w-32 {
   width: 8rem;
 }
@@ -1839,6 +1957,7 @@ input:checked + .toggle-bg {
   max-width: 5rem;
 }
 
+<<<<<<< HEAD
 .max-w-2xl {
   max-width: 42rem;
 }
@@ -1847,14 +1966,19 @@ input:checked + .toggle-bg {
   max-width: 56rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .max-w-7xl {
   max-width: 80rem;
 }
 
+<<<<<<< HEAD
 .max-w-\[1440px\] {
   max-width: 1440px;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .max-w-lg {
   max-width: 32rem;
 }
@@ -1867,22 +1991,39 @@ input:checked + .toggle-bg {
   max-width: 24rem;
 }
 
+<<<<<<< HEAD
 .max-w-xl {
   max-width: 36rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .max-w-xs {
   max-width: 20rem;
 }
 
+<<<<<<< HEAD
+=======
+.max-w-2xl {
+  max-width: 42rem;
+}
+
+.max-w-xl {
+  max-width: 36rem;
+}
+
+>>>>>>> feature/choose-restaurant
 .flex-1 {
   flex: 1 1 0%;
 }
 
+<<<<<<< HEAD
 .flex-auto {
   flex: 1 1 auto;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .flex-shrink {
   flex-shrink: 1;
 }
@@ -1899,10 +2040,13 @@ input:checked + .toggle-bg {
   flex-grow: 0;
 }
 
+<<<<<<< HEAD
 .table-auto {
   table-layout: auto;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .border-collapse {
   border-collapse: collapse;
 }
@@ -1926,11 +2070,14 @@ input:checked + .toggle-bg {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+<<<<<<< HEAD
 .translate-x-1 {
   --tw-translate-x: 0.25rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .translate-x-1\/2 {
   --tw-translate-x: 50%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -1951,6 +2098,14 @@ input:checked + .toggle-bg {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+<<<<<<< HEAD
+=======
+.translate-x-1 {
+  --tw-translate-x: 0.25rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+>>>>>>> feature/choose-restaurant
 .rotate-180 {
   --tw-rotate: 180deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -1992,6 +2147,7 @@ input:checked + .toggle-bg {
   resize: both;
 }
 
+<<<<<<< HEAD
 .list-disc {
   list-style-type: disc;
 }
@@ -2008,6 +2164,8 @@ input:checked + .toggle-bg {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .grid-cols-4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -2016,6 +2174,7 @@ input:checked + .toggle-bg {
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
+<<<<<<< HEAD
 .grid-rows-1 {
   grid-template-rows: repeat(1, minmax(0, 1fr));
 }
@@ -2024,6 +2183,8 @@ input:checked + .toggle-bg {
   grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .flex-row {
   flex-direction: row;
 }
@@ -2102,18 +2263,30 @@ input:checked + .toggle-bg {
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
+<<<<<<< HEAD
 .space-x-8 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(2rem * var(--tw-space-x-reverse));
   margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
 }
 
+<<<<<<< HEAD
+=======
+.space-x-8 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(2rem * var(--tw-space-x-reverse));
+  margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+>>>>>>> feature/choose-restaurant
 .overflow-hidden {
   overflow: hidden;
 }
@@ -2176,11 +2349,14 @@ input:checked + .toggle-bg {
   border-end-start-radius: 0.5rem;
 }
 
+<<<<<<< HEAD
 .rounded-t-lg {
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .rounded-bl-xl {
   border-bottom-left-radius: 0.75rem;
 }
@@ -2226,11 +2402,14 @@ input:checked + .toggle-bg {
 .border-blue-900 {
   --tw-border-opacity: 1;
   border-color: rgb(35 56 118 / var(--tw-border-opacity));
+<<<<<<< HEAD
 }
 
 .border-cyan-500 {
   --tw-border-opacity: 1;
   border-color: rgb(6 182 212 / var(--tw-border-opacity));
+=======
+>>>>>>> feature/choose-restaurant
 }
 
 .border-cyan-700 {
@@ -2238,11 +2417,11 @@ input:checked + .toggle-bg {
   border-color: rgb(14 116 144 / var(--tw-border-opacity));
 }
 
+<<<<<<< HEAD
 .border-cyan-800 {
   --tw-border-opacity: 1;
   border-color: rgb(21 94 117 / var(--tw-border-opacity));
-}
-
+=======
 .border-cyan-900 {
   --tw-border-opacity: 1;
   border-color: rgb(22 78 99 / var(--tw-border-opacity));
@@ -2253,6 +2432,67 @@ input:checked + .toggle-bg {
   border-color: rgb(16 185 129 / var(--tw-border-opacity));
 }
 
+.border-gray-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(243 244 246 / var(--tw-border-opacity));
+}
+
+.border-gray-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity));
+}
+
+.border-gray-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
+.border-red-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(240 82 82 / var(--tw-border-opacity));
+}
+
+.border-red-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(224 36 36 / var(--tw-border-opacity));
+}
+
+.border-red-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(200 30 30 / var(--tw-border-opacity));
+}
+
+.border-transparent {
+  border-color: transparent;
+}
+
+.border-white {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity));
+>>>>>>> feature/choose-restaurant
+}
+
+.bg-blue-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(26 86 219 / var(--tw-bg-opacity));
+}
+
+.bg-blue-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(35 56 118 / var(--tw-bg-opacity));
+}
+
+.bg-cyan-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(207 250 254 / var(--tw-bg-opacity));
+}
+
+.border-emerald-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(16 185 129 / var(--tw-border-opacity));
+}
+
+<<<<<<< HEAD
 .border-gray-100 {
   --tw-border-opacity: 1;
   border-color: rgb(243 244 246 / var(--tw-border-opacity));
@@ -2322,6 +2562,8 @@ input:checked + .toggle-bg {
   background-color: rgb(6 182 212 / var(--tw-bg-opacity));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .bg-cyan-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(14 116 144 / var(--tw-bg-opacity));
@@ -2357,21 +2599,27 @@ input:checked + .toggle-bg {
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
+<<<<<<< HEAD
 .bg-gray-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .bg-gray-800 {
   --tw-bg-opacity: 1;
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
 
+<<<<<<< HEAD
 .bg-gray-900 {
   --tw-bg-opacity: 1;
   background-color: rgb(17 24 39 / var(--tw-bg-opacity));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .bg-gray-900\/50 {
   background-color: rgb(17 24 39 / 0.5);
 }
@@ -2404,6 +2652,14 @@ input:checked + .toggle-bg {
   background-color: rgb(255 255 255 / 0.5);
 }
 
+<<<<<<< HEAD
+=======
+.bg-gray-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
+}
+
+>>>>>>> feature/choose-restaurant
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
@@ -2426,10 +2682,13 @@ input:checked + .toggle-bg {
   padding: 0.625rem;
 }
 
+<<<<<<< HEAD
 .p-3 {
   padding: 0.75rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .p-4 {
   padding: 1rem;
 }
@@ -2442,6 +2701,7 @@ input:checked + .toggle-bg {
   padding: 2rem;
 }
 
+<<<<<<< HEAD
 .px-0 {
   padding-left: 0px;
   padding-right: 0px;
@@ -2457,6 +2717,8 @@ input:checked + .toggle-bg {
   padding-right: 2.5rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -2527,14 +2789,21 @@ input:checked + .toggle-bg {
   padding-bottom: 2rem;
 }
 
+<<<<<<< HEAD
 .pb-16 {
   padding-bottom: 4rem;
+=======
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+>>>>>>> feature/choose-restaurant
 }
 
 .pb-2 {
   padding-bottom: 0.5rem;
 }
 
+<<<<<<< HEAD
 .pb-20 {
   padding-bottom: 5rem;
 }
@@ -2549,6 +2818,10 @@ input:checked + .toggle-bg {
 
 .pb-32 {
   padding-bottom: 8rem;
+=======
+.pb-3 {
+  padding-bottom: 0.75rem;
+>>>>>>> feature/choose-restaurant
 }
 
 .pb-60 {
@@ -2559,10 +2832,13 @@ input:checked + .toggle-bg {
   padding-bottom: 2rem;
 }
 
+<<<<<<< HEAD
 .pr-4 {
   padding-right: 1rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .pt-2 {
   padding-top: 0.5rem;
 }
@@ -2575,6 +2851,29 @@ input:checked + .toggle-bg {
   padding-top: 1.5rem;
 }
 
+<<<<<<< HEAD
+=======
+.pb-16 {
+  padding-bottom: 4rem;
+}
+
+.pb-20 {
+  padding-bottom: 5rem;
+}
+
+.pb-28 {
+  padding-bottom: 7rem;
+}
+
+.pb-32 {
+  padding-bottom: 8rem;
+}
+
+.pr-4 {
+  padding-right: 1rem;
+}
+
+>>>>>>> feature/choose-restaurant
 .text-left {
   text-align: left;
 }
@@ -2665,6 +2964,7 @@ input:checked + .toggle-bg {
   text-transform: capitalize;
 }
 
+<<<<<<< HEAD
 .leading-4 {
   line-height: 1rem;
 }
@@ -2673,6 +2973,8 @@ input:checked + .toggle-bg {
   line-height: 1.25rem;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .leading-6 {
   line-height: 1.5rem;
 }
@@ -2685,11 +2987,14 @@ input:checked + .toggle-bg {
   letter-spacing: -0.025em;
 }
 
+<<<<<<< HEAD
 .text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(63 131 248 / var(--tw-text-opacity));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(28 100 242 / var(--tw-text-opacity));
@@ -2847,6 +3152,7 @@ input:checked + .toggle-bg {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+<<<<<<< HEAD
 .shadow-sm {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
@@ -2856,6 +3162,109 @@ input:checked + .toggle-bg {
 .shadow-white {
   --tw-shadow-color: #ffffff;
   --tw-shadow: var(--tw-shadow-colored);
+=======
+.shadow-white {
+  --tw-shadow-color: #ffffff;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+
+.outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.outline {
+  outline-style: solid;
+}
+
+.ring-1 {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.ring-black {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(0 0 0 / var(--tw-ring-opacity));
+}
+
+.ring-opacity-5 {
+  --tw-ring-opacity: 0.05;
+}
+
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.transition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.duration-100 {
+  transition-duration: 100ms;
+}
+
+.duration-150 {
+  transition-duration: 150ms;
+}
+
+.ease-in {
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Pure css */
+
+.toggle__dot {
+  top: 2px;
+  left: 3.5px;
+  transition: all 0.3s ease-in-out;
+}
+
+input:checked ~ .toggle__dot {
+  transform: translateX(100%);
+  left: 5px;
+  background-color: #06B6D4;
+}
+
+.hover\:border-gray-300:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+
+.hover\:bg-blue-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 66 159 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-cyan-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(165 243 252 / var(--tw-bg-opacity));
+>>>>>>> feature/choose-restaurant
 }
 
 .outline-none {
@@ -3113,11 +3522,14 @@ nav .sub-nav-item:focus {
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+<<<<<<< HEAD
 .hover\:text-blue-200:hover {
   --tw-text-opacity: 1;
   color: rgb(195 221 253 / var(--tw-text-opacity));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .hover\:text-blue-600:hover {
   --tw-text-opacity: 1;
   color: rgb(28 100 242 / var(--tw-text-opacity));
@@ -3163,25 +3575,32 @@ nav .sub-nav-item:focus {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+<<<<<<< HEAD
 .hover\:underline:hover {
   text-decoration-line: underline;
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .focus\:border-cyan-400:focus {
   --tw-border-opacity: 1;
   border-color: rgb(34 211 238 / var(--tw-border-opacity));
 }
 
+<<<<<<< HEAD
 .focus\:bg-gray-700:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(55 65 81 / var(--tw-bg-opacity));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .focus\:text-black:focus {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+<<<<<<< HEAD
 .focus\:text-blue-200:focus {
   --tw-text-opacity: 1;
   color: rgb(195 221 253 / var(--tw-text-opacity));
@@ -3192,6 +3611,8 @@ nav .sub-nav-item:focus {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+=======
+>>>>>>> feature/choose-restaurant
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -3340,11 +3761,14 @@ nav .sub-nav-item:focus {
     margin-right: auto;
   }
 
+<<<<<<< HEAD
   .sm\:my-0 {
     margin-top: 0px;
     margin-bottom: 0px;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .sm\:ml-3 {
     margin-left: 0.75rem;
   }
@@ -3377,6 +3801,7 @@ nav .sub-nav-item:focus {
     height: 18rem;
   }
 
+<<<<<<< HEAD
   .sm\:w-3\/5 {
     width: 60%;
   }
@@ -3385,6 +3810,8 @@ nav .sub-nav-item:focus {
     width: auto;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .sm\:max-w-sm {
     max-width: 24rem;
   }
@@ -3405,11 +3832,14 @@ nav .sub-nav-item:focus {
     justify-content: center;
   }
 
+<<<<<<< HEAD
   .sm\:px-3 {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .sm\:px-6 {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -3423,11 +3853,14 @@ nav .sub-nav-item:focus {
     text-align: center;
   }
 
+<<<<<<< HEAD
   .sm\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .sm\:text-5xl {
     font-size: 3rem;
     line-height: 1;
@@ -3444,10 +3877,13 @@ nav .sub-nav-item:focus {
     margin-bottom: 0px;
   }
 
+<<<<<<< HEAD
   .md\:mb-4 {
     margin-bottom: 1rem;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .md\:ml-10 {
     margin-left: 2.5rem;
   }
@@ -3508,11 +3944,14 @@ nav .sub-nav-item:focus {
     padding-bottom: 1rem;
   }
 
+<<<<<<< HEAD
   .md\:py-5 {
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .md\:pb-20 {
     padding-bottom: 5rem;
   }
@@ -3551,6 +3990,7 @@ nav .sub-nav-item:focus {
     right: 0px;
   }
 
+<<<<<<< HEAD
   .lg\:col-span-1 {
     grid-column: span 1 / span 1;
   }
@@ -3567,6 +4007,8 @@ nav .sub-nav-item:focus {
     grid-row: span 3 / span 3;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .lg\:mx-0 {
     margin-left: 0px;
     margin-right: 0px;
@@ -3580,6 +4022,7 @@ nav .sub-nav-item:focus {
     display: block;
   }
 
+<<<<<<< HEAD
   .lg\:flex {
     display: flex;
   }
@@ -3588,6 +4031,8 @@ nav .sub-nav-item:focus {
     display: none;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .lg\:h-full {
     height: 100%;
   }
@@ -3612,6 +4057,7 @@ nav .sub-nav-item:focus {
     flex-grow: 0;
   }
 
+<<<<<<< HEAD
   .lg\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -3624,6 +4070,8 @@ nav .sub-nav-item:focus {
     align-items: center;
   }
 
+=======
+>>>>>>> feature/choose-restaurant
   .lg\:justify-start {
     justify-content: flex-start;
   }
@@ -3640,6 +4088,32 @@ nav .sub-nav-item:focus {
   .lg\:text-left {
     text-align: left;
   }
+<<<<<<< HEAD
+=======
+}
+
+@media (min-width: 1280px) {
+  .xl\:mt-28 {
+    margin-top: 7rem;
+  }
+
+  .xl\:inline {
+    display: inline;
+  }
+
+  .xl\:pb-32 {
+    padding-bottom: 8rem;
+  }
+}
+
+.rtl\:rotate-180:where([dir="rtl"], [dir="rtl"] *) {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.rtl\:space-x-reverse:where([dir="rtl"], [dir="rtl"] *) > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+>>>>>>> feature/choose-restaurant
 }
 
 @media (min-width: 1280px) {
