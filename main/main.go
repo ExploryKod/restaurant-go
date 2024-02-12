@@ -18,10 +18,10 @@ func main() {
 	}
 
 	conf := mysql.Config{
-		User:                 "root",
+		User:                 os.Getenv("BDD_USER"),
 		Passwd:               os.Getenv("BDD_PASSWORD"),
 		Addr:                 os.Getenv("BDD_PORT"),
-		DBName:               "restaurantbdd",
+		DBName:               os.Getenv("BDD_NAME"),
 		Net:                  "tcp",
 		AllowNativePasswords: true,
 		ParseTime:            true,

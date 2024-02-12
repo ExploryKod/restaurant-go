@@ -173,8 +173,8 @@ CREATE TABLE `Restaurants` (
   `phone` varchar(255) NOT NULL,
   `mail` varchar(255) NOT NULL,
   `is_open` tinyint(1) NOT NULL,
-  `opening_time` time NOT NULL,
-  `closing_time` time NOT NULL,
+  `opening_time` TIMESTAMP NOT NULL,
+  `closing_time` TIMESTAMP NOT NULL,
   `grade` int(11) NOT NULL,
   `is_validated` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
