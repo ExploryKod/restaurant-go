@@ -98,7 +98,7 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Route("/product", func(r chi.Router) {
 			r.Get("/list/{restaurantId}", handler.ListProducts())
-			r.Get("/list/delete/{id}", handler.DeleteProducts())
+			r.Get("/list/delete/{id}/{restaurantId}", handler.DeleteProducts())
 			r.Get("/type/create/{restaurantId}", handler.AddProductType())
 			r.Post("/type/create/{restaurantId}", handler.AddProductType())
 

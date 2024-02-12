@@ -111,13 +111,16 @@ func (h *Handler) ListProducts() http.HandlerFunc {
 }
 func (h *Handler) DeleteProducts() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+
 		id := chi.URLParam(request, "id")
+		resId := chi.URLParam(request, "restaurantId")
 		idInt, _ := strconv.Atoi(id)
+		resIdInt, _ := strconv.Atoi(resId)
 		productsList, _ := h.ProductStore.DeleteProduct(idInt)
 		if productsList {
-
+			fmt.Println("Error in productlist")
 		}
-		http.Redirect(writer, request, request.URL.String(), http.StatusSeeOther)
+		http.Redirect(writer, request, fmt.Sprintf("/product/list/%d", resIdInt), http.StatusSeeOther)
 		//  Allergy
 
 		// allergies, err := h.ProductStore.GetAllergiesList()
@@ -126,6 +129,5 @@ func (h *Handler) DeleteProducts() http.HandlerFunc {
 		// 	allergies:   allergies,
 		// }
 		// h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": productsList})
-		return
 	}
 }

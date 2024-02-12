@@ -449,7 +449,8 @@ document.addEventListener('alpine:init', () => {
     }))
     Alpine.data('manageProduct', () => ({
         deleteProduct(id) {
-            fetch('http://localhost:8097/product/list/delete/' + id)
+            const restaurantId = localStorage.getItem('UserRestaurantID')
+            fetch('http://localhost:8097/product/list/delete/' + id +"/"+restaurantId)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
