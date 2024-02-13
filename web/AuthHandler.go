@@ -27,8 +27,9 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 
 			username := session.Values["username"].(string)
+			userId := session.Values["userId"].(int)
 			token := session.Values["token"].(string)
-			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: entity.User{Username: username}, Token: token}
+			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: entity.User{ID: userId, Username: username}, Token: token}
 
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
@@ -79,6 +80,7 @@ func (h *Handler) Login() http.HandlerFunc {
 			session.Values["token"] = token
 			session.Values["authenticated"] = true
 			session.Values["username"] = user.Username
+			session.Values["userId"] = user.ID
 
 			err := session.Save(request, writer)
 			if err != nil {

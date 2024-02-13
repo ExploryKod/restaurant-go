@@ -170,21 +170,40 @@ func (h *Handler) ValidateOrderById() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		ID := chi.URLParam(request, "id")
 		idInt, _ := strconv.Atoi(ID)
-		// restaurantId := 1
+
 		_, err := h.OrderStore.ValidateOrder(idInt)
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "getallorderhasproduct Internal Server Error"})
 			return
 		}
-		http.Redirect(writer, request, "restaurant/order/get", http.StatusSeeOther)
+
+		order := h.OrderStore.GetOrderByID(idInt)
+		if order == nil {
+			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": "order not found"})
+			return
+		}
+
+		err = h.Client.Trigger("user-"+strconv.Itoa(order.User.ID), "order-validated", map[string]any{"data": order, "message": "Order validated !"})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = h.Client.Trigger("restaurant-"+strconv.Itoa(order.Restaurant.ID), "order-validated", map[string]any{"data": order, "message": "Order validated !"})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Order validated", "data": order})
+		//http.Redirect(writer, request, "/restaurant/"+restoID+"/order/get", http.StatusSeeOther)
 	}
 }
 func (h *Handler) CompleteOrderById() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		ID := chi.URLParam(request, "id")
 		idInt, _ := strconv.Atoi(ID)
-		// restaurantId := 1
 		_, err := h.OrderStore.CompleteOrder(idInt)
 		if err != nil {
 			log.Println(err)

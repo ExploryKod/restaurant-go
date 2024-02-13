@@ -3,15 +3,19 @@
     <div class="text-center">
         <h1 class="text-3xl font-bold mb-4">Menu</h1>
     </div>
-    <section x-data="manageOrder">
-     <a href="" id="restaurantLink"
+    <section x-data="manageProduct">
+     <a :href="'http://localhost:8097/product/create/' + localStorage.getItem('UserRestaurantID')"
                            class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Ajouter Produit</a>
+                           <a :href="'http://localhost:8097/product/type/create/' + localStorage.getItem('UserRestaurantID')"
+                           class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Ajouter Produit Type</a>
         <div class="overflow-x-auto">
             <table class="table-auto w-full border-collapse border border-gray-400">
                 <thead >
                     <tr>
                         <th class="px-4 py-2 bg-gray-200 border border-gray-400">Nom du produit</th>
                         <th class="px-4 py-2 bg-gray-200 border border-gray-400">Prix</th>
+                        <th class="px-4 py-2 bg-gray-200 border border-gray-400">Menu</th>
+                        <th class="px-4 py-2 bg-gray-200 border border-gray-400">Action</th>
                         {{/* <th class="px-4 py-2 bg-gray-200 border border-gray-400">Menu</th> */}}
                     </tr>
                 </thead>
@@ -20,6 +24,10 @@
                     <tr>
                         <td class="px-4 py-2 border border-gray-400">{{.Name}}</td>
                         <td class="px-4 py-2 border border-gray-400">{{.Price}}</td>
+                        <td class="px-4 py-2 border border-gray-400">{{.ProductType.Name}}</td>
+                        <td class="px-4 py-2 border border-gray-400">
+                          <button  class="font-medium border border-1 border-red-500 bg-white text-red-500 px-4 py-1.5 rounded-md hover:bg-red-500 hover:text-white me-2"
+                            @click="deleteProduct({{.ID}})">Supprimer</button></td>
                         
                     </tr>
                     {{end}}
@@ -28,15 +36,6 @@
         </div>
     </section>
 </div>
-<script>
-if(localStorage.getItem('UserRestaurantID') !== null){
-            var link = document.getElementById('restaurantLink');
-            link.style.display = 'inline';
-            link.href = "http://localhost:8097/product/create/" + localStorage.getItem('UserRestaurantID');
-            console.log("LOCAL STORAGE", localStorage.getItem('UserRestaurantID'));
-            console.log("LINK", link.href);
 
-        }
-        </script>
 
 {{end}}

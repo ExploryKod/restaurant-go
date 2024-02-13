@@ -3,7 +3,7 @@
         <div class="text-center">
             <h1 class="text-3xl font-bold mb-4">Menu</h1>
         </div>
-        <section x-data="manageOrder" x-init="init">
+        <section x-data="manageOrder" x-init="init(1, 1)">
             <div class="overflow-x-auto">
                 <label for="dropdown">Affichage:</label>
                 <select id="dropdown" @change="filterOrder(event)">

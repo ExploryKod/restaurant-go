@@ -38,13 +38,13 @@
                     </a>
                     <h1 class="text-3xl font-bold">RestaurantGo</h1>
                 </div>
-                <div>
-                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande</a>
+                <div x-data="manageOrder" x-bind:init="init(localStorage.getItem('userId'), 0)">
+                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande <span class="p-2 text-white rounded-full bg-orange-500" x-text="notifUser.length"></span></a>
                     {{if .Content}}
                         <a href="/admin"
                            class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon
                             Espace</a>
-                        <a href="/logout" type="submit"
+                        <a href="/logout" type="submit" @click="localStorage.clear()"
                            class="border border-1 border-red-600 bg-white text-red-500 px-4 py-1.5 rounded-md hover:bg-red-500 hover:text-white">Logout</a>
                     {{end}}
                 </div>

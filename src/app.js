@@ -364,44 +364,164 @@ document.addEventListener('alpine:init', () => {
     }));
 
     Alpine.data('manageOrder', () => ({
-        orders: [],
-        getAllOrdersByRestaurantId() {
-            fetch(`/restaurant/order/get/${1}?req=json`)
-                .then(response => (response.json()))
-                .then(data => {
-                    this.orders = data.data;
+            orders: [],
+            notifUser: [],
+            notifyRestaurant: null,
+            getAllOrdersByRestaurantId() {
+                fetch(`/restaurant/${1}/order/get?req=json`)
+                    .then(response => (response.json()))
+                    .then(data => {
+                        this.orders = data.data;
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            },
+            init(restaurantId, userId) {
+
+                const pusher = new Pusher('ec7d4445ff7ce87c929e', {
+                    cluster: 'eu'
+                });
+
+                if (restaurantId !== 0) {
+                    this.getAllOrdersByRestaurantId(restaurantId);
+
+                    const channel = pusher.subscribe('restaurant-' + restaurantId);
+                    channel.bind('new-order', (data) => {
+                        const newOrder = data.data;
+                        this.orders.push(newOrder);
+                    });
+
+                    channel.bind('order-validated', (data) => {
+                        const order = data.data;
+                        console.log(JSON.stringify(order));
+                        this.orders = this.orders.map((item) => {
+                            if (item.id !== order.id) return item;
+                            item.status = order.status;
+                            return item;
+                        });
+                    });
+                }
+
+                if (userId !== 0) {
+                    const channel2 = pusher.subscribe('user-' + userId);
+
+                    channel2.bind('order-validated', (data) => {
+                        const order = data.data;
+                        console.log(JSON.stringify(order));
+                        this.notifUser.push("Order n°" + order.number + " has been validated");
+                        console.log(this.notifUser);
+                    });
+
+                    channel2.bind('order-ready', (data) => {
+                        const order = data.data;
+                        console.log(JSON.stringify(order));
+                        this.orders = this.orders.map((item) => {
+                            if (item.id !== order.id) return item;
+                            item.status = order.status;
+                            return item;
+                        });
+                    });
+
+                    channel2.bind('order-completed', (data) => {
+                        const order = data.data;
+                        console.log(JSON.stringify(order));
+                        this.orders = this.orders.map((item) => {
+                            if (item.id !== order.id) return item;
+                            item.status = order.status;
+                            return item;
+                        });
+                    })
+                }
+            }
+            ,
+            validateOrder(id) {
+                fetch('http://localhost:8097/restaurant/order/validate/' + id)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Erreur lors de la requête.');
+                        }
+                        return response.json()
+                    })
+                    .then((json) => {
+
+                    })
+                    .catch((error) => {
+                        console.log('Error during checking:', error)
+                    })
+            }
+            ,
+            readyOrder(id) {
+                fetch('http://localhost:8097/restaurant/order/ready/' + id)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Erreur lors de la requête.');
+                        }
+                        return response.json()
+                    })
+                    .then((json) => {
+
+                    })
+                    .catch((error) => {
+                        console.log('Error during checking:', error)
+                    })
+            }
+            ,
+            completeOrder(id) {
+                fetch('http://localhost:8097/restaurant/order/done/' + id)
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Erreur lors de la requête.');
+                        }
+                        return response.json()
+                    })
+                    .then((json) => {
+
+
+                    })
+                    .catch((error) => {
+                        console.log('Error during checking:', error)
+                    })
+            }
+            ,
+            filterOrder(e) {
+                // console.log(e.target.value)
+                // window.location.href = '/restaurant/order/get/' + e.target.value;
+                // fetch('http://localhost:8097/restaurant/order/get/' + id)
+                //     .then((response) => {
+                //         if (!response.ok) {
+                //             throw new Error('Erreur lors de la requête.');
+                //         }
+                //         return response.json()
+                //     })
+                //     .then((json) => {
+
+
+                //     })
+                //     .catch((error) => {
+                //         console.log('Error during checking:', error)
+                //     })
+            }
+        }))
+    Alpine.data('manageProduct', () => ({
+        deleteProduct(id) {
+            const restaurantId = localStorage.getItem('UserRestaurantID')
+            fetch('http://localhost:8097/product/list/delete/' + id + "/" + restaurantId)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la requête.');
+                    }
+                    return response.json()
+                })
+                .then((json) => {
+
+
                 })
                 .catch((error) => {
-                    console.error('Error:', error);
-                });
+                    console.log('Error during checking:', error)
+                })
         },
-        init() {
-            this.getAllOrdersByRestaurantId();
-            // Initialisez la réception des notifications Pusher
-            const pusher = new Pusher('ec7d4445ff7ce87c929e', {
-                cluster: 'eu'
-            });
+    }))
 
-            // Remplacez 'my-channel' et 'my-event' par vos propres valeurs de canal et d'événement
-            const channel = pusher.subscribe('restaurant-1');
-            channel.bind('new-order', (data) => {
-                // Traitez la nouvelle commande reçue via Pusher
-                const newOrder = data.data;
-                console.log(JSON.stringify(newOrder));
-                this.orders.push(newOrder); // Ajoutez la nouvelle commande au tableau des commandes
-            });
-        },
-        validateOrder(id) {
-            // Logique de validation de commande
-        },
-        readyOrder(id) {
-            // Logique de commande prête
-        },
-        completeOrder(id) {
-            // Logique de commande terminée
-        },
-        filterOrder(e) {
-            // Logique de filtrage des commandes
-        }
-    }));
+
 })
