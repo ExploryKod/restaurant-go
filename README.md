@@ -31,6 +31,13 @@ SMTP_PORT=25
 
 ``` docker compose up -d --build ```
 
-2. Démarrer l'application 
+2. Démarrer l'application
+
+``` go mod tidy ```
 
 ``` go run main/main.go ```
+
+2. Alternative : utiliser air pour le hot reloading
+
+Ecrire la commande suivante: 
+``` air ```
