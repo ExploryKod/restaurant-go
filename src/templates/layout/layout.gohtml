@@ -1,0 +1,113 @@
+{{define "layout"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>RestaurantGO | {{.Title}}</title>
+        <link href="/src/output.css" rel="stylesheet">
+        <link rel="icon" href="/src/assets/restaurantGo.png" type="image/x-icon">
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+        <script src="/src/app.js"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+                integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+                crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <style>
+            input[type='number']::-webkit-inner-spin-button,
+            input[type='number']::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            .custom-number-input input:focus {
+                outline: none !important;
+            }
+
+            .custom-number-input button:focus {
+                outline: none !important;
+            }
+        </style>
+    </head>
+    <body class="bg-stone-50 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <div class="bg-white text-cyan-500 px-4 border-b-4 border-cyan-700 ">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="/">
+                        <img src="/src/assets/restaurantGo.png" alt="Logo" class="pb-2 h-20 w-20 mr-2">
+                    </a>
+                    <h1 class="text-3xl font-bold">RestaurantGo</h1>
+                </div>
+                <div>
+                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande</a>
+                    {{if .Content}}
+                        <a href="/admin"
+                           class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon
+                            Espace</a>
+                        <a href="/logout" type="submit"
+                           class="border border-1 border-red-600 bg-white text-red-500 px-4 py-1.5 rounded-md hover:bg-red-500 hover:text-white">Logout</a>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-grow">
+            {{template "content" .}}
+        </div>
+    </div>
+    <hr class="mt-10">
+    <footer class="p-2 bg-white">
+        <div class="text-cyan-500 px-4">
+            <div class="flex flex-col-reverse gap-2 items-center md:flex-row">
+                <div class="flex-1 items-center">
+                    <img src="/src/assets/restaurantGo.png" alt="Logo" class="h-12 w-12 md:h-16 md:w-16">
+                </div>
+                <div class="flex flex-1 justify-center">
+                    <p class="text-center">© 2024 RestaurantGo - made with 💙 </p>
+                </div>
+                <div class="flex flex-1 justify-end">
+                    🍴<a href="/restaurant/become-restaurant" class="font-semibold underline text-end">Je suis Restaurateur</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+        function decrement(e) {
+            const btn = e.target.parentNode.parentElement.querySelector(
+                'button[data-action="decrement"]'
+            );
+            const target = btn.nextElementSibling;
+            let value = Number(target.value);
+            value--;
+            target.value = value;
+        }
+
+        function increment(e) {
+            const btn = e.target.parentNode.parentElement.querySelector(
+                'button[data-action="decrement"]'
+            );
+            const target = btn.nextElementSibling;
+            let value = Number(target.value);
+            value++;
+            target.value = value;
+        }
+
+        const decrementButtons = document.querySelectorAll(
+            `button[data-action="decrement"]`
+        );
+
+        const incrementButtons = document.querySelectorAll(
+            `button[data-action="increment"]`
+        );
+
+        decrementButtons.forEach(btn => {
+            btn.addEventListener("click", decrement);
+        });
+
+        incrementButtons.forEach(btn => {
+            btn.addEventListener("click", increment);
+        });
+    </script>
+    </body>
+    </html>
+{{end}}

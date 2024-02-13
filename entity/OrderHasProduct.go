@@ -1,7 +1,20 @@
 package entity
 
-// OrderHasProduct represent a struct
 type OrderHasProduct struct {
-	Order   Order   `json:"order"`
-	Product Product `json:"product"`
+	Order    Order     `json:"order" db:"order"`
+	Products []Product `json:"products" db:"products"`
+}
+
+func NewOrderHasProduct(order Order, products []Product) *OrderHasProduct {
+	return &OrderHasProduct{
+		Order:    order,
+		Products: products,
+	}
+}
+
+type OrderHasProductStoreInterface interface {
+	AddOrderHasProduct(item *OrderHasProduct) (int, error)
+	GetAllOrderHasProducts() ([]OrderHasProduct, error)
+	GetOrderHasProductByOrderID(id int) *OrderHasProduct
+	GetOrderHasProductByProductID(id int) *OrderHasProduct
 }

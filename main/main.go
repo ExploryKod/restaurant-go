@@ -12,17 +12,19 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file:", err)
+	errdot := godotenv.Load()
+	if errdot != nil {
+		log.Fatal("Error loading .env file:", errdot)
 	}
+
 	conf := mysql.Config{
-		User:                 "root",
-		Passwd:               "password",
+		User:                 os.Getenv("BDD_USER"),
+		Passwd:               os.Getenv("BDD_PASSWORD"),
 		Addr:                 os.Getenv("BDD_PORT"),
-		DBName:               "restaurantbdd",
+		DBName:               os.Getenv("BDD_NAME"),
 		Net:                  "tcp",
 		AllowNativePasswords: true,
+		ParseTime:            true,
 	}
 
 	db, err := sqlx.Open("mysql", conf.FormatDSN())

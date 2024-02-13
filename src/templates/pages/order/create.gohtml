@@ -1,0 +1,139 @@
+{{define "content"}}
+    <div>
+
+        <div class="restaugo-title-wrapper">
+            <h1 class="text-center restogo-title-xl">Menu</h1>
+        </div>
+        <section>
+            <div x-data="{orders: orders()}">
+                <div class="flex flex-wrap">
+                    <template x-for="menu in orders.menus" :key="menu.id">
+                        <div class="w-full md:w-1/2 lg:w-1/4 p-2">
+                            <div class="border-2 border-red-700 bg-white shadow-md rounded-md">
+                                <div class="p-4">
+                                    <h2 class="text-xl text-red-700 font-bold mb-4" x-text="menu.name"></h2>
+                                    <div class="grid gap-4">
+                                        <template x-for="product in orders.products" :key="product.id">
+                                            <div x-show="product.menuid === menu.id"
+                                                 class="border border-gray-200 rounded-md p-4">
+                                                <img class=" object-cover object-center mb-4" :src="product.image"
+                                                     alt="product.name">
+                                                <h3 class="text-lg font-bold text-gray-800 mb-2"
+                                                    x-text="product.name"></h3>
+                                                <p class="text-gray-600 mb-2" x-text="product.description"></p>
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-xl font-bold text-gray-800"
+                                                          x-text="product.price + ' €'"></span>
+                                                    <button class="bg-cyan-500 text-white px-4 py-2 rounded-md hover:bg-cyan-600"
+                                                            @click="$store.cart.add(product)"
+                                                    >Add to Cart
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div
+                    id="cart"
+                    class="flex flex-col items-end fixed z-30 bottom-0 right-0"
+                    x-data="cart_container"
+            >
+
+                <button
+                        type="button"
+                        class="capitalize text-4xl font-ssp font-bold rounded-xl mx-8 p-2 bg-cyan-900 text-white border-2 border-cyan-900 disabled:opacity-50"
+                        @click='submit()'
+                        x-show="open"
+                        x-bind:disabled="$store.cart.items.length === 0"
+                        data-restaurant-id="{{.Content.IdRestaurant}}"
+                >
+                    Validate
+                </button>
+                <script>
+                </script>
+                <input type="text" id="restaurantId" value="{{.Content.IdRestaurant}}" hidden>
+
+                <button
+                        type="button"
+                        class="font-ssp rounded-xl mx-8 my-4 flex items-center bg-cyan-900 text-white border-2 border-cyan-900"
+                        @click="toggle()"
+                >
+                    <div class="p-4 rounded-tl-xl rounded-bl-xl bg-white text-cyan-900 flex items-center justify-center">
+                        <span class="text-6xl font-bold" x-text="$store.cart.count"></span>
+                        <span class="text-6xl mx-2">x</span>
+                    </div>
+                    <div class="flex items-center text-center px-4">
+                        <span class="inline-block text-6xl font-bold">€</span>
+                        <span class="inline-block text-6xl font-bold" x-text="$store.cart.total"></span>
+                    </div>
+                </button>
+
+                <!-- cart modal -->
+                <template x-teleport="body">
+                    <div id="cart-modal" class="modal-box grid content-center w-full h-full fixed inset-0"
+                         x-show="open" x-transition>
+                        <div class="absolute z-10 h-full w-full bg-cyan-800 opacity-90" ></div>
+                        <div class=" modal-content px-4 py-8 flex flex-col justify-start items-center overflow-y-auto relative z-20 pb-60">
+                            <div class="max-w-md mx-auto w-full fixed top-0 left-1/2 translate-x-[-50%] flex justify-end">
+                                {{/*
+                                <button class="bg-white max-w-20 max-h-20" type="button" @click="toggle()">
+                                    <svg fill="#1e3a8a" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <g data-name="Layer 2">
+                                            <path d="m13.41 12 4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"
+                                                  data-name="close"/>
+                                        </g>
+                                    </svg>
+                                </button>*/}}
+                            </div>
+                            <div class="shadow shadow-white max-w-lg mx-auto px-4 py-2 w-full border border-blue-900 rounded-xl z-30">
+                                <h1 id="cart-is-empty"
+                                    class="font-ssp text-white text-4xl font-bold capitalize text-center"
+                                    x-show="$store.cart.items.length === 0">cart is empty.</h1>
+                                <div id="submitted-box" class="text-center py-8"
+                                     x-show="$store.cart.items.length > 0 && submitted">
+                                    <h1 class="font-ssp text-white text-5xl font-bold capitalize text-center">order was
+                                        sent successfully.</h1>
+                                    <button type="button"
+                                            class="capitalize text-4xl font-ssp font-bold rounded-xl mx-8 mt-4 p-2 bg-white text-cyan-900 border-2 border-cyan-900"
+                                            @click="submitted = false"
+                                    >
+                                        continue
+                                    </button>
+                                </div>
+                                <ul id="cart-products-list" class="font-ssp"
+                                    x-show="$store.cart.items.length > 0 && !submitted">
+                                    <template x-for="item in $store.cart.items" :key="item.id">
+                                        <li class="p-4 my-12 text-white border-b border-white">
+                                            <div class="text-6xl font-bold capitalize" x-text="item.name"></div>
+                                            <div class="font-mont mt-4 text-4xl text-center font-bold"
+                                                 x-text="item.count + ' for ' + item.total+ ' € '"></div>
+                                            <div class="mt-4 flex justify-around max-w-xs mx-auto">
+                                                <button class="border border-white rounded-full px-2" type="button"
+                                                        @click="$store.cart.remove(item.id)">
+                                                    - Remove
+                                                </button>
+                                                <button class="border border-white rounded-full px-2" type="button"
+                                                        @click="$store.cart.add(item)">
+                                                    + Add
+                                                </button>
+                                            </div>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <!-- cart modal -->
+
+            </div>
+            <!-- the cart -->
+        </section>
+    </div>
+
+{{end}}

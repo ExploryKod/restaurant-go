@@ -1,39 +1,36 @@
 package web
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/gorilla/sessions"
-	"html/template"
+	"golang.org/x/crypto/bcrypt"
+	"log"
 	"net/http"
+	"net/url"
 	"restaurantHTTP"
-	"strconv"
+	"restaurantHTTP/entity"
 	"time"
 )
 
-var store = sessions.NewCookieStore([]byte("faux-token-temporaire"))
+var storeSession = sessions.NewCookieStore([]byte("faux-token-temporaire"))
 
 func (h *Handler) GetHomePage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
-		session, err := store.Get(request, "session-name")
+		session, err := storeSession.Get(request, "session-basic")
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
-			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: nil, Error: "", Success: ""}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/home.gohtml")
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
 
-			err = tmpl.ExecuteTemplate(writer, "layout", data)
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
+			username := session.Values["username"].(string)
+			token := session.Values["token"].(string)
+			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: entity.User{Username: username}, Token: token}
+
+			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
 		}
 
@@ -44,18 +41,19 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 func (h *Handler) Login() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		if request.Method == http.MethodGet {
-			data := restaurantHTTP.TemplateData{Titre: "Login Page"}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/login.gohtml")
+			encodedMessage := request.URL.Query().Get("success")
+			decodedMessage, err := url.QueryUnescape(encodedMessage)
 			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
+				log.Println("Error during decoding success msg :", err)
+				decodedMessage = ""
 			}
 
-			err = tmpl.ExecuteTemplate(writer, "layout", data)
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
+			data := restaurantHTTP.TemplateData{Title: "Login"}
+			if decodedMessage != "" {
+				data.Success = decodedMessage
 			}
+
+			h.RenderHtml(writer, data, "auth/login.gohtml")
 			return
 		}
 
@@ -68,73 +66,196 @@ func (h *Handler) Login() http.HandlerFunc {
 		}
 
 		if user == nil {
-			h.failLogin()(writer, request)
+			h.failLogin(writer, request)
 			return
 		}
 
-		if user.Username == username && user.Password == password {
+		match := CheckPasswordHash(password, user.Password)
 
-			session, _ := store.Get(request, "session-name")
+		if user.Username == username && match {
+			token := makeToken(user.ID, user.Username, user.Mail, user.IsSuperadmin)
+
+			session, _ := storeSession.Get(request, "session-basic")
+			session.Values["token"] = token
 			session.Values["authenticated"] = true
 			session.Values["username"] = user.Username
+
 			err := session.Save(request, writer)
 			if err != nil {
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
 			}
 
-			token := strconv.Itoa(user.ID) + "." + user.Username + "." + user.Password
 			http.SetCookie(writer, &http.Cookie{
 				HttpOnly: true,
 				Expires:  time.Now().Add(7 * 24 * time.Hour),
 				SameSite: http.SameSiteLaxMode,
-				// Uncomment below for HTTPS:
-				// Secure: true,
-				Name:  "token", // Must be named "jwt" or else the token cannot be searched for by jwtauth.Verifier.
+				// Secure: true, // si on souhaite activer le HTTPS
+				Name:  "jwt",
 				Value: token,
 			})
 
-			data := restaurantHTTP.TemplateData{Titre: "Home Page", Content: user, Error: "", Success: "Connexion réussie !"}
-			tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/home.gohtml")
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
-			}
-
-			err = tmpl.ExecuteTemplate(writer, "layout", data)
-			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-			}
+			http.Redirect(writer, request, "/", http.StatusSeeOther)
 		} else {
-			h.failLogin()(writer, request)
+			h.failLogin(writer, request)
 		}
 	}
 }
 
 func (h *Handler) Signup() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		// handler signup from post request
+		if request.Method == http.MethodGet {
+			data := restaurantHTTP.TemplateData{Title: "Signup"}
+
+			h.RenderHtml(writer, data, "auth/signup.gohtml")
+			return
+		}
 		username := request.FormValue("username")
 		password := request.FormValue("password")
+		name := request.FormValue("name")
+		firstname := request.FormValue("firstname")
+		mail := request.FormValue("mail")
+		phone := request.FormValue("phone")
+		//birthday := request.FormValue("birthday")
 
-		fmt.Println(username, password)
+		response, err := h.UserStore.GetUserByUsername(username)
+		if err != nil {
+			fmt.Println(response)
+			return
+		}
 
+		if response != nil {
+			h.RenderHtml(writer, restaurantHTTP.TemplateData{Title: "Signup", Error: "Username already taken !"}, "auth/signup.gohtml")
+			return
+		}
+
+		hashedPassword, _ := HashPassword(password)
+
+		user := entity.NewUser(username, hashedPassword, name, firstname, mail, phone, false, sql.NullTime{})
+
+		var id int
+		id, err = h.UserStore.AddUser(user)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		fmt.Println("New user id :", id)
+
+		encodedMessage := url.QueryEscape("Account created successfully !")
+		http.Redirect(writer, request, "/login?success="+encodedMessage, http.StatusSeeOther)
 	}
 }
 
-func (h *Handler) failLogin() http.HandlerFunc {
+func (h *Handler) Logout() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		data := restaurantHTTP.TemplateData{Titre: "Login Page", Content: nil, Error: "Nom d'utilisateur ou mot de passe incorrect !", Success: ""}
-		tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout.gohtml", "src/templates/login.gohtml")
+		session, _ := storeSession.Get(request, "session-basic")
+		session.Values["authenticated"] = false
+		session.Values["username"] = nil
+
+		err := session.Save(request, writer)
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		err = tmpl.ExecuteTemplate(writer, "layout", data)
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		http.SetCookie(writer, &http.Cookie{
+			Name:     "token",
+			Value:    "",
+			Expires:  time.Now(),
+			Path:     "/",
+			HttpOnly: true,
+			SameSite: http.SameSiteLaxMode,
+			//Secure:   true,
+		})
+
+		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
+}
+
+func (h *Handler) failLogin(writer http.ResponseWriter, request *http.Request) {
+	data := restaurantHTTP.TemplateData{Title: "Login", Error: "Nom d'utilisateur ou mot de passe incorrect !"}
+
+	h.RenderHtml(writer, data, "auth/login.gohtml")
+}
+
+func (h *Handler) checkEmailAndUsername() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		username := request.URL.Query().Get("username")
+		email := request.URL.Query().Get("email")
+
+		var user *entity.User
+		var err error
+
+		EmailAndUsernameCheck := struct {
+			Email struct {
+				Exists  *bool  `json:"exists"`
+				Message string `json:"message"`
+			} `json:"email"`
+			Username struct {
+				Exists  *bool  `json:"exists"`
+				Message string `json:"message"`
+			} `json:"username"`
+		}{
+			Email: struct {
+				Exists  *bool  `json:"exists"`
+				Message string `json:"message"`
+			}{
+				nil,
+				"",
+			},
+			Username: struct {
+				Exists  *bool  `json:"exists"`
+				Message string `json:"message"`
+			}{
+				nil,
+				"",
+			},
+		}
+
+		if username != "" {
+			user, err = h.UserStore.GetUserByUsername(username)
+			if err != nil {
+				fmt.Println(err)
+			}
+			if user == nil {
+				EmailAndUsernameCheck.Username.Exists = new(bool)
+				*EmailAndUsernameCheck.Username.Exists = false
+				EmailAndUsernameCheck.Username.Message = "Username available !"
+			} else {
+				EmailAndUsernameCheck.Username.Exists = new(bool)
+				*EmailAndUsernameCheck.Username.Exists = true
+				EmailAndUsernameCheck.Username.Message = "Username already taken !"
+			}
+		}
+
+		if email != "" {
+			user, err = h.UserStore.GetUserByMail(email)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			if user == nil {
+				EmailAndUsernameCheck.Email.Exists = new(bool)
+				*EmailAndUsernameCheck.Email.Exists = false
+				EmailAndUsernameCheck.Email.Message = "Email available !"
+			} else {
+				EmailAndUsernameCheck.Email.Exists = new(bool)
+				*EmailAndUsernameCheck.Email.Exists = true
+				EmailAndUsernameCheck.Email.Message = "Email already taken !"
+			}
+		}
+
+		h.RenderJson(writer, http.StatusOK, EmailAndUsernameCheck)
+	}
+}
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
