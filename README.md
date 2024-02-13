@@ -21,11 +21,12 @@ BDD_PORT=127.0.0.1:3309
 Ouvrez un compte gratuit MailTrap de test et aller dans Email Testing (colone à gauche) > SMTP settings > cliquer sur "show credentials"
 
 Coller vos credentials dans le .env : 
+```
 SMTP_PASSWORD=<votrepassword>
 SMTP_USERNAME=<usernamemailtrap>
 SMTP_HOST=sandbox.smtp.mailtrap.io
 SMTP_PORT=25
-
+```
 1. Base de donnée et phpmyadmin 
 
 ``` docker compose up -d --build ```
