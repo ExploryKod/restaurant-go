@@ -38,11 +38,13 @@
                     <h1 class="text-3xl font-bold">RestaurantGo</h1>
                 </div>
                 <div>
-                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande</a>
+                    <a x-show="localStorage.getItem('orderData') !== null" href="/order" class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Ma commande</a>
                     {{if .Content}}
                         <a href="/admin"
                            class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon
                             Espace</a>
+                        <a id="restaurantLink" style="display: none;" href="#" class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon restaurant</a>
+
                         <a href="/logout" type="submit"
                            class="border border-1 border-red-600 bg-white text-red-500 px-4 py-1.5 rounded-md hover:bg-red-500 hover:text-white">Logout</a>
                     {{end}}
@@ -106,7 +108,13 @@
         incrementButtons.forEach(btn => {
             btn.addEventListener("click", increment);
         });
+        if(localStorage.getItem('UserRestaurantID') !== null){
+            var link = document.getElementById('restaurantLink');
+            link.style.display = 'inline';
+            link.href = "/restaurant/manage/" + localStorage.getItem('UserRestaurantID');
+        }
     </script>
+
     </body>
     </html>
 {{end}}

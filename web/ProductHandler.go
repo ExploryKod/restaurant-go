@@ -15,14 +15,15 @@ import (
 
 func (h *Handler) AddProductType() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
+		restaurantId := chi.URLParam(request, "restaurantId")
+		restaurantIdInt, _ := strconv.Atoi(restaurantId)
 		if request.Method == http.MethodPost {
 			menu := request.FormValue("menu")
 			icon := request.FormValue("icon")
-			restaurantId := 1
 			productType := &entity.ProductType{
 				Name:         menu,
 				Icon:         icon,
-				RestaurantId: restaurantId,
+				RestaurantId: restaurantIdInt,
 			}
 			var id int
 			var err error // declare err here
@@ -34,6 +35,7 @@ func (h *Handler) AddProductType() http.HandlerFunc {
 			message := "Account created successfully with id: " + fmt.Sprintf("%d", id)
 			encodedMessage := url.QueryEscape(message)
 			fmt.Println("Error parsing form:", encodedMessage)
+			http.Redirect(writer, request, fmt.Sprintf("/product/list/%d", restaurantIdInt), http.StatusSeeOther)
 		}
 		fmt.Println("Error adding product type to the database:", request.Method)
 		data := restaurantHTTP.TemplateData{Error: "Echec de l'inscription du restaurant"}
@@ -78,6 +80,9 @@ func (h *Handler) AddProduct() http.HandlerFunc {
 			message := "Product created successfully with id: " + fmt.Sprintf("%d", id)
 			encodedMessage := url.QueryEscape(message)
 			fmt.Println("Error parsing form:", encodedMessage)
+			RestaurantId, _ := strconv.Atoi(chi.URLParam(request, "restaurantId"))
+
+			http.Redirect(writer, request, fmt.Sprintf("/product/list/%d", RestaurantId), http.StatusSeeOther)
 		}
 		productsType, _ := h.ProductTypeStore.GetProductTypeByRestaurantId(restaurantIdInt)
 		//  Allergy
@@ -93,17 +98,40 @@ func (h *Handler) AddProduct() http.HandlerFunc {
 }
 func (h *Handler) ListProducts() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		restaurantId := 1
-		productsList, _ := h.ProductStore.GetProductByRestaurantId(restaurantId)
+		restaurantId := chi.URLParam(request, "restaurantId")
+		restaurantIdInt, _ := strconv.Atoi(restaurantId)
+		productsList, _ := h.ProductStore.GetProductByRestaurantId(restaurantIdInt)
 		//  Allergy
 		// allergies, err := h.ProductStore.GetAllergiesList()
 		// obj := ProductTypeAllergy{
 		// 	productType: productsType,
 		// 	allergies:   allergies,
 		// }
-		fmt.Println(productsList)
+		// h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": productsList})
 		data := restaurantHTTP.TemplateData{Error: "Echec de l'ajouter un produit", Content: productsList}
 		h.RenderHtml(writer, data, "pages/product/product.list.gohtml")
 		return
+	}
+}
+func (h *Handler) DeleteProducts() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+
+		id := chi.URLParam(request, "id")
+		resId := chi.URLParam(request, "restaurantId")
+		idInt, _ := strconv.Atoi(id)
+		resIdInt, _ := strconv.Atoi(resId)
+		productsList, _ := h.ProductStore.DeleteProduct(idInt)
+		if productsList {
+			fmt.Println("Error in productlist")
+		}
+		http.Redirect(writer, request, fmt.Sprintf("/product/list/%d", resIdInt), http.StatusSeeOther)
+		//  Allergy
+
+		// allergies, err := h.ProductStore.GetAllergiesList()
+		// obj := ProductTypeAllergy{
+		// 	productType: productsType,
+		// 	allergies:   allergies,
+		// }
+		// h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": productsList})
 	}
 }

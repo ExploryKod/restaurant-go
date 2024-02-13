@@ -64,6 +64,14 @@ func NewHandler(store *database.Store) *Handler {
 		r.Get("/", handler.GetHomePage())
 		r.Get("/logout", handler.Logout())
 
+		r.Route("/restaurantUser", func(r chi.Router) {
+			r.Get("/list/{restaurantId}", handler.RestaurantUserList())
+			r.Get("/create/{restaurantId}", handler.RestaurantUserCreate())
+			r.Post("/create/{restaurantId}", handler.RestaurantUserCreate())
+			r.Get("/update/{id}/{restaurantId}", handler.RestaurantUserUpdate())
+			r.Post("/update/{id}/{restaurantId}", handler.RestaurantUserUpdate())
+			r.Get("/delete/{id}/{restaurantId}", handler.RestaurantUserDelete())
+		})
 		r.Route("/user", func(r chi.Router) {
 			//r.Get("/getAll", handler.GetAllUsers())
 			//r.Get("/{id}/get", handler.GetUser())
@@ -80,11 +88,12 @@ func NewHandler(store *database.Store) *Handler {
 			r.Get("/{id}/menu", handler.CreateOrder())
 
 			r.Post("/{id}/create-order", handler.CreateOrder())
-			r.Get("/order/get/{type}", handler.GetAllOrdersByRestaurantId())
+			r.Get("/order/get/{restaurantId}", handler.GetAllOrdersByRestaurantId())
 			r.Get("/order/validate/{id}", handler.ValidateOrderById())
 			r.Get("/order/done/{id}", handler.CompleteOrderById())
 			r.Get("/order/ready/{id}", handler.ReadyOrderById())
 			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+			r.Get("/manage/{restaurantId}", handler.ManageRestaurant())
 		})
 
 		r.Route("/order", func(r chi.Router) {
@@ -97,9 +106,10 @@ func NewHandler(store *database.Store) *Handler {
 		})
 
 		r.Route("/product", func(r chi.Router) {
-			r.Get("/list", handler.ListProducts())
-			r.Get("/type/create", handler.AddProductType())
-			r.Post("/type/create", handler.AddProductType())
+			r.Get("/list/{restaurantId}", handler.ListProducts())
+			r.Get("/list/delete/{id}/{restaurantId}", handler.DeleteProducts())
+			r.Get("/type/create/{restaurantId}", handler.AddProductType())
+			r.Post("/type/create/{restaurantId}", handler.AddProductType())
 
 			r.Get("/create/{restaurantId}", handler.AddProduct())
 			r.Post("/create/{restaurantId}", handler.AddProduct())

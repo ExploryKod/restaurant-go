@@ -13,5 +13,5 @@ type Product struct {
 type ProductStoreInterface interface {
 	GetProductByRestaurantId(restaurantId int) ([]Product, error)
 	AddProduct(item Product) (int, error)
-	DeleteProduct(id int) error
+	DeleteProduct(id int) (bool, error)
 }

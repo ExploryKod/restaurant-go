@@ -133,40 +133,37 @@ func (h *Handler) GetAllOrders() http.HandlerFunc {
 
 func (h *Handler) GetAllOrdersByRestaurantId() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		restaurantId := 1
-		typeId := chi.URLParam(request, "type")
-		typeInt, _ := strconv.Atoi(typeId)
+		restaurantId := chi.URLParam(request, "restaurantId")
+		restaurantIdInt, _ := strconv.Atoi(restaurantId)
 
-		orders, err := h.OrderHasProductStore.GetAllOrderHasProductsByRestaurantId(restaurantId)
+		orders, err := h.OrderHasProductStore.GetAllOrderHasProductsByRestaurantId(restaurantIdInt)
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "getallorderhasproduct Internal Server Error"})
 			return
 		}
 
-		// Filtering Orders with type
-		var pendingOrders []entity.OrderHasProduct
-		for _, order := range orders {
-			if typeInt == 2 {
-				if order.Order.Status == "pending" {
-					pendingOrders = append(pendingOrders, order)
-				}
-			} else if typeInt == 3 {
-				if order.Order.Status == "delivered" {
-					pendingOrders = append(pendingOrders, order)
-				}
-			} else {
-				pendingOrders = append(pendingOrders, order)
-			}
-		}
+		// // Filtering Orders with type
+		// var pendingOrders []entity.OrderHasProduct
+		// for _, order := range orders {
+		// 	if typeInt == 2 {
+		// 		if order.Order.Status == "pending" {
+		// 			pendingOrders = append(pendingOrders, order)
+		// 		}
+		// 	} else if typeInt == 3 {
+		// 		if order.Order.Status == "delivered" {
+		// 			pendingOrders = append(pendingOrders, order)
+		// 		}
+		// 	} else {
+		// 		pendingOrders = append(pendingOrders, order)
+		// 	}
+		// }
 		// fmt.Println(pendingOrders)
 
 		data := restaurantHTTP.TemplateData{Title: "Mes commandes", Content: struct {
 			PendingOrders []entity.OrderHasProduct
-			TypeId        int
 		}{
-			PendingOrders: pendingOrders,
-			TypeId:        typeInt,
+			PendingOrders: orders,
 		}}
 
 		h.RenderHtml(writer, data, "pages/order/list.admin.gohtml")
