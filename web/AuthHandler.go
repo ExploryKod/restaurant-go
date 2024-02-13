@@ -28,7 +28,7 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 
 			username := session.Values["username"].(string)
 			token := session.Values["token"].(string)
-			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: entity.User{Username: username}, Token: token}
+			data := restaurantHTTP.TemplateData{Title: "Bienvenue", Content: entity.User{Username: username}, Token: token}
 
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
