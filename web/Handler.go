@@ -152,9 +152,6 @@ func NewHandler(store *database.Store) *Handler {
 
 		})
 
-		r.Route("/api", func(r chi.Router) {
-			r.Post("/restaurant/register", handler.RegisterRestaurant())
-		})
 	})
 
 	return handler
