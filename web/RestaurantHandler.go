@@ -62,7 +62,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetRestaurant()
+		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
@@ -84,7 +84,7 @@ func (h *Handler) ShowRestaurantProfile() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		restaurants, err := h.RestaurantStore.GetRestaurant()
+		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
