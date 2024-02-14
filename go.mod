@@ -26,6 +26,7 @@ require (
 	github.com/lestrrat-go/jwx/v2 v2.0.17 // indirect
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/lib/pq v1.10.9 // indirect
+	github.com/pusher/pusher-http-go/v5 v5.1.1 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
 )

@@ -18,7 +18,7 @@ func NewOrderStore(db *sqlx.DB) *OrderStore {
 	}
 }
 
-func (o *OrderStore) AddOrder(order entity.Order) (int, error) {
+func (o *OrderStore) AddOrder(order *entity.Order) (int, int, error) {
 
 	var currentOrderNumber int
 	currentDate := order.CreatedDate.Format("2006-01-02")
@@ -32,15 +32,15 @@ func (o *OrderStore) AddOrder(order entity.Order) (int, error) {
 
 	res, err := o.DB.Exec("INSERT INTO Orders (user_id, restaurant_id, status, total_price, number, created_date, closed_date) VALUES ( ? , ? , ?, ?, ?, ?, ?)", order.User.ID, order.Restaurant.ID, order.Status, order.TotalPrice, nextOrderNumber, order.CreatedDate, order.ClosedDate)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 
 	id, err := res.LastInsertId()
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
 	fmt.Println()
-	return int(id), nil
+	return int(id), nextOrderNumber, nil
 }
 
 func (o *OrderStore) GetAllOrders() ([]entity.Order, error) {

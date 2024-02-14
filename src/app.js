@@ -362,6 +362,7 @@ document.addEventListener('alpine:init', () => {
                 });
         }
     }));
+
     Alpine.data('manageOrder', () => ({
         username: '',
         email: '',
@@ -417,11 +418,6 @@ document.addEventListener('alpine:init', () => {
                 })
                 .then((json) => {
 
-                    // this.error.username = json.username?.exists ? json.username.message : null;
-                    // this.success.username = !json.username?.exists ? json.username.message : null;
-
-                    // this.error.email = json.email?.exists ? json.email.message : null;
-                    // this.success.email = !json.email?.exists ? json.email.message : null;
 
                 })
                 .catch((error) => {

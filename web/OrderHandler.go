@@ -67,14 +67,14 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 
 		order := entity.NewOrder(*user, *restaurant, "pending", totalPrice, 0, time.Now(), sql.NullTime{})
 
-		var lastOrderID int
-		lastOrderID, err = h.OrderStore.AddOrder(*order)
+		lastOrderID, orderNumber, err := h.OrderStore.AddOrder(order)
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
 			return
 		}
 		order.ID = lastOrderID
+		order.Number = orderNumber
 
 		orderHasProduct := entity.NewOrderHasProduct(*order, *products)
 
@@ -82,6 +82,12 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
+			return
+		}
+
+		err = h.Client.Trigger("restaurant-"+strconv.Itoa(restaurantID), "new-order", map[string]any{"data": orderHasProduct, "message": "New order !"})
+		if err != nil {
+			log.Println(err)
 			return
 		}
 
@@ -133,41 +139,30 @@ func (h *Handler) GetAllOrders() http.HandlerFunc {
 
 func (h *Handler) GetAllOrdersByRestaurantId() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
-		restaurantId := chi.URLParam(request, "restaurantId")
-		restaurantIdInt, _ := strconv.Atoi(restaurantId)
+		restaurantIDUrl := chi.URLParam(request, "restaurantId")
+		restaurantId, _ := strconv.Atoi(restaurantIDUrl)
 
-		orders, err := h.OrderHasProductStore.GetAllOrderHasProductsByRestaurantId(restaurantIdInt)
+		req := request.URL.Query().Get("req")
+
+		orders, err := h.OrderHasProductStore.GetAllOrderHasProductsByRestaurantId(restaurantId)
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "getallorderhasproduct Internal Server Error"})
 			return
 		}
 
-		// // Filtering Orders with type
-		// var pendingOrders []entity.OrderHasProduct
-		// for _, order := range orders {
-		// 	if typeInt == 2 {
-		// 		if order.Order.Status == "pending" {
-		// 			pendingOrders = append(pendingOrders, order)
-		// 		}
-		// 	} else if typeInt == 3 {
-		// 		if order.Order.Status == "delivered" {
-		// 			pendingOrders = append(pendingOrders, order)
-		// 		}
-		// 	} else {
-		// 		pendingOrders = append(pendingOrders, order)
-		// 	}
-		// }
-		// fmt.Println(pendingOrders)
+		if req == "json" {
+			h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": orders})
+			return
+		}
 
 		data := restaurantHTTP.TemplateData{Title: "Mes commandes", Content: struct {
-			PendingOrders []entity.OrderHasProduct
+			Orders []entity.OrderHasProduct `json:"orders"`
 		}{
-			PendingOrders: orders,
+			Orders: orders,
 		}}
 
 		h.RenderHtml(writer, data, "pages/order/list.admin.gohtml")
-		// h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Orders found", "data": pendingOrders})
 
 	}
 }
@@ -175,21 +170,40 @@ func (h *Handler) ValidateOrderById() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		ID := chi.URLParam(request, "id")
 		idInt, _ := strconv.Atoi(ID)
-		// restaurantId := 1
+
 		_, err := h.OrderStore.ValidateOrder(idInt)
 		if err != nil {
 			log.Println(err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "getallorderhasproduct Internal Server Error"})
 			return
 		}
-		http.Redirect(writer, request, "restaurant/order/get", http.StatusSeeOther)
+
+		order := h.OrderStore.GetOrderByID(idInt)
+		if order == nil {
+			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": "order not found"})
+			return
+		}
+
+		err = h.Client.Trigger("user-"+strconv.Itoa(order.User.ID), "order-validated", map[string]any{"data": order, "message": "Order validated !"})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		err = h.Client.Trigger("restaurant-"+strconv.Itoa(order.Restaurant.ID), "order-validated", map[string]any{"data": order, "message": "Order validated !"})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		h.RenderJson(writer, http.StatusOK, map[string]any{"message": "Order validated", "data": order})
+		//http.Redirect(writer, request, "/restaurant/"+restoID+"/order/get", http.StatusSeeOther)
 	}
 }
 func (h *Handler) CompleteOrderById() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		ID := chi.URLParam(request, "id")
 		idInt, _ := strconv.Atoi(ID)
-		// restaurantId := 1
 		_, err := h.OrderStore.CompleteOrder(idInt)
 		if err != nil {
 			log.Println(err)

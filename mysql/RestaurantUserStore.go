@@ -81,12 +81,12 @@ func (t *ProductStore) GetRestaurantUserByUserID(userId int) (*entity.Restaurant
 
 	return &restaurantHasUser, nil
 }
-func (t *ProductStore) GetRestaurantIDByUserID(userId int) (*int, error) {
-	var restaurantId *int
+func (t *ProductStore) GetRestaurantIDByUserID(userId int) (int, error) {
+	var restaurantId int
 	err := t.QueryRow("SELECT restaurant_id FROM Restaurant_has_users WHERE user_id = ?", userId).Scan(&restaurantId)
 	if err != nil {
 
-		return nil, err
+		return 0, err
 
 	}
 	return restaurantId, nil
