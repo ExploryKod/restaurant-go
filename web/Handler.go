@@ -7,7 +7,9 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth/v5"
 	"html/template"
+	"log"
 	"net/http"
+	"net/url"
 	"restaurantHTTP"
 	database "restaurantHTTP/mysql"
 )
@@ -140,4 +142,32 @@ func (h *Handler) RenderHtml(writer http.ResponseWriter, data restaurantHTTP.Tem
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func DecodeRedirectMessage(data restaurantHTTP.TemplateData, request *http.Request) string {
+	encodedMessage := request.URL.Query().Get("success")
+	decodedMessage, err := url.QueryUnescape(encodedMessage)
+	if err != nil {
+		log.Println("Error during decoding success msg :", err)
+		decodedMessage = ""
+		return decodedMessage
+	}
+	if decodedMessage != "" {
+		data.Success = decodedMessage
+		return data.Success
+	}
+
+	encodedMessage = request.URL.Query().Get("echec")
+	decodedMessage, err = url.QueryUnescape(encodedMessage)
+	if err != nil {
+		log.Println("Error during decoding echec msg :", err)
+		decodedMessage = ""
+		return decodedMessage
+	}
+
+	if decodedMessage != "" {
+		data.Error = decodedMessage
+		return data.Error
+	}
+	return ""
 }

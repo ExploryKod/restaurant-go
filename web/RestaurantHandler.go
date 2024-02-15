@@ -11,6 +11,7 @@ import (
 	"strconv"
 )
 
+// TODO: nomenclature de nommage à faire pour toute les func qui rendent un template html (pour s'y retrouver ensuite)
 func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 
@@ -78,25 +79,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Content: restaurants}
 
-			encodedMessage := request.URL.Query().Get("success")
-			decodedMessage, err := url.QueryUnescape(encodedMessage)
-			if err != nil {
-				log.Println("Error during decoding success msg :", err)
-				decodedMessage = ""
-			}
-			if decodedMessage != "" {
-				data.Success = decodedMessage
-			}
-
-			encodedMessage = request.URL.Query().Get("echec")
-			decodedMessage, err = url.QueryUnescape(encodedMessage)
-			if err != nil {
-				log.Println("Error during decoding echec msg :", err)
-				decodedMessage = ""
-			}
-			if decodedMessage != "" {
-				data.Error = decodedMessage
-			}
+			DecodeRedirectMessage(data, request)
 
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
 			return
@@ -131,6 +114,7 @@ func (h *Handler) ShowBecomeRestaurantPage() http.HandlerFunc {
 
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Error: "", Success: ""}
+
 			h.RenderHtml(writer, data, "pages/restaurants.subscribe.gohtml")
 			return
 		}
@@ -293,14 +277,15 @@ func (h *Handler) UpdateRestaurantHandler() http.HandlerFunc {
 		},
 			restaurantID)
 		if err != nil {
-			log.Println(err)
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			log.Println(writer, err.Error(), http.StatusInternalServerError)
+			encodedMessage := url.QueryEscape("Echec de la modification du restaurant")
+			http.Redirect(writer, request, "/restaurant/manage-restaurants?success="+encodedMessage, http.StatusSeeOther)
+			http.Redirect(writer, request, "/restaurant/manage-restaurants?error="+encodedMessage, http.StatusInternalServerError)
 			return
 		}
 
-		data := restaurantHTTP.TemplateData{Title: "", Success: restaurantName + "modifié"}
-		h.RenderHtml(writer, data, "pages/restaurants.update.gohtml")
-		return
+		encodedMessage := url.QueryEscape(restaurantName + " a été modifié")
+		http.Redirect(writer, request, "/restaurant/manage-restaurants?success="+encodedMessage, http.StatusOK)
 	}
 }
 
@@ -312,11 +297,14 @@ func (h *Handler) DeleteRestaurantHandler() http.HandlerFunc {
 
 		err := h.RestaurantStore.DeleteRestaurantById(id)
 		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			log.Println(writer, err.Error(), http.StatusInternalServerError)
+			encodedMessage := url.QueryEscape("Echec de la suppression du restaurant")
+			http.Redirect(writer, request, "/restaurant/manage-restaurants?success="+encodedMessage, http.StatusSeeOther)
+			http.Redirect(writer, request, "/restaurant/manage-restaurants?error="+encodedMessage, http.StatusInternalServerError)
 			return
 		}
-
-		http.Redirect(writer, request, "/restaurant/manage-restaurants", http.StatusSeeOther)
+		encodedMessage := url.QueryEscape("Le restaurant a été supprimé")
+		http.Redirect(writer, request, "/restaurant/manage-restaurants?success="+encodedMessage, http.StatusOK)
 
 	}
 }
