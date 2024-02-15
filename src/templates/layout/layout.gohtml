@@ -38,7 +38,7 @@
                     </a>
                     <h1 class="text-3xl font-bold">RestaurantGo</h1>
                 </div>
-                <div x-data="manageOrder" x-bind:init="init(localStorage.getItem('userId'), 0)">
+                <div x-data="manageOrder" x-bind:init="init(localStorage.getItem('userId') || 0, 0)">
                     <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande <span class="p-2 text-white rounded-full bg-orange-500" x-text="notifUser.length"></span></a>
                     {{if .Content}}
                         <a href="/admin"
