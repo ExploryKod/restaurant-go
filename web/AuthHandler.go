@@ -37,6 +37,7 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 				entity.User{Username: username, ID: userId},
 				userRestaurantID,
 			}
+			fmt.Println(content)
 			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: content, Token: token}
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return

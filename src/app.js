@@ -377,7 +377,7 @@ document.addEventListener('alpine:init', () => {
                     console.error('Error:', error);
                 });
         },
-        init(restaurantId, userId) {
+        init(userId, restaurantId) {
 
             const pusher = new Pusher('ec7d4445ff7ce87c929e', {
                 cluster: 'eu'
