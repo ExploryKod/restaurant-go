@@ -27,6 +27,7 @@ func (h *Handler) ShowRestaurantsPage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Content: restaurants, Error: "", Success: ""}
 			h.RenderHtml(writer, data, "pages/restaurants.client.gohtml")
+			return
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
@@ -49,6 +50,7 @@ func (h *Handler) ShowMenuByRestaurant() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Content: restaurants, Error: "", Success: ""}
 			h.RenderHtml(writer, data, "pages/order/create.gohtml")
+			return
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
@@ -73,6 +75,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Content: restaurants}
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
+			return
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
@@ -105,6 +108,7 @@ func (h *Handler) ShowBecomeRestaurantPage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Error: "", Success: ""}
 			h.RenderHtml(writer, data, "pages/restaurants.subscribe.gohtml")
+			return
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
@@ -189,6 +193,7 @@ func (h *Handler) ShowAdminRestaurantPage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "", Content: restaurant}
 			h.RenderHtml(writer, data, "pages/restaurants.admin.gohtml")
+			return
 		}
 		http.Redirect(writer, request, "/login", http.StatusSeeOther)
 	}
