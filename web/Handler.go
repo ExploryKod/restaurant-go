@@ -144,17 +144,17 @@ func (h *Handler) RenderHtml(writer http.ResponseWriter, data restaurantHTTP.Tem
 	}
 }
 
-func DecodeRedirectMessage(data restaurantHTTP.TemplateData, request *http.Request) string {
+func DecodeRedirectMessage(data *restaurantHTTP.TemplateData, request *http.Request) {
 	encodedMessage := request.URL.Query().Get("success")
 	decodedMessage, err := url.QueryUnescape(encodedMessage)
 	if err != nil {
 		log.Println("Error during decoding success msg :", err)
 		decodedMessage = ""
-		return decodedMessage
+		return
 	}
 	if decodedMessage != "" {
 		data.Success = decodedMessage
-		return data.Success
+		return
 	}
 
 	encodedMessage = request.URL.Query().Get("echec")
@@ -162,12 +162,11 @@ func DecodeRedirectMessage(data restaurantHTTP.TemplateData, request *http.Reque
 	if err != nil {
 		log.Println("Error during decoding echec msg :", err)
 		decodedMessage = ""
-		return decodedMessage
+		return
 	}
 
 	if decodedMessage != "" {
 		data.Error = decodedMessage
-		return data.Error
+		return
 	}
-	return ""
 }

@@ -79,7 +79,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Content: restaurants}
 
-			DecodeRedirectMessage(data, request)
+			DecodeRedirectMessage(&data, request)
 
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
 			return
@@ -294,17 +294,15 @@ func (h *Handler) DeleteRestaurantHandler() http.HandlerFunc {
 		QueryId := chi.URLParam(request, "id")
 
 		id, _ := strconv.Atoi(QueryId)
-
+		fmt.Println()
 		err := h.RestaurantStore.DeleteRestaurantById(id)
 		if err != nil {
 			log.Println(writer, err.Error(), http.StatusInternalServerError)
 			encodedMessage := url.QueryEscape("Echec de la suppression du restaurant")
-			http.Redirect(writer, request, "/restaurant/manage-restaurants?success="+encodedMessage, http.StatusSeeOther)
-			http.Redirect(writer, request, "/restaurant/manage-restaurants?error="+encodedMessage, http.StatusInternalServerError)
+			http.Redirect(writer, request, "/restaurant/manage-restaurants?error="+encodedMessage, http.StatusSeeOther)
 			return
 		}
 		encodedMessage := url.QueryEscape("Le restaurant a été supprimé")
-		http.Redirect(writer, request, "/restaurant/manage-restaurants?success="+encodedMessage, http.StatusOK)
-
+		http.Redirect(writer, request, "/restaurant/manage-restaurants?success="+encodedMessage, http.StatusSeeOther)
 	}
 }
