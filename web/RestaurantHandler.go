@@ -5,6 +5,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
+	"net/url"
 	"restaurantHTTP"
 	"restaurantHTTP/entity"
 	"strconv"
@@ -64,6 +65,7 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 			http.Error(writer, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		restaurants, err := h.RestaurantStore.GetAllRestaurants()
 		if err != nil {
 			log.Println(err)
@@ -72,8 +74,30 @@ func (h *Handler) ShowAddRestaurantAdminPage() http.HandlerFunc {
 		}
 
 		// TODO: limiter à un accés admin seulement (il créé le restaurant à la suite d'un email > formulaire de contact restaurateur > admin)
+		// TODO: Refactor (remove) session authenticated in whole project
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 			data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Content: restaurants}
+
+			encodedMessage := request.URL.Query().Get("success")
+			decodedMessage, err := url.QueryUnescape(encodedMessage)
+			if err != nil {
+				log.Println("Error during decoding success msg :", err)
+				decodedMessage = ""
+			}
+			if decodedMessage != "" {
+				data.Success = decodedMessage
+			}
+
+			encodedMessage = request.URL.Query().Get("echec")
+			decodedMessage, err = url.QueryUnescape(encodedMessage)
+			if err != nil {
+				log.Println("Error during decoding echec msg :", err)
+				decodedMessage = ""
+			}
+			if decodedMessage != "" {
+				data.Error = decodedMessage
+			}
+
 			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
 			return
 		}
@@ -138,13 +162,12 @@ func (h *Handler) RegisterRestaurant() http.HandlerFunc {
 		}
 		_, err = h.RestaurantStore.AddRestaurant(entity.Restaurant{Name: restaurantName, Phone: restaurantTel, Mail: restaurantEmail, Grade: restaurantGradeInt, IsValidated: true})
 		if err != nil {
-			data := restaurantHTTP.TemplateData{Error: "Echec de l'inscription du restaurant"}
-			h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
+			encodedMessage := url.QueryEscape("Echec de l'inscription du restaurant")
+			http.Redirect(writer, request, "/restaurant/manage-restaurants?error="+encodedMessage, http.StatusSeeOther)
 			return
 		}
-		data := restaurantHTTP.TemplateData{Title: "Inscription d'un nouveau restaurant", Success: restaurantName + " est inscris dans le FoodCourt."}
-		h.RenderHtml(writer, data, "pages/restaurants.create.gohtml")
-		return
+		encodedMessage := url.QueryEscape(restaurantName + " est inscris dans le FoodCourt.")
+		http.Redirect(writer, request, "/restaurant/manage-restaurants?success="+encodedMessage, http.StatusSeeOther)
 	}
 }
 

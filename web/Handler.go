@@ -84,7 +84,7 @@ func NewHandler(store *database.Store) *Handler {
 
 			r.Get("/become-restaurant", handler.ShowBecomeRestaurantPage())
 
-			r.Post("/restaurant/register", handler.RegisterRestaurant())
+			r.Post("/register", handler.RegisterRestaurant())
 
 			r.Get("/manage-restaurants", handler.ShowAddRestaurantAdminPage())
 
