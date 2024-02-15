@@ -364,10 +364,79 @@ document.addEventListener('alpine:init', () => {
     }));
 
     Alpine.data('manageOrder', () => ({
-        username: '',
-        email: '',
+        orders: [],
+        notifUser: [],
+        notifyRestaurant: null,
+        getAllOrdersByRestaurantId() {
+            fetch(`/restaurant/${1}/order/get?req=json`)
+                .then(response => (response.json()))
+                .then(data => {
+                    this.orders = data.data;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        },
+        init(restaurantId, userId) {
+
+            const pusher = new Pusher('ec7d4445ff7ce87c929e', {
+                cluster: 'eu'
+            });
+
+            if (restaurantId !== 0) {
+                this.getAllOrdersByRestaurantId(restaurantId);
+
+                const channel = pusher.subscribe('restaurant-' + restaurantId);
+                channel.bind('new-order', (data) => {
+                    const newOrder = data.data;
+                    this.orders.push(newOrder);
+                });
+
+                channel.bind('order-validated', (data) => {
+                    const order = data.data;
+                    console.log(JSON.stringify(order));
+                    this.orders = this.orders.map((item) => {
+                        if (item.id !== order.id) return item;
+                        item.status = order.status;
+                        return item;
+                    });
+                });
+            }
+
+            if (userId !== 0) {
+                const channel2 = pusher.subscribe('user-' + userId);
+
+                channel2.bind('order-validated', (data) => {
+                    const order = data.data;
+                    console.log(JSON.stringify(order));
+                    this.notifUser.push("Order n°" + order.number + " has been validated");
+                    console.log(this.notifUser);
+                });
+
+                channel2.bind('order-ready', (data) => {
+                    const order = data.data;
+                    console.log(JSON.stringify(order));
+                    this.orders = this.orders.map((item) => {
+                        if (item.id !== order.id) return item;
+                        item.status = order.status;
+                        return item;
+                    });
+                });
+
+                channel2.bind('order-completed', (data) => {
+                    const order = data.data;
+                    console.log(JSON.stringify(order));
+                    this.orders = this.orders.map((item) => {
+                        if (item.id !== order.id) return item;
+                        item.status = order.status;
+                        return item;
+                    });
+                })
+            }
+        }
+        ,
         validateOrder(id) {
-            fetch('/restaurant/order/validate/' + id)
+            fetch('http://localhost:8097/restaurant/order/validate/' + id)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -376,19 +445,14 @@ document.addEventListener('alpine:init', () => {
                 })
                 .then((json) => {
 
-                    // this.error.username = json.username?.exists ? json.username.message : null;
-                    // this.success.username = !json.username?.exists ? json.username.message : null;
-
-                    // this.error.email = json.email?.exists ? json.email.message : null;
-                    // this.success.email = !json.email?.exists ? json.email.message : null;
-
                 })
                 .catch((error) => {
                     console.log('Error during checking:', error)
                 })
-        },
+        }
+        ,
         readyOrder(id) {
-            fetch('/restaurant/order/ready/' + id)
+            fetch('http://localhost:8097/restaurant/order/ready/' + id)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -397,19 +461,14 @@ document.addEventListener('alpine:init', () => {
                 })
                 .then((json) => {
 
-                    // this.error.username = json.username?.exists ? json.username.message : null;
-                    // this.success.username = !json.username?.exists ? json.username.message : null;
-
-                    // this.error.email = json.email?.exists ? json.email.message : null;
-                    // this.success.email = !json.email?.exists ? json.email.message : null;
-
                 })
                 .catch((error) => {
                     console.log('Error during checking:', error)
                 })
-        },
+        }
+        ,
         completeOrder(id) {
-            fetch('/restaurant/order/done/' + id)
+            fetch('http://localhost:8097/restaurant/order/done/' + id)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -423,11 +482,12 @@ document.addEventListener('alpine:init', () => {
                 .catch((error) => {
                     console.log('Error during checking:', error)
                 })
-        },
+        }
+        ,
         filterOrder(e) {
             // console.log(e.target.value)
-            window.location.href = '/restaurant/order/get/' + e.target.value;
-            // fetch('/restaurant/order/get/' + id)
+            // window.location.href = '/restaurant/order/get/' + e.target.value;
+            // fetch('http://localhost:8097/restaurant/order/get/' + id)
             //     .then((response) => {
             //         if (!response.ok) {
             //             throw new Error('Erreur lors de la requête.');
@@ -443,10 +503,11 @@ document.addEventListener('alpine:init', () => {
             //     })
         }
     }))
+
     Alpine.data('manageProduct', () => ({
         deleteProduct(id) {
             const restaurantId = localStorage.getItem('UserRestaurantID')
-            fetch('/product/list/delete/' + id +"/"+restaurantId)
+            fetch('/product/list/delete/' + id + "/" + restaurantId)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Erreur lors de la requête.');
@@ -462,5 +523,5 @@ document.addEventListener('alpine:init', () => {
                 })
         },
     }))
-    
+
 })
