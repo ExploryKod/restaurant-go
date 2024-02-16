@@ -3,10 +3,10 @@ module.exports = {
   content: [
     "./src/templates/*.gohtml",
     "./src/templates/**/*.gohtml",
-    "./src/*css"
+    "./src/*css",
   ],
   theme: {
     extend: {},
-  }
+  },
 }
 

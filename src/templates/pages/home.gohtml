@@ -1,11 +1,10 @@
 {{define "content"}}
     <script>
+        localStorage.setItem("connected", "true")
         {{if .Content }}
-        console.log("content")
-            {{ if .Content.UserRestaurantID}}
-            console.log("UserRestaurantID")
-                localStorage.setItem("UserRestaurantID", "{{ .Content.UserRestaurantID }}")
-            {{end}}
+        {{ if .Content.UserRestaurantID}}
+        localStorage.setItem("UserRestaurantID", "{{ .Content.UserRestaurantID }}")
+        {{end}}
         {{ end }}
     </script>
     <section class="relative bg-white overflow-hidden h-screen">
@@ -89,7 +88,7 @@
                                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Nos
                                 restaurants</a>
 
-                            <a href="/profile"
+                            <a href="/orders"
                                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Mes
                                 commandes</a>
                         </div>
@@ -159,16 +158,18 @@
                                                   d="M464 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zM224 416H64V160h160v256zm224 0H288V160h160v256z"></path>
                                         </svg>
                                         <span class="mx-3">
-                    Dashboard</span>
+                    RestaurantGo - Board Administrateur</span>
                                     </a></h1>
                                 <div class="">
                                     <div class="hidden lg:flex">
+                                        <a href="/#dashboard"
+                                           class="nav-item px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-blue focus:outline-none transition duration-150 ease-in-out">Mon
+                                            board</a>
+                                        <a href="admin/register-restaurant"
+                                           class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none">Inscrire
+                                            un restaurant</a>
                                         <a href="#"
-                                           class="nav-item px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-blue focus:outline-none transition duration-150 ease-in-out">Home</a>
-                                        <a href="#"
-                                           class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none">Setting</a>
-                                        <a href="#"
-                                           class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none ">Help</a>
+                                           class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none ">Emails</a>
 
                                     </div>
                                     <div class="flex lg:hidden">
@@ -232,8 +233,8 @@
                                     </g>
                                 </svg>
                             </p>
-                            <h2 class="text-5xl animate"> $9 </h2>
-                            <h2 class="text-base sm:w-3/5  w-full"> Yearly Tunover</h2>
+                            <h2 class="text-5xl animate"> $90 </h2>
+                            <h2 class="text-base sm:w-3/5  w-full"> CA de RestaurantGo </h2>
 
                         </div>
                         <div class="expand-card shadow-sm text-white bg-secondary-color p-2 rounded-lg">
@@ -261,66 +262,19 @@
                                     </g>
                                 </svg>
                             </p>
-                            <h2 class="text-5xl animate"> 85 </h2>
-                            <h2 class="text-base sm:w-3/5  w-full"> Enterprise Clients</h2>
+                            <h2 class="text-5xl animate"> 10 </h2>
+                            <h2 class="text-base sm:w-3/5  w-full"> restaurants </h2>
                         </div>
 
                     </div>
 
                     <div class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-4 lg:col-span-2 ">
-                        <h2 class="text-xl text-gray-500"> Earnings
-                            <button class="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-blue-200 focus:outline-none focus:text-white focus:text-blue-200 transition duration-150 ease-in-out  float-right"
-                                    aria-label="refresh" onclick="refresh()">
-                                <svg width="20" height="20" aria-hidden="true" focusable="false" data-prefix="fas"
-                                     data-icon="sync-alt" class="svg-inline--fa fa-sync-alt fa-w-16" role="img"
-                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                    <path fill="currentColor"
-                                          d="M370.72 133.28C339.458 104.008 298.888 87.962 255.848 88c-77.458.068-144.328 53.178-162.791 126.85-1.344 5.363-6.122 9.15-11.651 9.15H24.103c-7.498 0-13.194-6.807-11.807-14.176C33.933 94.924 134.813 8 256 8c66.448 0 126.791 26.136 171.315 68.685L463.03 40.97C478.149 25.851 504 36.559 504 57.941V192c0 13.255-10.745 24-24 24H345.941c-21.382 0-32.09-25.851-16.971-40.971l41.75-41.749zM32 296h134.059c21.382 0 32.09 25.851 16.971 40.971l-41.75 41.75c31.262 29.273 71.835 45.319 114.876 45.28 77.418-.07 144.315-53.144 162.787-126.849 1.344-5.363 6.122-9.15 11.651-9.15h57.304c7.498 0 13.194 6.807 11.807 14.176C478.067 417.076 377.187 504 256 504c-66.448 0-126.791-26.136-171.315-68.685L48.97 471.03C33.851 486.149 8 475.441 8 454.059V320c0-13.255 10.745-24 24-24z"></path>
-                                </svg>
-                            </button>
-                        </h2>
-                        <h2 class="text-5xl font-medium text-dark mb-5"> $9249.81 </h2>
-
-                        <!--start chart-->
-                        <div class="bar-chart bg-white py-2 px-2  mx-4 w-full sm:w-auto rounded-lg">
-
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block"></div>
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-
-                            </div>
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-
-                            </div>
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-                            </div>
-
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-                            </div>
-
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-                            </div>
-
-                            <div class="bar bg-blue-200 box-placeholder rounded-t-lg inline-block">
-                            </div>
-
-                            <div class="w-full h-line bg-gray-600 mb-2"></div>
-                            <div class="bar-label color-gray-600 inline-block text-sm"> Riyadh</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">Dammam</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">Jeddah</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">makkah</div>
-
-                            <div class="bar-label color-gray-600 inline-block text-sm">Jubail</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">Al Khobar</div>
-                            <div class="bar-label color-gray-600 inline-block text-sm">Abha</div>
-                        </div>
-
-                        <!-- end chart -->
 
                     </div>
 
-                    <difv class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-1 lg:row-span-3 lg:col-span-1">
-                        <h2 class="text-sm text-gray-500"> Riyadh</h2>
-                        <h2 class="text-xl text-dark mb-4"> Saudi Arabisa </h2>
+                    <div class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-1 lg:row-span-3 lg:col-span-1">
+                        <h2 class="text-sm text-gray-500"> Restaurant Le Goéland </h2>
+                        <h2 class="text-xl text-dark mb-4"> Présentation </h2>
                         <div class="bg-gray-200 box-placeholder rounded-lg inline-block">
                             &nbsp;
                         </div>
@@ -333,8 +287,7 @@
                         <div class="bg-gray-200 box-placeholder rounded-lg inline-block">
                             &nbsp;
                         </div>
-
-                    </difv>
+                    </div>
                 </div>
 
             </setion>
@@ -375,8 +328,8 @@
                 </div>
                 <!-- content -->
                 <div class="flex flex-col justify-between">
-                    <h2 class="text-dark text-xl font-medium text-center"> Super Admin Access</h2>
-                    <h3 class="text-gray-500 text-sm text-center mb-4"> View Analytics </h3>
+                    <h2 class="text-dark text-xl font-medium text-center"> Super-admin </h2>
+                    <h3 class="text-gray-500 text-sm text-center mb-4"> Gestion des restaurants </h3>
 
                     <!-- list -->
 
@@ -396,14 +349,15 @@
                                 </svg>
                             </div>
                             <div class="flex flex-col">
-                                <h3 class="text-gray-500 text-xs leading-4"> Open projects </h3>
+                                <h3 class="text-gray-500 text-xs leading-4"> Créer un restaurant </h3>
                                 <h2 class="text-dark text-sm text-3xl font-medium text-dark text-sm text-2xl font-medium leading-9">
                                     200</h2>
                             </div>
                         </div>
 
-                        <button class="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-blue-200 focus:outline-none focus:text-white focus:text-blue-200 transition duration-150 ease-in-out  float-right"
-                                aria-label="more">
+                        <a href="/restaurant/manage-restaurants"
+                           class="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-blue-200 focus:outline-none focus:text-white focus:text-blue-200 transition duration-150 ease-in-out  float-right"
+                           aria-label="more">
 
                             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right"
                                  class="svg-inline--fa fa-chevron-right fa-w-10" role="img" width="10"
@@ -412,56 +366,7 @@
                                       d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
                             </svg>
                             </svg>
-                        </button>
-
-                    </div>
-
-                    <div class="side-card flex flex-row justify-between  items-center rounded-lg px-2 py-4 my-2 bg-white shadow-sm">
-
-                        <div class="flex flex-row">
-                            <div class="p-2 mx-4 my-auto bg-blue-200 rounded-lg items-center">
-
-                                <svg id="_x31__px" enable-background="new 0 0 24 24" height="25" viewBox="0 0 24 24"
-                                     width="25" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="XMLID_1_">
-                                        <path d="m14 9.09 8.81 1.75c.71.15 1.19.75 1.19 1.46v10.2c0 .83-.67 1.5-1.5 1.5h-9c.28 0 .5-.22.5-.5v-.5h8.5c.27 0 .5-.22.5-.5v-10.2c0-.23-.16-.44-.39-.49l-8.61-1.7z"/>
-                                        <path d="m19.5 14c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m19.5 17c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m19.5 20c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m14 23.5c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-.5-13.5c0-.15.07-.29.18-.39.12-.09.27-.13.42-.1l.4.08v1.02 12.89z"/>
-                                        <path d="m13 23v.5c0 .28.22.5.5.5h-4c.28 0 .5-.22.5-.5v-.5z"/>
-                                        <path d="m10.5 5c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m11 8.5c0 .28-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h2c.28 0 .5.22.5.5z"/>
-                                        <path d="m10.5 11c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m10.5 14c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m6 14.5c0 .28-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h2c.28 0 .5.22.5.5z"/>
-                                        <path d="m5.5 5c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m5.5 8c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m5.5 11c.28 0 .5.22.5.5s-.22.5-.5.5h-2c-.28 0-.5-.22-.5-.5s.22-.5.5-.5z"/>
-                                        <path d="m9 18.5c0-.28-.23-.5-.5-.5h-3c-.28 0-.5.22-.5.5v4.5h-1v-4.5c0-.83.67-1.5 1.5-1.5h3c.83 0 1.5.67 1.5 1.5v4.5h-1z"/>
-                                        <path d="m5 23h4 1v.5c0 .28-.22.5-.5.5h-5c-.28 0-.5-.22-.5-.5v-.5z"/>
-                                        <path d="m1.75.2 10.99 1.67c.73.12 1.26.74 1.26 1.48v5.74l-.4-.08c-.15-.03-.3.01-.42.1-.11.1-.18.24-.18.39v-6.15c0-.25-.18-.46-.42-.5l-10.99-1.66c-.03-.01-.06-.01-.09-.01-.12 0-.23.04-.32.12-.12.1-.18.23-.18.38v20.82c0 .28.23.5.5.5h2.5v.5c0 .28.22.5.5.5h-3c-.83 0-1.5-.67-1.5-1.5v-20.82c0-.44.19-.86.53-1.14.34-.29.78-.41 1.22-.34z"/>
-                                    </g>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col">
-                                <h3 class="text-gray-500 text-xs leading-4"> Successfully completed </h3>
-                                <h2 class="text-dark text-sm text-3xl font-medium text-dark text-sm text-2xl font-medium leading-9">
-                                    3400</h2>
-                            </div>
-                        </div>
-
-                        <button class="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-blue-200 focus:outline-none focus:text-white focus:text-blue-200 transition duration-150 ease-in-out  float-right"
-                                aria-label="more">
-
-                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right"
-                                 class="svg-inline--fa fa-chevron-right fa-w-10" role="img" width="10"
-                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                <path fill="currentColor"
-                                      d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
-                            </svg>
-                            </svg>
-                        </button>
+                        </a>
 
                     </div>
 

@@ -23,7 +23,7 @@ func (o *OrderStore) AddOrder(order *entity.Order) (int, int, error) {
 	var currentOrderNumber int
 	currentDate := order.CreatedDate.Format("2006-01-02")
 
-	err := o.QueryRow("SELECT MAX(number) FROM Orders WHERE restaurant_id = ? AND DATE(created_date) = ? AND (SELECT COUNT(id) FROM Orders WHERE restaurant_id = ? AND DATE(created_date) = ?) > 0", order.Restaurant.ID, currentDate, order.Restaurant.ID, currentDate).Scan(&currentOrderNumber)
+	err := o.QueryRow("SELECT IFNULL(MAX(number), 0) FROM Orders WHERE restaurant_id = ? AND DATE(created_date) = ?", order.Restaurant.ID, currentDate).Scan(&currentOrderNumber)
 	if err != nil {
 		currentOrderNumber = 0
 		log.Println(err)

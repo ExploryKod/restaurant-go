@@ -3,6 +3,7 @@ package web
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"restaurantHTTP"
@@ -59,6 +60,7 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": "restaurant not found"})
 			return
 		}
+		fmt.Println("RESTOO   :", restaurant)
 
 		totalPrice := 0.0
 		for _, product := range *products {
@@ -160,7 +162,8 @@ func (h *Handler) GetAllOrdersByRestaurantId() http.HandlerFunc {
 			Orders []entity.OrderHasProduct `json:"orders"`
 		}{
 			Orders: orders,
-		}}
+		},
+		}
 
 		h.RenderHtml(writer, data, "pages/order/list.admin.gohtml")
 

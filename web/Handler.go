@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"github.com/pusher/pusher-http-go/v5"
 	"html/template"
+	"log"
 	"net/http"
+	"net/url"
 	"restaurantHTTP"
 	database "restaurantHTTP/mysql"
 
@@ -86,15 +88,32 @@ func NewHandler(store *database.Store, pusherClient *pusher.Client) *Handler {
 			r.Get("/", handler.ShowRestaurantsPage())
 
 			r.Get("/get/all", handler.GetAllRestaurants())
-			r.Get("/{id}", handler.ShowRestaurantProfile())
+			//r.Get("/{id}", handler.ShowRestaurantProfile())
 			r.Get("/{id}/menu", handler.CreateOrder())
 
 			r.Post("/{id}/create-order", handler.CreateOrder())
+
+			r.Get("/delete/{id}", handler.DeleteRestaurantHandler())
+
+			r.Get("/become-restaurant", handler.ShowBecomeRestaurantPage())
+
+			r.Post("/register", handler.RegisterRestaurant())
+
+			r.Get("/manage-restaurants", handler.ShowAddRestaurantAdminPage())
+
+			r.Post("/update", handler.UpdateRestaurantHandler())
+
+			r.Get("/show/restaurant-update/{id}", handler.ShowRestaurantUpdatePage())
+
+			r.Get("/admin/{id}", handler.ShowAdminRestaurantPage())
+			// TODO: ajout de {id} ici pour isoler l'id restaurant et l'adjoindre dans le handler pour populer la rable restaurantHasTag
+			r.Post("/tag/add", handler.AddTagToRestaurant())
+
 			r.Get("/{restaurantId}/order/get", handler.GetAllOrdersByRestaurantId())
 			r.Get("/order/validate/{id}", handler.ValidateOrderById())
 			r.Get("/order/done/{id}", handler.CompleteOrderById())
 			r.Get("/order/ready/{id}", handler.ReadyOrderById())
-			r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+			//r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
 			r.Get("/manage/{restaurantId}", handler.ManageRestaurant())
 		})
 
@@ -102,7 +121,6 @@ func NewHandler(store *database.Store, pusherClient *pusher.Client) *Handler {
 			r.Get("/", handler.ShowOrdersPage())
 			r.Get("/get/all", handler.GetAllOrders())
 			r.Get("/{id}", handler.GetOrder())
-
 			//r.Post("/add", handler.AddOrder())
 			//r.Delete("/delete/{id}", handler.DeleteOrder())
 		})
@@ -119,6 +137,10 @@ func NewHandler(store *database.Store, pusherClient *pusher.Client) *Handler {
 
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
+		})
+
+		r.Route("/email", func(r chi.Router) {
+			r.Post("/create-restaurant", handler.AskToAddRestaurantByEmail())
 		})
 
 		r.Route("/api", func(r chi.Router) {
@@ -155,6 +177,33 @@ func (h *Handler) RenderHtml(writer http.ResponseWriter, data restaurantHTTP.Tem
 	err = tmpl.ExecuteTemplate(writer, "layout", data)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func DecodeRedirectMessage(data *restaurantHTTP.TemplateData, request *http.Request) {
+	encodedMessage := request.URL.Query().Get("success")
+	decodedMessage, err := url.QueryUnescape(encodedMessage)
+	if err != nil {
+		log.Println("Error during decoding success msg :", err)
+		decodedMessage = ""
+		return
+	}
+	if decodedMessage != "" {
+		data.Success = decodedMessage
+		return
+	}
+
+	encodedMessage = request.URL.Query().Get("echec")
+	decodedMessage, err = url.QueryUnescape(encodedMessage)
+	if err != nil {
+		log.Println("Error during decoding echec msg :", err)
+		decodedMessage = ""
+		return
+	}
+
+	if decodedMessage != "" {
+		data.Error = decodedMessage
 		return
 	}
 }

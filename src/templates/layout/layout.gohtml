@@ -6,6 +6,7 @@
         <title>RestaurantGO | {{.Title}}</title>
         <link href="/src/output.css" rel="stylesheet">
         <link rel="icon" href="/src/assets/restaurantGo.png" type="image/x-icon">
+        <script defer src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
         <script src="/src/app.js"></script>
         <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
         <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
@@ -38,15 +39,18 @@
                     </a>
                     <h1 class="text-3xl font-bold">RestaurantGo</h1>
                 </div>
-                <div x-data="manageOrder" x-bind:init="init(localStorage.getItem('userId') || 0, 0)">
-                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Ma commande <span class="p-2 text-white rounded-full bg-orange-500" x-text="notifUser.length"></span></a>
-                    {{if .Content}}
-                        <a href="/admin"
-                           class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon
-                            Espace</a>
-                        <a href="/logout" type="submit" @click="localStorage.clear()" class="border border-1 border-red-600 bg-white text-red-500 px-4 py-1.5 rounded-md hover:bg-red-500 hover:text-white">Logout</a>
-                        <a id="restaurantLink" style="display: none;" href="#" class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon restaurant</a>
-                    {{end}}
+                <div x-data="layout" x-init="init" x-show="visible">
+                    <a x-show="localStorage.getItem('orderData') !== null" href="/order">Mes commandes
+                        <span class="p-2 text-white rounded-full bg-orange-500" x-text="countNotif"></span>
+                    </a>
+                    <a id="restaurantLink" style="display: none;" href="#"
+                       class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon
+                        restaurant</a>
+                    <a href="/admin"
+                       class="font-medium border border-1 border-cyan-800 bg-white text-cyan-500 px-4 py-1.5 rounded-md hover:bg-cyan-500 hover:text-white me-2">Mon
+                        Espace</a>
+                    <a href="/logout" type="submit" @click="localStorage.clear()"
+                       class="border border-1 border-red-600 bg-white text-red-500 px-4 py-1.5 rounded-md hover:bg-red-500 hover:text-white">Logout</a>
                 </div>
             </div>
         </div>
@@ -66,7 +70,8 @@
                     <p class="text-center">© 2024 RestaurantGo - made with 💙 </p>
                 </div>
                 <div class="flex flex-1 justify-end">
-                    🍴<a href="/" class="font-semibold underline text-end">Je suis Restaurateur</a>
+                    🍴<a href="/restaurant/become-restaurant" class="font-semibold underline text-end">Je suis
+                        Restaurateur</a>
                 </div>
             </div>
         </div>
@@ -107,7 +112,7 @@
         incrementButtons.forEach(btn => {
             btn.addEventListener("click", increment);
         });
-        if(localStorage.getItem('UserRestaurantID') !== null){
+        if (localStorage.getItem('UserRestaurantID') !== null) {
             var link = document.getElementById('restaurantLink');
             link.style.display = 'inline';
             link.href = "/restaurant/manage/" + localStorage.getItem('UserRestaurantID');
