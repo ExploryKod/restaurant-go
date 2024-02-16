@@ -2,14 +2,18 @@ package web
 
 import (
 	"encoding/json"
+	"github.com/pusher/pusher-http-go/v5"
+	"html/template"
+	"log"
+	"net/http"
+	"net/url"
+	"restaurantHTTP"
+	database "restaurantHTTP/mysql"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth/v5"
-	"html/template"
-	"net/http"
-	"restaurantHTTP"
-	database "restaurantHTTP/mysql"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -18,15 +22,16 @@ func init() {
 	tokenAuth = jwtauth.New("HS256", []byte("restaurantGo"), nil)
 }
 
-func makeToken(id int, name string, email string) string {
-	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": name, "user": email})
+func makeToken(id int, username string, mail string, isSuperadmin bool) string {
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"id": id, "username": username, "mail": mail, "isSuperadmin": isSuperadmin})
 	return tokenString
 }
 
-func NewHandler(store *database.Store) *Handler {
+func NewHandler(store *database.Store, pusherClient *pusher.Client) *Handler {
 	handler := &Handler{
 		chi.NewRouter(),
 		store,
+		pusherClient,
 	}
 
 	handler.Use(middleware.Logger)
@@ -63,9 +68,17 @@ func NewHandler(store *database.Store) *Handler {
 		r.Get("/", handler.GetHomePage())
 		r.Get("/logout", handler.Logout())
 
+		r.Route("/restaurantUser", func(r chi.Router) {
+			r.Get("/list/{restaurantId}", handler.RestaurantUserList())
+			r.Get("/create/{restaurantId}", handler.RestaurantUserCreate())
+			r.Post("/create/{restaurantId}", handler.RestaurantUserCreate())
+			r.Get("/update/{id}/{restaurantId}", handler.RestaurantUserUpdate())
+			r.Post("/update/{id}/{restaurantId}", handler.RestaurantUserUpdate())
+			r.Get("/delete/{id}/{restaurantId}", handler.RestaurantUserDelete())
+		})
 		r.Route("/user", func(r chi.Router) {
 			//r.Get("/getAll", handler.GetAllUsers())
-			//r.Get("/get/{id}", handler.GetUser())
+			//r.Get("/{id}/get", handler.GetUser())
 			r.Post("/add", handler.AddUser())
 			r.Delete("/delete/{id}", handler.DeleteUser())
 			r.Patch("/modify/{id}", handler.ToggleIsSuperadmin())
@@ -73,19 +86,66 @@ func NewHandler(store *database.Store) *Handler {
 
 		r.Route("/restaurant", func(r chi.Router) {
 			r.Get("/", handler.ShowRestaurantsPage())
-			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
-			r.Get("/get", handler.GetAllRestaurants())
-			r.Get("/menu/{id}", handler.ShowMenuByRestaurant())
-			r.Get("/menu/{id}", handler.CreateOrder())
-			r.Post("/orders/create", handler.CreateOrder())
+
+			r.Get("/get/all", handler.GetAllRestaurants())
+			//r.Get("/{id}", handler.ShowRestaurantProfile())
+			r.Get("/{id}/menu", handler.CreateOrder())
+
+			r.Post("/{id}/create-order", handler.CreateOrder())
+
+			r.Get("/delete/{id}", handler.DeleteRestaurantHandler())
+
+			r.Get("/become-restaurant", handler.ShowBecomeRestaurantPage())
+
+			r.Post("/register", handler.RegisterRestaurant())
+
+			r.Get("/manage-restaurants", handler.ShowAddRestaurantAdminPage())
+
+			r.Post("/update", handler.UpdateRestaurantHandler())
+
+			r.Get("/show/restaurant-update/{id}", handler.ShowRestaurantUpdatePage())
+
+			r.Get("/admin/{id}", handler.ShowAdminRestaurantPage())
+			// TODO: ajout de {id} ici pour isoler l'id restaurant et l'adjoindre dans le handler pour populer la rable restaurantHasTag
+			r.Post("/tag/add", handler.AddTagToRestaurant())
+
+			r.Get("/{restaurantId}/order/get", handler.GetAllOrdersByRestaurantId())
+			r.Get("/order/validate/{id}", handler.ValidateOrderById())
+			r.Get("/order/done/{id}", handler.CompleteOrderById())
+			r.Get("/order/ready/{id}", handler.ReadyOrderById())
+			//r.Get("/restaurator/{id}", handler.ShowRestaurantProfile())
+			r.Get("/manage/{restaurantId}", handler.ManageRestaurant())
+		})
+
+		r.Route("/order", func(r chi.Router) {
+			r.Get("/", handler.ShowOrdersPage())
+			r.Get("/get/all", handler.GetAllOrders())
+			r.Get("/{id}", handler.GetOrder())
+			//r.Post("/add", handler.AddOrder())
+			//r.Delete("/delete/{id}", handler.DeleteOrder())
+		})
+
+		r.Route("/product", func(r chi.Router) {
+			r.Get("/list/{restaurantId}", handler.ListProducts())
+			r.Get("/list/delete/{id}/{restaurantId}", handler.DeleteProducts())
+			r.Get("/type/create/{restaurantId}", handler.AddProductType())
+			r.Post("/type/create/{restaurantId}", handler.AddProductType())
+
+			r.Get("/create/{restaurantId}", handler.AddProduct())
+			r.Post("/create/{restaurantId}", handler.AddProduct())
 		})
 
 		r.Route("/admin", func(r chi.Router) {
 			r.Get("/register-restaurant", handler.ShowAddRestaurantAdminPage())
 		})
 
+		r.Route("/email", func(r chi.Router) {
+			r.Post("/create-restaurant", handler.AskToAddRestaurantByEmail())
+		})
+
 		r.Route("/api", func(r chi.Router) {
-			r.Post("/restaurant/register", handler.RegisterRestaurant())
+			//r.Get("/order/get/all", handler.GetAllOrders())
+			//r.Get("/order/get/{id}", handler.GetOrdersByRestaurantId())
 		})
 
 	})
@@ -96,6 +156,7 @@ func NewHandler(store *database.Store) *Handler {
 type Handler struct {
 	*chi.Mux
 	*database.Store
+	*pusher.Client
 }
 
 func (h *Handler) RenderJson(w http.ResponseWriter, status int, data interface{}) {
@@ -116,6 +177,33 @@ func (h *Handler) RenderHtml(writer http.ResponseWriter, data restaurantHTTP.Tem
 	err = tmpl.ExecuteTemplate(writer, "layout", data)
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func DecodeRedirectMessage(data *restaurantHTTP.TemplateData, request *http.Request) {
+	encodedMessage := request.URL.Query().Get("success")
+	decodedMessage, err := url.QueryUnescape(encodedMessage)
+	if err != nil {
+		log.Println("Error during decoding success msg :", err)
+		decodedMessage = ""
+		return
+	}
+	if decodedMessage != "" {
+		data.Success = decodedMessage
+		return
+	}
+
+	encodedMessage = request.URL.Query().Get("echec")
+	decodedMessage, err = url.QueryUnescape(encodedMessage)
+	if err != nil {
+		log.Println("Error during decoding echec msg :", err)
+		decodedMessage = ""
+		return
+	}
+
+	if decodedMessage != "" {
+		data.Error = decodedMessage
 		return
 	}
 }

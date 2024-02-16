@@ -49,6 +49,5 @@ vendor/
 # Redis
 *.rdb
 
-
 # CSS
 src/output.css

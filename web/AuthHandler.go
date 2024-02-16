@@ -1,6 +1,7 @@
 package web
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/gorilla/sessions"
 	"golang.org/x/crypto/bcrypt"
@@ -26,9 +27,18 @@ func (h *Handler) GetHomePage() http.HandlerFunc {
 		if session.Values["authenticated"] != nil && session.Values["authenticated"].(bool) {
 
 			username := session.Values["username"].(string)
+			userRestaurantID := session.Values["userRestaurantID"].(int)
+			userId := session.Values["userId"].(int)
 			token := session.Values["token"].(string)
-			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: entity.User{Username: username}, Token: token}
-
+			content := struct {
+				entity.User
+				UserRestaurantID int
+			}{
+				entity.User{Username: username, ID: userId},
+				userRestaurantID,
+			}
+			fmt.Println(content)
+			data := restaurantHTTP.TemplateData{Title: "Accueil", Content: content, Token: token}
 			h.RenderHtml(writer, data, "pages/home.gohtml")
 			return
 		}
@@ -72,14 +82,17 @@ func (h *Handler) Login() http.HandlerFunc {
 		match := CheckPasswordHash(password, user.Password)
 
 		if user.Username == username && match {
-			token := makeToken(user.ID, user.Username, user.Mail)
+			userRestaurantID, err := h.RestaurantUserStore.GetRestaurantIDByUserID(user.ID)
+			token := makeToken(user.ID, user.Username, user.Mail, user.IsSuperadmin)
 
 			session, _ := storeSession.Get(request, "session-basic")
 			session.Values["token"] = token
 			session.Values["authenticated"] = true
 			session.Values["username"] = user.Username
+			session.Values["userRestaurantID"] = userRestaurantID
+			session.Values["userId"] = user.ID
 
-			err := session.Save(request, writer)
+			err = session.Save(request, writer)
 			if err != nil {
 				http.Error(writer, err.Error(), http.StatusInternalServerError)
 				return
@@ -122,6 +135,7 @@ func (h *Handler) Signup() http.HandlerFunc {
 			fmt.Println(response)
 			return
 		}
+
 		if response != nil {
 			h.RenderHtml(writer, restaurantHTTP.TemplateData{Title: "Signup", Error: "Username already taken !"}, "auth/signup.gohtml")
 			return
@@ -129,15 +143,7 @@ func (h *Handler) Signup() http.HandlerFunc {
 
 		hashedPassword, _ := HashPassword(password)
 
-		user := &entity.User{
-			Username:     username,
-			Password:     hashedPassword,
-			Name:         name,
-			Firstname:    firstname,
-			Mail:         mail,
-			Phone:        phone,
-			IsSuperadmin: false,
-		}
+		user := entity.NewUser(username, hashedPassword, name, firstname, mail, phone, false, sql.NullTime{})
 
 		var id int
 		id, err = h.UserStore.AddUser(user)
@@ -165,7 +171,7 @@ func (h *Handler) Logout() http.HandlerFunc {
 		}
 
 		http.SetCookie(writer, &http.Cookie{
-			Name:     "token",
+			Name:     "jwt",
 			Value:    "",
 			Expires:  time.Now(),
 			Path:     "/",

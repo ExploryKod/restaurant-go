@@ -1,0 +1,31 @@
+{{define "content"}}
+<form class="bg-white rounded-lg shadow-md p-8" :action="'/product/create/'+ localStorage.getItem('UserRestaurantID')" method="post">
+    <h1>Ajouter le Produit</h1>
+    <div class="mb-4 mt-5">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="productName">Nom du Produit</label>
+        <input class="basic-input" type="text" name="productName" id="productName" placeholder="Nom du Produit" required>
+    </div>
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="dropdown">Choissez les menu</label>
+        <select class="basic-input" name="menuDropdown" id="menuDropdown" required>
+            {{range .Content}}
+            <option value="{{.ID}}">{{.Name}}</option>
+            {{end}}
+        </select>
+    </div>
+     <div class="mb-4 mt-5">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="price">Prix</label>
+        <input class="basic-input" type="text" name="price" id="price" placeholder="Prix" required>
+    </div>
+     <div class="mb-4 mt-5">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="description">Detail</label>
+        <input class="basic-input" type="text" name="description" id="description" placeholder="Detail" required>
+    </div>
+
+    <div>
+        <button class="btn-lg" type="submit">
+            Créer
+        </button>
+    </div>
+</form>
+{{end}}

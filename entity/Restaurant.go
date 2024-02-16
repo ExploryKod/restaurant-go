@@ -1,6 +1,8 @@
 package entity
 
-import "time"
+import (
+	"time"
+)
 
 type Restaurant struct {
 	ID          int       `json:"id" db:"id"`
@@ -18,6 +20,10 @@ type Restaurant struct {
 
 type RestaurantStoreInterface interface {
 	AddRestaurant(item Restaurant) (int, error)
+	UpdateRestaurant(item Restaurant, restaurantID int) error
+	DeleteRestaurantById(restaurantID int) error
 	GetAllRestaurants() ([]Restaurant, error)
-	GetRestaurantByID(id int) (*Restaurant, error)
+	GetRestaurantByID(id int) *Restaurant
+	AddTagToRestaurant(item Tag) (int, error)
+	AddTagToRestaurantHasTag(tagID int, restaurantID int) (int, error)
 }

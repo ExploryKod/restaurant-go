@@ -29,28 +29,13 @@ func NewOrder(user User, restaurant Restaurant, status string, totalPrice float6
 }
 
 type OrderStoreInterface interface {
-	AddOrder(item Order) (int, error)
+	AddOrder(item *Order) (int, int, error)
 	GetAllOrders() ([]Order, error)
 	GetOrderByID(id int) *Order
 	GetOrderByUserID(id int) []Order
-	GetOrderByRestaurantID(id int) []Order
+	GetOrderByRestaurantIDIncoming(id int) ([]Order, error)
+	ValidateOrder(id int) (any, error)
+	CompleteOrder(id int) (bool, error)
+	ReadyOrder(id int) (bool, error)
+	//GetOrderProductsByOrderID(id int) []OrderHasProduct
 }
-
-//func NewOrder(user User, restaurant Restaurant, status string, totalPrice float64, createdDate time.Time, closedDate time.Time) *Order {
-//	return &Order{
-//		User:        user,
-//		Restaurant:  restaurant,
-//		Status:      status,
-//		TotalPrice:  totalPrice,
-//		CreatedDate: createdDate,
-//		ClosedDate:  closedDate,
-//	}
-//}
-//
-//type OrderStoreInterface interface {
-//	AddOrder(item Order) (int, error)
-//	GetAllOrders() ([]Order, error)
-//	GetOrderByID(id int) *Order
-//	GetOrderByUserID(id int) []Order
-//	GetOrderByRestaurantID(id int) []Order
-//}

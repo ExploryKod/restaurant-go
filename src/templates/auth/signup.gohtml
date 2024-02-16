@@ -7,7 +7,7 @@
         {{end}}
 
         <form class="bg-white rounded-lg shadow-md p-8" action="/signup" method="post"
-              x-data="{stepper :stepper(), checker: checker()}" >
+              x-data="{stepper :stepper(), checker: checker()}">
             <div>
 
             </div>
@@ -52,8 +52,8 @@
                             Email
                         </span>
                         <span
-                            x-text="checker.error.email || checker.success.email"
-                            :class="{'text-red-500 text-xs': checker.error.email, 'text-emerald-500 text-xs': checker.success.email}"
+                                x-text="checker.error.email || checker.success.email"
+                                :class="{'text-red-500 text-xs': checker.error.email, 'text-emerald-500 text-xs': checker.success.email}"
                         ></span>
                     </label>
                     <input x-model="checker.email" @change="checker.checkUsername($event.target.value,'email')"

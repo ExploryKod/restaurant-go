@@ -1,8 +1,7 @@
 package database
 
 import (
-	"database/sql"
-	"errors"
+	"fmt"
 	"restaurantHTTP/entity"
 
 	"github.com/jmoiron/sqlx"
@@ -29,18 +28,79 @@ func NewProductStore(db *sqlx.DB) *ProductStore {
 // - resturantId: Id of the restaurant
 // Returns:
 // - A list of Product
-func (t *ProductStore) GetProductByRestaurantId(resturantId string) (*entity.Product, error) {
+func (t *ProductStore) GetProductByRestaurantId(resturantId int) ([]entity.Product, error) {
+	//
+	var productList []entity.Product
 
-	product := &entity.Product{}
-
-	err := t.Get(product, "SELECT * FROM Product WHERE restaurantId = ?", resturantId)
-	if errors.Is(err, sql.ErrNoRows) {
-		return nil, nil
-	} else if err != nil {
+	query := `WITH ranked_products AS (
+		SELECT 
+			p.id,
+			p.name,
+			p.price,
+			p.image,
+			p.description,
+			r.name AS restaurant_name,
+			r.logo AS restaurant_logo,
+			r.image AS restaurant_image,
+			r.phone AS restaurant_phone,
+			r.mail AS restaurant_mail,
+			r.is_open AS restaurant_is_open,
+			r.grade AS restaurant_grade,
+			pt.name AS productType_name,
+			pt.icon AS productType_icon,
+			ROW_NUMBER() OVER (PARTITION BY p.name ORDER BY p.id) AS row_num
+		FROM 
+			Products p 
+		JOIN 
+			Restaurants r ON p.restaurant_id = r.id
+		JOIN 
+			Product_type pt ON p.product_type_id = pt.id
+		WHERE 
+			p.restaurant_id = ?
+	)
+	SELECT 
+		id,
+		name,
+		price,
+		image,
+		description,
+		restaurant_name,
+		restaurant_logo,
+		restaurant_image,
+		restaurant_phone,
+		restaurant_mail,
+		restaurant_is_open,
+		restaurant_grade,
+		productType_name,
+		productType_icon
+	FROM 
+		ranked_products
+	WHERE 
+		row_num = 1;
+	`
+	rows, err := t.Query(query, resturantId)
+	if err != nil {
 		return nil, err
 	}
 
-	return product, nil
+	defer rows.Close()
+
+	for rows.Next() {
+		var product entity.Product
+		if err = rows.Scan(&product.ID, &product.Name, &product.Price, &product.Image, &product.Description,
+			&product.Restaurant.Name, &product.Restaurant.Logo, &product.Restaurant.Image, &product.Restaurant.Phone,
+			&product.Restaurant.Mail, &product.Restaurant.IsOpen,
+			&product.Restaurant.Grade, &product.ProductType.Name, &product.ProductType.Icon); err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		productList = append(productList, product)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	return productList, nil
 }
 
 // Add Product
@@ -49,7 +109,8 @@ func (t *ProductStore) GetProductByRestaurantId(resturantId string) (*entity.Pro
 // Returns:
 // - Id of inserted Product
 func (t *ProductStore) AddProduct(item entity.Product) (int, error) {
-	res, err := t.DB.Exec("INSERT INTO Product ( , ) VALUES ( , )", item, item)
+
+	res, err := t.DB.Exec("INSERT INTO Products (product_type_id, restaurant_id, name, price, image, description) VALUES (?,?,?,?,?,?)", item.ProductType.ID, item.Restaurant.ID, item.Name, item.Price, item.Image, item.Description)
 	if err != nil {
 		return 0, err
 	}
@@ -67,11 +128,39 @@ func (t *ProductStore) AddProduct(item entity.Product) (int, error) {
 // - id: The is of Product
 // Returns:
 // - nil
-func (t *ProductStore) DeleteProduct(id int) error {
-	_, err := t.DB.Exec("DELETE FROM Product WHERE id = ?", id)
+func (t *ProductStore) DeleteProduct(id int) (bool, error) {
+	_, err := t.DB.Exec("DELETE FROM Products WHERE id = ?", id)
 	if err != nil {
-		return err
+		return false, err
 	}
 
-	return nil
+	return true, nil
+}
+
+// Get List of allergies
+// Parameters:
+// Returns:
+// - Allergens
+func (t *ProductStore) GetAllergiesList() ([]entity.Allergen, error) {
+	var allergiesList []entity.Allergen
+
+	rows, err := t.Query("SELECT id, name FROM Allergens")
+	if err != nil {
+		return []entity.Allergen{}, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var allergy entity.Allergen
+		if err = rows.Scan(&allergy.ID, &allergy.Name); err != nil {
+			return []entity.Allergen{}, err
+		}
+		allergiesList = append(allergiesList, allergy)
+	}
+
+	if err = rows.Err(); err != nil {
+		return []entity.Allergen{}, err
+	}
+	return allergiesList, nil
 }
