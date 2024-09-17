@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 	database "restaurantHTTP/mysql"
 	"restaurantHTTP/web"
 
@@ -24,7 +23,7 @@ func main() {
 		// DBName:               os.Getenv("BDD_NAME"),
 		User:                 "ueill1e8a2djeyha",
 		Passwd:               "qbpkI0vidAOA5qha2Q6X",
-		Addr:                 "bg34o0geswbybq906ljp-mysql.services.clever-cloud.com:3306"
+		Addr:                 "bg34o0geswbybq906ljp-mysql.services.clever-cloud.com:3306",
 		DBName:               "bg34o0geswbybq906ljp",
 		Net:                  "tcp",
 		AllowNativePasswords: true,
