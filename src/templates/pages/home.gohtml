@@ -29,9 +29,9 @@
 
                             <a href="/restaurant" class="font-medium text-gray-500 hover:text-gray-900">Nos restaurants</a>
 
-                            <a href="/profile" class="font-medium text-gray-500 hover:text-gray-900">Mes commandes</a>
+                            <a href="/order" class="font-medium text-gray-500 hover:text-gray-900">Mes commandes</a>
 
-                            <a href="/cart" class="font-medium text-cyan-600 hover:text-cyan-500">Mon panier</a>
+                            {% comment %} <a href="/cart" class="font-medium text-cyan-600 hover:text-cyan-500">Mon panier</a> {% endcomment %}
 
                         </div>
                     </nav>
@@ -130,9 +130,7 @@
                                 <div class="">
                                     <div class="hidden lg:flex">
                                         <a href="/#dashboard" class="nav-item px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-blue focus:outline-none transition duration-150 ease-in-out">Mon board</a>
-                                        <a href="admin/register-restaurant" class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none">Inscrire un restaurant</a>
-                                        <a href="#" class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none ">Emails</a>
-
+                                        <a href="/restaurant/manage-restaurants" class="nav-item ml-4 px-1 sm:px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-500 focus:outline-none">Inscrire un restaurant</a>
                                     </div>
                                     <div class="flex lg:hidden">
                                         <div class="button_container" id="toggle" onclick="openNav()">
@@ -184,8 +182,8 @@
                                     </g>
                                 </svg>
                             </p>
-                            <h2 class="text-5xl animate"> $90 </h2>
-                            <h2 class="text-base sm:w-3/5  w-full"> CA de RestaurantGo </h2>
+                            <h2 class="text-5xl animate"> 90 K&euro; </h2>
+                            <h2 class="text-base sm:w-3/5  w-full"> CA de RestaurantGo</h2>
 
                         </div>
                         <div class="expand-card shadow-sm text-white bg-secondary-color p-2 rounded-lg">
@@ -218,8 +216,8 @@
 
                     </div>
 
-                    <div class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-4 lg:col-span-2 ">
-
+                    <div class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-4 lg:col-span-2 flex items-center justify-center ">
+                        <p class="text-xl font-bold text-gray-600 text-center"> Vous n'avez aucune communication à consulter en ce moment </p>
                     </div>
 
                     <div class="expand-card  shadow-sm bg-white p-2 rounded-lg col-span-3 row-span-1 lg:row-span-3 lg:col-span-1">
@@ -380,18 +378,9 @@
                             </div>
                             <div class="flex flex-col">
                                 <h3 class="text-gray-500 text-xs leading-4"> Earned this month </h3>
-                                <h2 class="text-dark text-sm text-3xl font-medium text-dark text-sm text-2xl font-medium leading-9">200</h2>
+                                <h2 class="text-dark text-sm text-3xl font-medium text-dark text-sm text-2xl font-medium leading-9">200 &euro;</h2>
                             </div>
                         </div>
-
-                        <button class="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-blue-200 focus:outline-none focus:text-white focus:text-blue-200 transition duration-150 ease-in-out  float-right" aria-label="more">
-
-                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" class="svg-inline--fa fa-chevron-right fa-w-10" role="img" width="10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                                <path fill="currentColor" d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"></path>
-                            </svg>
-                            </svg>
-                        </button>
-
                     </div>
 
                     <!-- end list -->
