@@ -53,7 +53,7 @@ curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh | s
 air -v
 ```
 
-Version de go > 1.22: 
+Version de go >= 1.22: 
 ```go
 go install github.com/air-verse/air@latest
 ```
