@@ -22,7 +22,7 @@ func main() {
 		// Addr:                 os.Getenv("BDD_PORT"),
 		// DBName:               os.Getenv("BDD_NAME"),
 		User:                 "ueill1e8a2djeyha",
-		Passwd:               "qbpkI0vidAOA5qha2Q6X",
+		Passwd:               "",
 		Addr:                 "bg34o0geswbybq906ljp-mysql.services.clever-cloud.com:3306",
 		DBName:               "bg34o0geswbybq906ljp",
 		Net:                  "tcp",
