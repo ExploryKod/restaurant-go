@@ -39,5 +39,17 @@ SMTP_PORT=25
 
 2. Alternative : utiliser air pour le hot reloading
 
-Ecrire la commande suivante: 
+Installer et configurer air : [Visitez leur site](https://github.com/air-verse/air)
+
+**Installer:**
+```
+go install github.com/air-verse/air@latest
+```
+**Configurer les fichier de configuration :** <br>
+(la commande lancera air si elle trouve un fichier déjà présent)
+```
+air -c .air.toml
+```
+
+**Executer avec simplement:**
 ``` air ```
