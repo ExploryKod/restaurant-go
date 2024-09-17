@@ -1,14 +1,15 @@
 package main
 
 import (
-	"github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
 	database "restaurantHTTP/mysql"
 	"restaurantHTTP/web"
+
+	"github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
 )
 
 func main() {

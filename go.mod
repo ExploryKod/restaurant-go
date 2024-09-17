@@ -1,8 +1,8 @@
 module restaurantHTTP
 
-go 1.21
+go 1.22
 
-toolchain go1.21.2
+toolchain go1.22.3
 
 require (
 	github.com/aws/aws-sdk-go v1.50.15
@@ -29,5 +29,7 @@ require (
 	github.com/lestrrat-go/option v1.0.1 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sys v0.17.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

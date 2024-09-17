@@ -37,23 +37,13 @@ SMTP_PORT=25
 
 ``` go run main/main.go ```
 
+Aller sur ```http://localhost:9999/login```
+
 2. Alternative : utiliser air pour le hot reloading
 
 Installer et configurer air : [Visitez leur site](https://github.com/air-verse/air)
 
 **Installer:**
-
-```go
-# binary will be $(go env GOPATH)/bin/air
-curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
-
-# or install it into ./bin/
-curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh | sh -s
-
-air -v
-```
-
-Version de go >= 1.22: 
 ```go
 go install github.com/air-verse/air@latest
 ```
