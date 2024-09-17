@@ -42,12 +42,24 @@ SMTP_PORT=25
 Installer et configurer air : [Visitez leur site](https://github.com/air-verse/air)
 
 **Installer:**
+
+```go
+# binary will be $(go env GOPATH)/bin/air
+curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+
+# or install it into ./bin/
+curl -sSfL https://raw.githubusercontent.com/air-verse/air/master/install.sh | sh -s
+
+air -v
 ```
+
+Version de go > 1.22: 
+```go
 go install github.com/air-verse/air@latest
 ```
 **Configurer les fichier de configuration :** <br>
 (la commande lancera air si elle trouve un fichier déjà présent)
-```
+```go
 air -c .air.toml
 ```
 
