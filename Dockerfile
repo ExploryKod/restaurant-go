@@ -15,12 +15,6 @@ FROM scratch AS build-release-stage
 
 WORKDIR /appgo
 
-ENV BDD_PORT=bg34o0geswbybq906ljp-mysql.services.clever-cloud.com:3306
-ENV BDD_NAME=bg34o0geswbybq906ljp
-ENV BDD_USER=ueill1e8a2djeyha
-ENV BDD_PASSWORD=qbpkI0vidAOA5qha2Q6X
-
-
 COPY --from=Builder /build/restaurantgo ./restaurantgo
 
 ENTRYPOINT ["./restaurantgo"]
