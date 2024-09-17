@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/smtp"
-	"os"
 	"restaurantHTTP"
 )
 
@@ -19,20 +18,20 @@ type EmailData struct {
 
 func MakeMailtrapEmail(h *Handler, writer http.ResponseWriter, emailData EmailData, template string) {
 
-	username := os.Getenv("SMTP_USERNAME")
-	password := os.Getenv("SMTP_PASSWORD")
-	smtpHost := os.Getenv("SMTP_HOST")
+	// username := os.Getenv("SMTP_USERNAME")
+	// password := os.Getenv("SMTP_PASSWORD")
+	// smtpHost := os.Getenv("SMTP_HOST")
 
 	// Choose auth method
-	auth := smtp.PlainAuth("", username, password, smtpHost)
+	auth := smtp.PlainAuth("", "username", "password", "smtpHost")
 	// Message data
 	from := emailData.ReceiverEmail
 	to := []string{emailData.SenderEmail}
 
 	// Connect to the server and send message
-	smtpUrl := smtpHost + ":" + os.Getenv("SMTP_PORT")
+	// smtpUrl := smtpHost + ":" + os.Getenv("SMTP_PORT")
 
-	err := smtp.SendMail(smtpUrl, auth, from, to, emailData.Message)
+	err := smtp.SendMail("smtpurl", auth, from, to, emailData.Message)
 	if err != nil {
 		fmt.Println(err)
 		data := restaurantHTTP.TemplateData{Error: emailData.errorMessage}
