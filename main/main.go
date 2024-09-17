@@ -43,7 +43,7 @@ func main() {
 	store := database.CreateStore(db)
 	mux := web.NewHandler(store)
 
-	err = http.ListenAndServe(os.Getenv("MUX_PORT"), mux)
+	err = http.ListenAndServe(":9999", mux)
 
 	if err != nil {
 		log.Fatal(err)
