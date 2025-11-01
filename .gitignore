@@ -22,7 +22,9 @@
 /go_app/tmp
 /tmp
 /tmp/*
-.air.toml
+tmp/
+tmp/*
+build-errors.log
 go_app/main/tmp/*
 
 # Binaries for programs and plugins

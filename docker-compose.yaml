@@ -36,14 +36,20 @@ services:
         restart: always
         tty: true
         environment:
+            # Variables pour la base de données (depuis Docker, utiliser le nom du service)
+            BDD_USER: ${BDD_USER:-root}
+            BDD_PASSWORD: ${BDD_PASSWORD:-password}
+            BDD_PORT: database:3306  # Nom du service Docker + port interne
+            BDD_NAME: ${BDD_NAME:-restaurantbdd}
+            # Variables optionnelles
             MARIADB_ROOT_PASSWORD: ${BDD_PASSWORD:-password}
             MARIADB_DATABASE: ${BDD_NAME:-restaurantbdd}
         ports:
             - "8097:8097"
+            - "9999:9999"  # Port de l'application Go
         volumes:
             - ./:/app
-
-
-
+        depends_on:
+            - database
 volumes:
     db-data:

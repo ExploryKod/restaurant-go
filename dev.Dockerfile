@@ -1,4 +1,4 @@
-FROM golang:1.21
+FROM golang:latest
 
 # Active le comportement de module indépendant
 ENV GO111MODULE=on
@@ -12,12 +12,14 @@ ENV GOARCH=$GOARCH
 WORKDIR /app
 COPY . /app
 
-#RUN go install github.com/cosmtrek/air@latest
-#RUN apt-get update
-#RUN apt-get install nano -y
+# Installer Air pour le hot reloading
+RUN go install github.com/air-verse/air@latest
 
+# Installer les dépendances
 RUN go mod download \
     && go mod verify \
-    && go mod tidy \
-    && go build -o restaurant-go-dev
+    && go mod tidy
+
+# Air sera exécuté via docker-compose
+CMD ["air", "-c", ".air.toml"]
 
