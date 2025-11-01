@@ -44,6 +44,8 @@ services:
             # Variables optionnelles
             MARIADB_ROOT_PASSWORD: ${BDD_PASSWORD:-password}
             MARIADB_DATABASE: ${BDD_NAME:-restaurantbdd}
+            # Mode développement : charger les templates depuis le système de fichiers pour le hot reload
+            DEV_MODE: "1"
         ports:
             - "8097:8097"
             - "9999:9999"  # Port de l'application Go

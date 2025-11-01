@@ -5,22 +5,35 @@
         </div>
         <section class="flex flex-col sm:flex-row justify-center items-center gap-5 sm:flex-wrap">
             {{- /*gotype: restaurantHTTP/web.TemplateData*/ -}}
-            {{ range .Content }}
+            {{ range $index, $restaurant := .Content }}
+                {{ $imageSrc := "" }}
+                {{ if $restaurant.Image }}
+                    {{ $imageSrc = fixImagePath $restaurant.Image }}
+                {{ else }}
+                    {{ $imgIndex := $index }}
+                    {{ if eq $imgIndex 0 }}
+                        {{ $imageSrc = "/src/assets/restaurant-1.jpg" }}
+                    {{ else if eq $imgIndex 1 }}
+                        {{ $imageSrc = "/src/assets/restaurant-2.jpg" }}
+                    {{ else }}
+                        {{ $imageSrc = "/src/assets/restaurant_generic_jp.jpg" }}
+                    {{ end }}
+                {{ end }}
                 <article class="min-w-[500px] sm:max-w-sm rounded overflow-hidden shadow-lg">
                     <div>
-                        <img class="w-full" src="https://source.unsplash.com/600x300/?Restaurant" alt="Restaurant">
+                        <img class="w-full h-48 object-cover" src="{{ $imageSrc }}" alt="{{ $restaurant.Name }}">
                     </div>
                     <div class="px-6 py-4">
                         <div class="font-bold text-xl mb-2">
-                            <h2>{{ .Name }}</h2>
+                            <h2>{{ $restaurant.Name }}</h2>
                         </div>
                     </div>
                     {{/*                    <div class="px-6 pt-4 pb-2">*/}}
-                    {{/*                        <a class="my-5 text-red-600" title="menu du restaurant" href="/restaurants/menu/{{.ID }}" >Menu</a><br>*/}}
-                    {{/*                        <a class="my-5 text-red-600 font-bold" title="menu du restaurant" href="/restaurant/menu/{{.ID}}" >Menu test</a>*/}}
+                    {{/*                        <a class="my-5 text-red-600" title="menu du restaurant" href="/restaurants/menu/{{$restaurant.ID }}" >Menu</a><br>*/}}
+                    {{/*                        <a class="my-5 text-red-600 font-bold" title="menu du restaurant" href="/restaurant/menu/{{$restaurant.ID}}" >Menu test</a>*/}}
                     {{/*                    </div>*/}}
                     <div class="px-6 pt-4 pb-2 mb-3">
-                        <a class="btn-lg" title="menu du restaurant" href="/restaurant/{{.ID }}/menu">Découvrir le
+                        <a class="btn-lg" title="menu du restaurant" href="/restaurant/{{ $restaurant.ID }}/menu">Découvrir le
                             menu</a>
                     </div>
                     <div class="px-6 pt-4 pb-2">

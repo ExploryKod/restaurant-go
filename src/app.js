@@ -72,6 +72,28 @@ const serverUrl = location.hostname;
     }))
 
 
+    // Fonction helper pour obtenir une image Unsplash par mot-clé
+    async function getUnsplashImage(query) {
+        try {
+            const protocol = window.location.protocol;
+            const host = window.location.host;
+            const port = window.location.port ? `:${window.location.port}` : '';
+            const url = `${protocol}//${host}${port}/api/unsplash/image?query=${encodeURIComponent(query)}`;
+            console.log('Fetching image for:', query, 'from:', url);
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+            }
+            const data = await response.json();
+            console.log('Image received for', query, ':', data.url);
+            return data.url || `https://source.unsplash.com/300x150/?${encodeURIComponent(query)}`;
+        } catch (error) {
+            console.error('Error fetching Unsplash image for', query, ':', error);
+            // Fallback vers l'ancienne URL
+            return `https://source.unsplash.com/300x150/?${encodeURIComponent(query)}`;
+        }
+    }
+
     Alpine.data('orders', () => ({
         orders: [],
         loading: true,
@@ -86,190 +108,48 @@ const serverUrl = location.hostname;
             {id: 8, restaurantid: 4, name: 'Sandwiches', icon: 'fas fa-bread-slice', link: '#'},
         ],
         products: [
-            {
-                id: 1,
-                menuid: 1,
-                name: 'Chocolate Cake',
-                description: 'Delicious chocolate cake',
-                price: 10,
-                image: 'https://source.unsplash.com/300x150/?ChocolateCake'
-            },
-            {
-                id: 9,
-                menuid: 1,
-                name: 'Cheese Cake',
-                description: 'Delicious cheese cake',
-                price: 12,
-                image: 'https://source.unsplash.com/300x150/?CheeseCake'
-            },
-            {
-                id: 10,
-                menuid: 1,
-                name: 'Apple pie',
-                description: 'Delicious apple pie',
-                price: 12,
-                image: 'https://source.unsplash.com/300x150/?ApplePie'
-            },
-
-            {
-                id: 2,
-                menuid: 2,
-                name: 'Coca-Cola',
-                description: 'Coca-Cola 33cl',
-                price: 2,
-                image: 'https://source.unsplash.com/300x150/?Coca-Cola'
-            },
-            {
-                id: 11,
-                menuid: 2,
-                name: 'Fanta',
-                description: 'Fanta 33cl',
-                price: 2,
-                image: 'https://source.unsplash.com/300x150/?Fanta'
-            },
-            {
-                id: 12,
-                menuid: 2,
-                name: 'Sprite',
-                description: 'Sprite 33cl',
-                price: 2,
-                image: 'https://source.unsplash.com/300x150/?Sprite'
-            },
-
-            {
-                id: 3,
-                menuid: 3,
-                name: 'Cheese Burger',
-                description: 'Cheese Burger with fries',
-                price: 15,
-                image: 'https://source.unsplash.com/300x150/?cheeseburger'
-            },
-            {
-                id: 13,
-                menuid: 3,
-                name: 'Chicken Burger',
-                description: 'Chicken Burger with fries',
-                price: 15,
-                image: 'https://source.unsplash.com/300x150/?chickenburger'
-            },
-            {
-                id: 14,
-                menuid: 3,
-                name: 'Fish Burger',
-                description: 'Fish Burger with fries',
-                price: 15,
-                image: 'https://source.unsplash.com/300x150/?fish burger'
-            },
-
-            {
-                id: 4,
-                menuid: 4,
-                name: 'Pizza Margarita',
-                description: 'Pizza Margarita 4 seasons',
-                price: 20,
-                image: 'https://source.unsplash.com/300x150/?pizza'
-            },
-            {
-                id: 15,
-                menuid: 4,
-                name: 'Pizza 4 seasons',
-                description: 'Pizza 4 seasons',
-                price: 20,
-                image: 'https://source.unsplash.com/300x150/?pizza'
-            },
-            {
-                id: 16,
-                menuid: 4,
-                name: 'Pizza 4 cheese',
-                description: 'Pizza 4 cheese',
-                price: 20,
-                image: 'https://source.unsplash.com/300x150/?pizza'
-            },
-
-            {
-                id: 5,
-                menuid: 5,
-                name: 'Sushi Mix',
-                description: 'Sushi Mix 24 pieces',
-                price: 30,
-                image: 'https://source.unsplash.com/300x150/?sushi'
-            },
-            {
-                id: 17,
-                menuid: 5,
-                name: 'Sushi californian roll',
-                description: 'Sushi Mix 24 pieces',
-                price: 30,
-                image: 'https://source.unsplash.com/300x150/?sushi'
-            },
-            {
-                id: 18,
-                menuid: 5,
-                name: 'Sushi Mix 24 pieces',
-                description: 'Sushi Mix 24 pieces',
-                price: 30,
-                image: 'https://source.unsplash.com/300x150/?sushi'
-            },
-
-            {
-                id: 6,
-                menuid: 6,
-                name: 'Salad',
-                description: 'Salad with vegetables',
-                price: 8,
-                image: 'https://source.unsplash.com/300x150/?salad'
-            },
-            {
-                id: 19,
-                menuid: 6,
-                name: 'Salad with vegetables',
-                description: 'Salad with vegetables',
-                price: 8,
-                image: 'https://source.unsplash.com/300x150/?salad'
-            },
-
-            {
-                id: 7,
-                menuid: 7,
-                name: 'Pasta Carbonara',
-                description: 'Pasta Carbonara with beef',
-                price: 12,
-                image: 'https://source.unsplash.com/300x150/?Pasta'
-            },
-            {
-                id: 20,
-                menuid: 7,
-                name: 'Pasta with tomato sauce',
-                description: 'Pasta with tomato sauce',
-                price: 12,
-                image: 'https://source.unsplash.com/300x150/?Pasta'
-            },
-            {
-                id: 21,
-                menuid: 7,
-                name: 'Pasta with cheese',
-                description: 'Pasta with cheese',
-                price: 12,
-                image: 'https://source.unsplash.com/300x150/?Pasta'
-            },
-
-            {
-                id: 8,
-                menuid: 8,
-                name: 'Sandwich',
-                description: 'Sandwich with chicken and cheese',
-                price: 6,
-                image: 'https://source.unsplash.com/300x150/?Sandwich'
-            },
-            {
-                id: 22,
-                menuid: 8,
-                name: 'Sandwich with fish',
-                description: 'Sandwich with fish',
-                price: 6,
-                image: 'https://source.unsplash.com/300x150/?Sandwich'
-            },
-        ]
+            {id: 1, menuid: 1, name: 'Chocolate Cake', description: 'Delicious chocolate cake', price: 10, imageQuery: 'ChocolateCake', image: '/src/assets/hero/hero_plats.jpg'},
+            {id: 9, menuid: 1, name: 'Cheese Cake', description: 'Delicious cheese cake', price: 12, imageQuery: 'CheeseCake', image: '/src/assets/hero/hero_plats_1.jpg'},
+            {id: 10, menuid: 1, name: 'Apple pie', description: 'Delicious apple pie', price: 12, imageQuery: 'ApplePie', image: '/src/assets/hero/hero_plat_3.jpg'},
+            {id: 2, menuid: 2, name: 'Coca-Cola', description: 'Coca-Cola 33cl', price: 2, imageQuery: 'Coca-Cola', image: '/src/assets/hero/hero_plats.jpg'},
+            {id: 11, menuid: 2, name: 'Fanta', description: 'Fanta 33cl', price: 2, imageQuery: 'Fanta', image: '/src/assets/hero/hero_plats_1.jpg'},
+            {id: 12, menuid: 2, name: 'Sprite', description: 'Sprite 33cl', price: 2, imageQuery: 'Sprite', image: '/src/assets/hero/hero_plat_3.jpg'},
+            {id: 3, menuid: 3, name: 'Cheese Burger', description: 'Cheese Burger with fries', price: 15, imageQuery: 'cheeseburger', image: '/src/assets/hero/hero_plats.jpg'},
+            {id: 13, menuid: 3, name: 'Chicken Burger', description: 'Chicken Burger with fries', price: 15, imageQuery: 'chickenburger', image: '/src/assets/hero/hero_plats_1.jpg'},
+            {id: 14, menuid: 3, name: 'Fish Burger', description: 'Fish Burger with fries', price: 15, imageQuery: 'fish burger', image: '/src/assets/hero/hero_plat_3.jpg'},
+            {id: 4, menuid: 4, name: 'Pizza Margarita', description: 'Pizza Margarita 4 seasons', price: 20, imageQuery: 'pizza', image: '/src/assets/hero/hero_plats.jpg'},
+            {id: 15, menuid: 4, name: 'Pizza 4 seasons', description: 'Pizza 4 seasons', price: 20, imageQuery: 'pizza', image: '/src/assets/hero/hero_plats_1.jpg'},
+            {id: 16, menuid: 4, name: 'Pizza 4 cheese', description: 'Pizza 4 cheese', price: 20, imageQuery: 'pizza', image: '/src/assets/hero/hero_plat_3.jpg'},
+            {id: 5, menuid: 5, name: 'Sushi Mix', description: 'Sushi Mix 24 pieces', price: 30, imageQuery: 'sushi', image: '/src/assets/hero/hero_plats.jpg'},
+            {id: 17, menuid: 5, name: 'Sushi californian roll', description: 'Sushi Mix 24 pieces', price: 30, imageQuery: 'sushi', image: '/src/assets/hero/hero_plats_1.jpg'},
+            {id: 18, menuid: 5, name: 'Sushi Mix 24 pieces', description: 'Sushi Mix 24 pieces', price: 30, imageQuery: 'sushi', image: '/src/assets/hero/hero_plat_3.jpg'},
+            {id: 6, menuid: 6, name: 'Salad', description: 'Salad with vegetables', price: 8, imageQuery: 'salad', image: '/src/assets/hero/hero_plats.jpg'},
+            {id: 19, menuid: 6, name: 'Salad with vegetables', description: 'Salad with vegetables', price: 8, imageQuery: 'salad', image: '/src/assets/hero/hero_plats_1.jpg'},
+            {id: 7, menuid: 7, name: 'Pasta Carbonara', description: 'Pasta Carbonara with beef', price: 12, imageQuery: 'Pasta', image: '/src/assets/hero/hero_plats.jpg'},
+            {id: 20, menuid: 7, name: 'Pasta with tomato sauce', description: 'Pasta with tomato sauce', price: 12, imageQuery: 'Pasta', image: '/src/assets/hero/hero_plats_1.jpg'},
+            {id: 21, menuid: 7, name: 'Pasta with cheese', description: 'Pasta with cheese', price: 12, imageQuery: 'Pasta', image: '/src/assets/hero/hero_plat_3.jpg'},
+            {id: 8, menuid: 8, name: 'Sandwich', description: 'Sandwich with chicken and cheese', price: 6, imageQuery: 'Sandwich', image: '/src/assets/hero/hero_plats.jpg'},
+            {id: 22, menuid: 8, name: 'Sandwich with fish', description: 'Sandwich with fish', price: 6, imageQuery: 'Sandwich', image: '/src/assets/hero/hero_plats_1.jpg'},
+        ],
+        async init() {
+            // Log pour déboguer
+            console.log('Orders init - products count:', this.products.length);
+            console.log('First product:', this.products[0]);
+            
+            // Optionnel : améliorer les images en arrière-plan via l'API Unsplash
+            console.log('Improving images via Unsplash API for', this.products.length, 'products');
+            this.products.forEach(async (product, index) => {
+                try {
+                    const imageUrl = await getUnsplashImage(product.imageQuery);
+                    if (imageUrl && imageUrl !== product.image) {
+                        product.image = imageUrl;
+                        console.log(`Image improved for ${product.name}`);
+                    }
+                } catch (error) {
+                    console.error(`Error improving image for ${product.name}:`, error);
+                }
+            });
+        }
     }))
 
     Alpine.store('cart', {

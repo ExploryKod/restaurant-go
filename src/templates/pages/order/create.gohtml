@@ -16,8 +16,10 @@
                                         <template x-for="product in orders.products" :key="product.id">
                                             <div x-show="product.menuid === menu.id"
                                                  class="border border-gray-200 rounded-md p-4">
-                                                <img class=" object-cover object-center mb-4" :src="product.image"
-                                                     alt="product.name">
+                                                <img class="object-cover object-center mb-4 w-full h-48 max-h-48" 
+                                                     :src="product.image"
+                                                     :alt="product.name"
+                                                     style="max-height: 192px; height: 192px;">
                                                 <h3 class="text-lg font-bold text-gray-800 mb-2"
                                                     x-text="product.name"></h3>
                                                 <p class="text-gray-600 mb-2" x-text="product.description"></p>

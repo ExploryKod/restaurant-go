@@ -2,14 +2,18 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
+	"html/template"
+	"net/http"
+	"net/url"
+	"os"
+	"restaurantHTTP"
+	database "restaurantHTTP/mysql"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth/v5"
-	"html/template"
-	"net/http"
-	"restaurantHTTP"
-	database "restaurantHTTP/mysql"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -53,6 +57,9 @@ func NewHandler(store *database.Store) *Handler {
 		r.Post("/signup", handler.Signup())
 
 		r.Get("/checkEmailAndUsername", handler.checkEmailAndUsername())
+
+		// Endpoint pour obtenir une image Unsplash par mot-clé
+		r.Get("/api/unsplash/image", handler.GetUnsplashImage())
 	})
 
 	handler.Group(func(r chi.Router) {
@@ -129,7 +136,42 @@ func (h *Handler) RenderJson(w http.ResponseWriter, status int, data interface{}
 }
 
 func (h *Handler) RenderHtml(writer http.ResponseWriter, data restaurantHTTP.TemplateData, fileRoute string) {
-	tmpl, err := template.ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout/layout.gohtml", "src/templates/"+fileRoute)
+	var tmpl *template.Template
+	var err error
+
+	// Fonctions helper pour les templates
+	funcMap := template.FuncMap{
+		"fixImagePath": func(path string) string {
+			if path == "" {
+				return ""
+			}
+			// Si le chemin commence déjà par /src/, le retourner tel quel
+			if len(path) >= 5 && path[:5] == "/src/" {
+				return path
+			}
+			// Si le chemin commence par image/, supprimer le préfixe et utiliser assets/
+			if len(path) >= 6 && path[:6] == "image/" {
+				return "/src/assets/" + path[6:]
+			}
+			// Si le chemin commence par logo/, supprimer le préfixe et utiliser assets/
+			if len(path) >= 5 && path[:5] == "logo/" {
+				return "/src/assets/" + path[5:]
+			}
+			// Sinon, ajouter /src/assets/ devant
+			return "/src/assets/" + path
+		},
+	}
+
+	// En développement, charger depuis le système de fichiers pour le hot reload
+	// En production, utiliser les templates embeddés
+	if os.Getenv("DEV_MODE") != "" || os.Getenv("AIR") != "" {
+		// Mode développement : charger depuis le système de fichiers
+		tmpl, err = template.New("layout").Funcs(funcMap).ParseFiles("src/templates/layout/layout.gohtml", "src/templates/"+fileRoute)
+	} else {
+		// Mode production : utiliser les templates embeddés
+		tmpl, err = template.New("layout").Funcs(funcMap).ParseFS(restaurantHTTP.EmbedTemplates, "src/templates/layout/layout.gohtml", "src/templates/"+fileRoute)
+	}
+
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
@@ -139,5 +181,63 @@ func (h *Handler) RenderHtml(writer http.ResponseWriter, data restaurantHTTP.Tem
 	if err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
 		return
+	}
+}
+
+// UnsplashImageResponse représente la réponse de l'API Unsplash pour une recherche
+type UnsplashImageResponse struct {
+	Results []struct {
+		ID   string `json:"id"`
+		URLs struct {
+			Small string `json:"small"`
+		} `json:"urls"`
+	} `json:"results"`
+}
+
+// GetUnsplashImage génère une URL d'image Unsplash basée sur un mot-clé
+func (h *Handler) GetUnsplashImage() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query().Get("query")
+		if query == "" {
+			http.Error(w, "Query parameter is required", http.StatusBadRequest)
+			return
+		}
+
+		unsplashAccessKey := os.Getenv("UNSPLASH_ACCESS_KEY")
+		if unsplashAccessKey == "" {
+			// Si pas de clé API, utiliser une URL par défaut (fallback)
+			// Note: Cette URL peut ne pas fonctionner car source.unsplash.com est déprécié
+			imageURL := fmt.Sprintf("https://source.unsplash.com/300x150/?%s", url.QueryEscape(query))
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(map[string]string{"url": imageURL})
+			return
+		}
+
+		// Appeler l'API Unsplash pour rechercher une photo
+		apiURL := fmt.Sprintf("https://api.unsplash.com/search/photos?query=%s&per_page=1&client_id=%s", url.QueryEscape(query), unsplashAccessKey)
+
+		resp, err := http.Get(apiURL)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error calling Unsplash API: %v", err), http.StatusInternalServerError)
+			return
+		}
+		defer resp.Body.Close()
+
+		var unsplashResp UnsplashImageResponse
+		if err := json.NewDecoder(resp.Body).Decode(&unsplashResp); err != nil {
+			http.Error(w, fmt.Sprintf("Error decoding Unsplash response: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		imageURL := ""
+		if len(unsplashResp.Results) > 0 {
+			imageURL = unsplashResp.Results[0].URLs.Small
+		} else {
+			// Fallback si aucune image trouvée
+			imageURL = fmt.Sprintf("https://source.unsplash.com/300x150/?%s", url.QueryEscape(query))
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"url": imageURL})
 	}
 }
