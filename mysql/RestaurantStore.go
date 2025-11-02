@@ -99,11 +99,12 @@ func (s *RestaurantStore) GetAllRestaurants() ([]entity.Restaurant, error) {
 
 func (s *RestaurantStore) GetRestaurantByID(id int) *entity.Restaurant {
 	restaurant := &entity.Restaurant{}
-	err := s.Get(restaurant, "SELECT name, logo, image, phone, mail, is_open, opening_time, closing_time, grade, is_validated FROM Restaurants WHERE id = ?", id)
+	err := s.Get(restaurant, "SELECT id, name, logo, image, phone, mail, is_open, opening_time, closing_time, grade, is_validated FROM Restaurants WHERE id = ?", id)
 	if err != nil {
-		log.Println(err)
+		log.Println("Error getting restaurant by ID:", id, err)
 		return nil
 	}
+	restaurant.ID = id // S'assurer que l'ID est bien défini
 	return restaurant
 }
 

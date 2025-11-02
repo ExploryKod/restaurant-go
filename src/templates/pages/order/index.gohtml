@@ -1,23 +1,39 @@
 {{define "content"}}
-    <div class="container mx-auto px-4 py-8" x-data="{ orders: JSON.parse(localStorage.getItem('orderData')) }">
+    <div class="container mx-auto px-4 py-8" x-data="{ 
+        orders: (() => {
+            const stored = localStorage.getItem('orderData');
+            if (!stored) return [];
+            try {
+                const parsed = JSON.parse(stored);
+                console.log('Parsed orders from localStorage:', parsed);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (e) {
+                console.error('Error parsing orderData:', e);
+                return [];
+            }
+        })()
+    }">
         <h1 class="text-3xl font-bold mb-8">Mes commandes</h1>
-        <template x-for="order in orders" :key="order.data.order.id">
-            <div class="bg-white shadow-md rounded-md p-4 mb-4">
+        <div x-show="orders.length === 0" class="text-center py-8">
+            <p class="text-gray-500 text-xl">Aucune commande passée</p>
+        </div>
+        <template x-for="(orderResponse, index) in orders" :key="index">
+            <div class="bg-white shadow-md rounded-md p-4 mb-4" x-show="orderResponse && orderResponse.data">
                 <div class="flex justify-between items-center">
                     <div class="flex gap-3">
-                        <h2 class="text-xl font-bold">Commande n°<span x-text="order.data.order.id"></span></h2>
-                        <span class="font-bold text-xl text-red-700" x-text="order.data.order.restaurant.name"></span>
+                        <h2 class="text-xl font-bold">Commande n°<span x-text="orderResponse.data.order.id"></span></h2>
+                        <span class="font-bold text-xl text-red-700" x-text="orderResponse.data.order.restaurant.name"></span>
                     </div>
-                    <p x-text="order.data.order.created_date"></p>
+                    <p x-text="new Date(orderResponse.data.order.created_date).toLocaleString('fr-FR')"></p>
                 </div>
-                <p class="font-semibold" x-text="order.data.order.total_price + ' €'"></p>
-                <p x-text="order.data.order.status"></p>
+                <p class="font-semibold" x-text="orderResponse.data.order.total_price + ' €'"></p>
+                <p class="capitalize" x-text="orderResponse.data.order.status"></p>
                 <div class="flex justify-between items-center mt-4">
                     <div>
                         <h3 class="text-lg font-bold">Produits</h3>
-                        <template x-for="product in order.data.products" :key="product.id">
+                        <template x-for="product in orderResponse.data.products" :key="product.id">
                             <div class="flex items-center mt-2">
-                                <img class="w-16 h-16 object-cover rounded-md" :src="product.image" :alt="product.name">
+                                <img class="w-16 h-16 object-cover rounded-md" :src="product.image || '/src/assets/hero/hero_plats.jpg'" :alt="product.name">
                                 <div class="ml-4">
                                     <h4 x-text="product.name"></h4>
                                     <span class="font-semibold" x-text="product.price + ' €'"></span>

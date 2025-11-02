@@ -3,6 +3,7 @@ package web
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/jwtauth/v5"
 	"log"
@@ -34,12 +35,38 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		}
 
 		/* products */
-		var products *[]entity.Product
+		// Structure temporaire pour décoder les données du frontend
+		type CartProduct struct {
+			ID          int     `json:"id"`
+			MenuID      int     `json:"menuid"`
+			Name        string  `json:"name"`
+			Description string  `json:"description"`
+			Price       float64 `json:"price"`
+			Image       string  `json:"image"`
+			Count       int     `json:"count"`
+			Total       float64 `json:"total"`
+		}
 
-		if err := json.NewDecoder(request.Body).Decode(&products); err != nil {
-			log.Println(err)
+		var cartProducts []CartProduct
+		if err := json.NewDecoder(request.Body).Decode(&cartProducts); err != nil {
+			log.Println("Error decoding products:", err)
 			h.RenderJson(writer, http.StatusBadRequest, map[string]string{"error": "Invalid products for the order"})
 			return
+		}
+
+		// Convertir les produits du panier en produits avec quantité
+		var products []entity.Product
+		for _, cartProduct := range cartProducts {
+			// Ajouter le produit autant de fois que sa quantité
+			for i := 0; i < cartProduct.Count; i++ {
+				products = append(products, entity.Product{
+					ID:          cartProduct.ID,
+					Name:        cartProduct.Name,
+					Description: cartProduct.Description,
+					Price:       cartProduct.Price,
+					Image:       cartProduct.Image,
+				})
+			}
 		}
 
 		/*get user*/
@@ -52,16 +79,26 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		}
 
 		/*order*/
-		restaurantID, _ := strconv.Atoi(restaurantIDUrl)
-		restaurant := h.RestaurantStore.GetRestaurantByID(restaurantID)
-		if restaurant == nil {
-			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": "restaurant not found"})
+		restaurantID, err := strconv.Atoi(restaurantIDUrl)
+		if err != nil {
+			log.Println("Error parsing restaurant ID:", restaurantIDUrl, err)
+			h.RenderJson(writer, http.StatusBadRequest, map[string]string{"error": "Invalid restaurant ID"})
 			return
 		}
+		
+		restaurant := h.RestaurantStore.GetRestaurantByID(restaurantID)
+		if restaurant == nil {
+			log.Printf("Restaurant with ID %d not found", restaurantID)
+			h.RenderJson(writer, http.StatusNotFound, map[string]string{"error": fmt.Sprintf("Restaurant with ID %d not found", restaurantID)})
+			return
+		}
+		
+		log.Printf("Creating order for restaurant ID: %d, Name: %s", restaurant.ID, restaurant.Name)
 
+		// Calculer le total en utilisant les données du panier (prend en compte les quantités)
 		totalPrice := 0.0
-		for _, product := range *products {
-			totalPrice += float64(product.Price)
+		for _, cartProduct := range cartProducts {
+			totalPrice += cartProduct.Total
 		}
 
 		order := entity.NewOrder(*user, *restaurant, "pending", totalPrice, 0, time.Now(), sql.NullTime{})
@@ -69,13 +106,13 @@ func (h *Handler) CreateOrder() http.HandlerFunc {
 		var lastOrderID int
 		lastOrderID, err = h.OrderStore.AddOrder(*order)
 		if err != nil {
-			log.Println(err)
+			log.Println("Error adding order:", err)
 			h.RenderJson(writer, http.StatusInternalServerError, map[string]string{"error": "Internal Server Error"})
 			return
 		}
 		order.ID = lastOrderID
 
-		orderHasProduct := entity.NewOrderHasProduct(*order, *products)
+		orderHasProduct := entity.NewOrderHasProduct(*order, products)
 
 		_, err = h.OrderHasProductStore.AddOrderHasProduct(orderHasProduct)
 		if err != nil {

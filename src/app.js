@@ -1,5 +1,5 @@
 document.addEventListener('alpine:init', () => {
-const serverUrl = location.hostname;
+const serverUrl = location.origin;
 
     Alpine.store('user', {
         id: null,
@@ -223,14 +223,21 @@ const serverUrl = location.hostname;
                 },
                 body: JSON.stringify(Alpine.store('cart').items),
             })
-                .then(response => (response.json()))
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => Promise.reject(err));
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('Order created successfully:', data);
                     if (localStorage.getItem('orderData') !== null) {
                         let oldOrderData = JSON.parse(localStorage.getItem('orderData'));
                         localStorage.setItem('orderData', JSON.stringify([...oldOrderData, data]));
                     } else {
                         localStorage.setItem('orderData', JSON.stringify([data]));
                     }
+                    console.log('Order saved to localStorage');
 
                     this.toggle();
                     Alpine.store('cart').items = [];
@@ -239,7 +246,8 @@ const serverUrl = location.hostname;
                     this.submitted = true;
                 })
                 .catch((error) => {
-                    console.error('Error:', error);
+                    console.error('Error creating order:', error);
+                    alert('Erreur lors de la création de la commande: ' + (error.error || error.message || 'Erreur inconnue'));
                 });
         }
     }));

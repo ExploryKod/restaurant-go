@@ -1,6 +1,7 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"log"
@@ -19,15 +20,19 @@ func NewOrderStore(db *sqlx.DB) *OrderStore {
 
 func (o *OrderStore) AddOrder(order entity.Order) (int, error) {
 
-	var currentOrderNumber int
+	var currentOrderNumber sql.NullInt64
 	currentDate := order.CreatedDate.Format("2006-01-02")
 
-	err := o.QueryRow("SELECT MAX(number) FROM Orders WHERE restaurant_id = ? AND DATE(created_date) = ? AND (SELECT COUNT(id) FROM Orders WHERE restaurant_id = ? AND DATE(created_date) = ?) > 0", order.Restaurant.ID, currentDate, order.Restaurant.ID, currentDate).Scan(&currentOrderNumber)
+	err := o.QueryRow("SELECT MAX(number) FROM Orders WHERE restaurant_id = ? AND DATE(created_date) = ?", order.Restaurant.ID, currentDate).Scan(&currentOrderNumber)
 	if err != nil {
-		currentOrderNumber = 0
-		log.Println(err)
+		log.Println("Error getting max order number:", err)
+		currentOrderNumber = sql.NullInt64{Valid: false}
 	}
-	nextOrderNumber := currentOrderNumber + 1
+	
+	nextOrderNumber := 1
+	if currentOrderNumber.Valid {
+		nextOrderNumber = int(currentOrderNumber.Int64) + 1
+	}
 
 	res, err := o.DB.Exec("INSERT INTO Orders (user_id, restaurant_id, status, total_price, number, created_date, closed_date) VALUES ( ? , ? , ?, ?, ?, ?, ?)", order.User.ID, order.Restaurant.ID, order.Status, order.TotalPrice, nextOrderNumber, order.CreatedDate, order.ClosedDate)
 	if err != nil {
