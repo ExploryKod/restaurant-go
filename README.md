@@ -17,6 +17,21 @@ BDD_NAME=restaurantbdd
 BDD_PORT=127.0.0.1:3309
 ```
 
+### Configuration pour la production (Render.com)
+
+Pour le déploiement sur Render.com avec Aiven MySQL, configurez ces variables d'environnement dans les **Secrets** de Render.com :
+
+```
+BDD_USER=avnadmin
+BDD_PASSWORD=<votre_mot_de_passe_aiven>
+BDD_PORT=mysql-restaurantgo-amauryfranssen-5ab7.h.aivencloud.com:14253
+BDD_NAME=defaultdb
+```
+
+**Important** : `BDD_PORT` doit contenir **host:port** ensemble (format: `hostname:port`)
+
+Voir `RENDER.md` pour plus de détails sur le déploiement sur Render.com.
+
 ### Email:
 Ouvrez un compte gratuit MailTrap de test et aller dans Email Testing (colone à gauche) > SMTP settings > cliquer sur "show credentials"
 

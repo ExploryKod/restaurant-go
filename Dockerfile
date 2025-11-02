@@ -11,10 +11,17 @@ RUN go mod download \
 RUN GO111MODULE=on CGO_ENABLED=0 GOOS=linux go build -o /build/restaurantgo ./main/main.go
 
 # Deploy the application binary into a lean image
-FROM scratch AS build-release-stage
+# Using alpine instead of scratch for better compatibility with Render.com
+FROM alpine:latest AS build-release-stage
+
+# Install CA certificates for HTTPS connections (required for external database connections)
+RUN apk --no-cache add ca-certificates
 
 WORKDIR /appgo
 
 COPY --from=Builder /build/restaurantgo ./restaurantgo
+
+# Expose the port the app runs on
+EXPOSE 9999
 
 ENTRYPOINT ["./restaurantgo"]
