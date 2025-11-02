@@ -6,6 +6,7 @@ import (
 	"os"
 	database "restaurantHTTP/mysql"
 	"restaurantHTTP/web"
+	"strings"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -44,7 +45,28 @@ func main() {
 	log.Printf("Is Render.com environment: %v", isRender)
 	if isRender {
 		log.Printf("RENDER_EXTERNAL_HOSTNAME: %s", os.Getenv("RENDER_EXTERNAL_HOSTNAME"))
+		log.Printf("RENDER_SERVICE_ID: %s", os.Getenv("RENDER_SERVICE_ID"))
+		log.Printf("RENDER_SERVICE_NAME: %s", os.Getenv("RENDER_SERVICE_NAME"))
+		log.Printf("RENDER_SERVICE_TYPE: %s", os.Getenv("RENDER_SERVICE_TYPE"))
 	}
+
+	// Afficher toutes les variables d'environnement qui commencent par BDD
+	log.Printf("--- All BDD_* environment variables ---")
+	for _, env := range os.Environ() {
+		if len(env) >= 4 && env[0:4] == "BDD_" {
+			parts := strings.SplitN(env, "=", 2)
+			if len(parts) == 2 {
+				key := parts[0]
+				value := parts[1]
+				if key == "BDD_PASSWORD" {
+					log.Printf("%s: %s", key, map[bool]string{true: "***SET***", false: "NOT SET"}[value != ""])
+				} else {
+					log.Printf("%s: %s", key, value)
+				}
+			}
+		}
+	}
+
 	log.Printf("BDD_USER: %s", bdUser)
 	log.Printf("BDD_PORT: %s", bdPort)
 	log.Printf("BDD_NAME: %s", bdName)
