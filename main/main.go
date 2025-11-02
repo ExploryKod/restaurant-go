@@ -105,24 +105,36 @@ func main() {
 
 	db, err := sqlx.Open("mysql", conf.FormatDSN())
 	if err != nil {
+		log.Printf("ERROR: Failed to open database connection: %v", err)
 		log.Fatal(err)
 		return
 	}
 
 	defer db.Close()
 
+	log.Printf("Attempting to ping database...")
 	if err = db.Ping(); err != nil {
+		log.Printf("ERROR: Failed to ping database: %v", err)
+		log.Printf("DSN used: %s", conf.FormatDSN())
 		log.Fatal(err)
 	}
+
+	log.Printf("✓ Database connection successful!")
 
 	store := database.CreateStore(db)
 	mux := web.NewHandler(store)
 
-	err = http.ListenAndServe(":9999", mux)
+	// Render.com définit la variable PORT, l'utiliser si disponible
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9999" // Port par défaut pour le développement local
+	}
+
+	log.Printf("Starting server on port %s", port)
+	err = http.ListenAndServe(":"+port, mux)
 
 	if err != nil {
 		log.Fatal(err)
-
 		return
 	}
 
