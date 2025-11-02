@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"restaurantHTTP"
 	database "restaurantHTTP/mysql"
 
@@ -45,8 +46,25 @@ func NewHandler(store *database.Store) *Handler {
 		MaxAge:           300,
 	}))
 
+	// Servir les fichiers statiques avec les bons MIME types
 	fs := http.FileServer(http.Dir("src"))
-	handler.Handle("/src/*", http.StripPrefix("/src/", fs))
+	// Wrapper pour forcer les bons Content-Type
+	fileServer := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Définir les MIME types pour les extensions courantes
+		if strings.HasSuffix(r.URL.Path, ".css") {
+			w.Header().Set("Content-Type", "text/css; charset=utf-8")
+		} else if strings.HasSuffix(r.URL.Path, ".js") {
+			w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+		} else if strings.HasSuffix(r.URL.Path, ".png") {
+			w.Header().Set("Content-Type", "image/png")
+		} else if strings.HasSuffix(r.URL.Path, ".jpg") || strings.HasSuffix(r.URL.Path, ".jpeg") {
+			w.Header().Set("Content-Type", "image/jpeg")
+		} else if strings.HasSuffix(r.URL.Path, ".svg") {
+			w.Header().Set("Content-Type", "image/svg+xml")
+		}
+		fs.ServeHTTP(w, r)
+	})
+	handler.Handle("/src/*", http.StripPrefix("/src/", fileServer))
 
 	handler.Route("/", func(r chi.Router) {
 
@@ -64,8 +82,19 @@ func NewHandler(store *database.Store) *Handler {
 
 	handler.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(tokenAuth))
-
-		r.Use(jwtauth.Authenticator(tokenAuth))
+		
+		// Middleware personnalisé pour rediriger vers /login si pas de token
+		r.Use(func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				token, _, err := jwtauth.FromContext(r.Context())
+				if err != nil || token == nil {
+					// Rediriger vers /login si pas de token
+					http.Redirect(w, r, "/login", http.StatusSeeOther)
+					return
+				}
+				next.ServeHTTP(w, r)
+			})
+		})
 
 		r.Get("/", handler.GetHomePage())
 		r.Get("/logout", handler.Logout())

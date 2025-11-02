@@ -20,6 +20,8 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /appgo
 
 COPY --from=Builder /build/restaurantgo ./restaurantgo
+# Copier le dossier src pour servir les fichiers statiques (CSS, JS, images)
+COPY --from=Builder /app/src ./src
 
 # Expose the port the app runs on
 EXPOSE 9999
