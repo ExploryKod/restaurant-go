@@ -13,26 +13,44 @@ import (
 )
 
 func main() {
-	// Charger .env seulement si les variables d'environnement ne sont pas déjà définies
-	// (comme dans Docker Compose où elles sont définies via environment)
-	// Cela permet aux variables Docker de prendre la priorité sur le fichier .env
-	if os.Getenv("BDD_PORT") == "" {
-		godotenv.Load() // Charge .env seulement si BDD_PORT n'est pas déjà défini
+	// En production (Render.com), les variables d'environnement sont définies directement
+	// Ne charger .env QUE si les variables d'environnement ne sont PAS déjà définies
+	// Cela évite que le .env (s'il est présent dans l'image) écrase les variables de production
+	bdUser := os.Getenv("BDD_USER")
+	bdPort := os.Getenv("BDD_PORT")
+	bdName := os.Getenv("BDD_NAME")
+
+	// Si aucune variable n'est définie, on est probablement en développement local
+	// Charger le .env seulement dans ce cas
+	if bdUser == "" && bdPort == "" && bdName == "" {
+		// Mode développement local : charger .env
+		if err := godotenv.Load(); err != nil {
+			log.Println("Warning: .env file not found, using environment variables only")
+		}
+		// Recharger les variables après le chargement du .env
+		bdUser = os.Getenv("BDD_USER")
+		bdPort = os.Getenv("BDD_PORT")
+		bdName = os.Getenv("BDD_NAME")
 	}
+
+	// Récupérer les variables d'environnement (priorité aux variables système)
+	bdPassword := os.Getenv("BDD_PASSWORD")
 
 	// Debug: afficher la configuration de connexion (sans le mot de passe)
 	log.Printf("Connecting to database: user=%s, addr=%s, dbname=%s",
-		os.Getenv("BDD_USER"), os.Getenv("BDD_PORT"), os.Getenv("BDD_NAME"))
+		bdUser, bdPort, bdName)
+
+	// Vérifier que les variables essentielles sont définies
+	if bdUser == "" || bdPort == "" || bdName == "" {
+		log.Fatal("Missing required database environment variables: BDD_USER, BDD_PORT, BDD_NAME must be set")
+		return
+	}
 
 	conf := mysql.Config{
-		User:   os.Getenv("BDD_USER"),
-		Passwd: os.Getenv("BDD_PASSWORD"),
-		Addr:   os.Getenv("BDD_PORT"),
-		DBName: os.Getenv("BDD_NAME"),
-		//User:                 "ueill1e8a2djeyha",
-		//Passwd:               "",
-		//Addr:                 "bg34o0geswbybq906ljp-mysql.services.clever-cloud.com:3306",
-		//DBName:               "bg34o0geswbybq906ljp",
+		User:                 bdUser,
+		Passwd:               bdPassword,
+		Addr:                 bdPort,
+		DBName:               bdName,
 		Net:                  "tcp",
 		AllowNativePasswords: true,
 		ParseTime:            true,

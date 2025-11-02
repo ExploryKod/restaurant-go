@@ -1,0 +1,26 @@
+# Exclude environment files from Docker build
+.env
+*.env
+.env.local
+.env.*.local
+
+# Exclude development files
+dev.Dockerfile
+.air.toml
+tmp/
+build-errors.log
+
+# Exclude git files
+.git
+.gitignore
+
+# Exclude IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Exclude documentation that's not needed in production
+RENDER.md
+README.md
+
