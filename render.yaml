@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: restaurant-go
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: BDD_USER
+        value: avnadmin
+      - key: BDD_PORT
+        value: mysql-restaurantgo-amauryfranssen-5ab7.h.aivencloud.com:14253
+      - key: BDD_NAME
+        value: defaultdb
+      # BDD_PASSWORD doit être défini dans les Secrets de Render.com (pas dans ce fichier pour sécurité)
+

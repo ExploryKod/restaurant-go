@@ -13,32 +13,43 @@ import (
 )
 
 func main() {
-	// En production (Render.com), les variables d'environnement sont définies directement
-	// Ne charger .env QUE si les variables d'environnement ne sont PAS déjà définies
-	// Cela évite que le .env (s'il est présent dans l'image) écrase les variables de production
-	bdUser := os.Getenv("BDD_USER")
-	bdPort := os.Getenv("BDD_PORT")
-	bdName := os.Getenv("BDD_NAME")
+	// Détecter si on est sur Render.com
+	// Render.com définit automatiquement RENDER_EXTERNAL_HOSTNAME pour tous les services web
+	// Cette variable est automatiquement injectée par Render.com (pas besoin de la définir manuellement)
+	isRender := os.Getenv("RENDER_EXTERNAL_HOSTNAME") != ""
 
-	// Si aucune variable n'est définie, on est probablement en développement local
-	// Charger le .env seulement dans ce cas
-	if bdUser == "" && bdPort == "" && bdName == "" {
-		// Mode développement local : charger .env
-		if err := godotenv.Load(); err != nil {
-			log.Println("Warning: .env file not found, using environment variables only")
+	// En production Render.com, NE JAMAIS charger .env
+	// En développement local, charger .env seulement si les variables ne sont pas définies
+	if !isRender {
+		bdUser := os.Getenv("BDD_USER")
+		bdPort := os.Getenv("BDD_PORT")
+		bdName := os.Getenv("BDD_NAME")
+
+		// Si aucune variable n'est définie, charger .env (développement local)
+		if bdUser == "" && bdPort == "" && bdName == "" {
+			if err := godotenv.Load(); err != nil {
+				log.Println("Warning: .env file not found, using environment variables only")
+			}
 		}
-		// Recharger les variables après le chargement du .env
-		bdUser = os.Getenv("BDD_USER")
-		bdPort = os.Getenv("BDD_PORT")
-		bdName = os.Getenv("BDD_NAME")
 	}
 
 	// Récupérer les variables d'environnement (priorité aux variables système)
+	bdUser := os.Getenv("BDD_USER")
 	bdPassword := os.Getenv("BDD_PASSWORD")
+	bdPort := os.Getenv("BDD_PORT")
+	bdName := os.Getenv("BDD_NAME")
 
-	// Debug: afficher la configuration de connexion (sans le mot de passe)
-	log.Printf("Connecting to database: user=%s, addr=%s, dbname=%s",
-		bdUser, bdPort, bdName)
+	// Debug: Afficher toutes les variables d'environnement pour diagnostic
+	log.Printf("=== Database Configuration Debug ===")
+	log.Printf("Is Render.com environment: %v", isRender)
+	if isRender {
+		log.Printf("RENDER_EXTERNAL_HOSTNAME: %s", os.Getenv("RENDER_EXTERNAL_HOSTNAME"))
+	}
+	log.Printf("BDD_USER: %s", bdUser)
+	log.Printf("BDD_PORT: %s", bdPort)
+	log.Printf("BDD_NAME: %s", bdName)
+	log.Printf("BDD_PASSWORD: %s", map[bool]string{true: "***SET***", false: "NOT SET"}[bdPassword != ""])
+	log.Printf("Connecting to database: user=%s, addr=%s, dbname=%s", bdUser, bdPort, bdName)
 
 	// Vérifier que les variables essentielles sont définies
 	if bdUser == "" || bdPort == "" || bdName == "" {
