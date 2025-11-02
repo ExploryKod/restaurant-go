@@ -14,6 +14,20 @@ import (
 )
 
 func main() {
+	// Log IMMÉDIATEMENT pour capturer toutes les variables avant toute autre opération
+	log.Printf("=== EARLY START - All environment variables ===")
+	allEnv := os.Environ()
+	for _, env := range allEnv {
+		// Afficher toutes les variables qui pourraient être liées à la DB
+		if strings.Contains(env, "BDD_") ||
+			strings.Contains(env, "DATABASE") ||
+			strings.Contains(env, "MYSQL") ||
+			strings.Contains(env, "RENDER") {
+			log.Printf("ENV: %s", env)
+		}
+	}
+	log.Printf("Total env vars: %d", len(allEnv))
+
 	// Détecter si on est sur Render.com
 	// Render.com définit automatiquement RENDER_EXTERNAL_HOSTNAME pour tous les services web
 	// Cette variable est automatiquement injectée par Render.com (pas besoin de la définir manuellement)
