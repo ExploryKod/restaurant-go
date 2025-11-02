@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+    database:
+        container_name: restaurant_database
+        image: mariadb:10.8
+        restart: always
+        ports:
+            - "3309:3306"
+        volumes:
+            - ./migrations/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+#            - db-data:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: restaurantbdd
+            MYSQL_ROOT_PASSWORD: password
+        command: --bind-address=0.0.0.0
+        healthcheck:
+            test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$BDD_PASSWORD" ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        ports:
+            - '8080:80'
+        environment:
+            - PMA_ARBITRARY=1
+
+    web:
+        build:
+            context: .
+            dockerfile: dev.Dockerfile
+        container_name: restaurant-go
+        restart: always
+        tty: true
+        environment:
+            # Variables pour la base de données (depuis Docker, utiliser le nom du service)
+            BDD_USER: ${BDD_USER:-root}
+            BDD_PASSWORD: ${BDD_PASSWORD:-password}
+            BDD_PORT: database:3306  # Nom du service Docker + port interne
+            BDD_NAME: ${BDD_NAME:-restaurantbdd}
+            # Variables optionnelles
+            MARIADB_ROOT_PASSWORD: ${BDD_PASSWORD:-password}
+            MARIADB_DATABASE: ${BDD_NAME:-restaurantbdd}
+            # Mode développement : charger les templates depuis le système de fichiers pour le hot reload
+            DEV_MODE: "1"
+        ports:
+            - "8097:8097"
+            - "9999:9999"  # Port de l'application Go
+        volumes:
+            - ./:/app
+        depends_on:
+            - database
+volumes:
+    db-data:
